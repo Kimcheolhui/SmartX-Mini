@@ -15,24 +15,45 @@
 
 라즈베리 파이(Raspberry Pi; 이하 Pi)는 Raspberry Pi 재단에서 디자인한 소형 임베디드 컴퓨터입니다. Pi는 일반적인 컴퓨터에 비해 비교적 저렴한 가격대로 구할 수 있지만, 그만큼 다른 하드웨어 구성과 특성(Property)을 갖습니다. 
 
-일례로 RTC(Real-Time Clock)가 기본적으로 제거되어있어, 부팅할 때마다 시간을 직접 맞춰주어야 합니다. (보통 `ntp`, `rdate`을 활용하여 부팅 시 시간을 조정할 수 있도록 설정합니다.) 이러한 이유로 본 실험에서는 Pi가 `rdate`와 `crontab`을 이용하여 부팅 이후 자동으로 시간을 맞출 수 있도록 설정합니다.
+일례로 RTC(Real-Time Clock)가 기본적으로 제거되어있어, 부팅할 때마다 시간을 직접 맞춰주어야 합니다. (보통 `ntp`, `rdate`을 활용하여 부팅 시 시간을 조정할 수 있도록 설정합니다.) 이러한 이유로 본 실습에서는 Pi가 `rdate`와 `crontab`을 이용하여 부팅 이후 자동으로 시간을 맞출 수 있도록 설정합니다.
 
-이번 실험에서는 [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)를 사용합니다. 해당 모델은 USB Type-C를 통해 전원을 공급받으며, Micro-HDMI를 통해 화면과 연결할 수 있습니다. 데이터 저장은 Micro SD를 이용하기 때문에, OS 설치는 SD 카드에 OS를 다운로드하는 방식으로 이루어집니다. 네트워크는 WiFi와 Gigabit Ethernet을 제공하는데, 이번 실험에서는 Ethernet을 통해 네트워크와 연결됩니다.
+이번 실습에서는 [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)를 사용합니다. 해당 모델은 USB Type-C를 통해 전원을 공급받으며, Micro-HDMI를 통해 화면과 연결할 수 있습니다. 데이터 저장은 Micro SD를 이용하기 때문에, OS 설치는 SD 카드에 OS를 다운로드하는 방식으로 이루어집니다. 네트워크는 WiFi와 Gigabit Ethernet을 제공하는데, 이번 실습에서는 Ethernet을 통해 네트워크와 연결합니다.
 
 ### 1-2. Apache Kafka
 
+![Why We use Kafka](./img/Apache_Kafka.png)
+
+Apache Kafka(이하 Kafka)는 대규모 스트리밍 데이터 처리에 능한 오픈소스 분산 이벤트 스트리밍 플랫폼입니다. 
+
+여기서 스트리밍 데이터(Streaming Data)는 데이터 원천(Data Source)으로부터 연속적이고 지속적으로 생성되는 데이터를 의미합니다. 가령, 공장의 온도 센서는 매 주기마다 온도를 측정하여 끊임없이 전송하고, CCTV는 촬영한 영상을 끊임없이 전송합니다. 이러한 데이터를 스트리밍 데이터라고 부릅니다.
+
+이와 같이 여러 시스템에서는 매 순간, 지속적으로 Event가 발생하며, 이를 받아 처리하는 시스템 또한 여럿 존재합니다. 여기서 데이터 원천에서 데이터를 가져와 변형하고, 처리하고, 최종 목적지에 전달하는 일련의 과정을 데이터 파이프라인(Data Pipeline)이라고 정의하겠습니다. 만약 데이터 파이프라인이 통일된 전송 수단 없이 구성된다면 어떤 문제가 발생할까요? 문제 파악을 위해 모든 파이프라인을 점검해야 하며, 이에 따라 장애 조치에 오랜 시간이 소요됩니다. 즉, 시스템 복잡도가 상승합니다. 또한, 각 처리 시스템마다 선호하는 데이터 포맷이 다르기에, 각 파이프라인마다 사용하는 데이터 포맷이 서로 달라 통합 및 확장이 까다로워집니다. 즉, 데이터 파이프라인을 관리하기 어려워집니다. 이러한 단점을 가장 잘 표현하는 것이 상단의 좌측 이미지입니다. (Apache Kafka 도입 이전의 LinkedIn의 데이터 처리 구성도입니다.)
+
+이러한 목적으로 데이터 원천과 처리 지점을 연결하는 통합 전송 수단이 요구되었고, 이러한 수단으로 활용될 수 있는 도구가 Apache Kafka입니다. 데이터 원천과 데이터 처리 지점은 오로지 Kafka만 신경쓰면 되고, 관리자 또한 Kafka를 통해 모든 이벤트와 데이터의 흐름을 중앙 관리할 수 있습니다. 개발자 입장에서는 데이터 원천과 서비스 간의 연결을 신경쓰지 않아도 됩니다. (즉, 데이터 원천과 처리 지점을 Decoupling할 수 있습니다.) 또한 새로운 서비스와 시스템을 추가한다고 해도, Kafka 표준 포맷으로만 연결하면 되기에 확장이 용이하며 신뢰성이 상승합니다.
+
 ![Kafka Overview](./img/kafka.png)
 
-Apache Kafka(이하 Kafka)는 대규모 트래픽 처리에 능한 분산 메세징 시스템(Messaging System)입니다.
+Apache Kafka는 구독-발행 패턴(Pub/Sub Pattern, Publish/Subscribe Pattern)을 따릅니다. 여기서 구독-발행 패턴은 유튜버와 구독자의 관계로 비유할 수 있습니다. 구독자는 유튜브에서 자신이 원하는 채널을 구독하고, 유튜버는 자신이 촬영한 영상을 유튜브에 업로드합니다. 그러면 구독자는 구독 목록을 보고 원하는 영상을 볼 수 있게 됩니다. 마찬가지로, Consumer가 자신이 원하는 Topic을 구독하고, Producer가 Topic에 메세지를 등록하면 Broker를 통해 Consumer가 데이터를 가져올 수 있습니다.
 
-메세징 시스템이란, 
+다시 Apache Kafka의 주요 구성원을 정리해보겠습니다.
+| Name | Description |
+|---|:---|
+|`Producer`| Event를 생성하여 Kafka에 전달하는 구성원. |
+|`Consumer`| Topic을 구독하여 Kafka에서 Event를 가져와 처리하는 구성원. |
+|`Topics`| Event 구독 단위. 파일시스템의 폴더와 유사하게, Event를 보관/관리하는 단위로 쓰인다. |
+|`Broker`| Event 저장/관리를 수행하는 구성원. Topic에 저장된 Event를 분산/복제하여 관리한다. |
 
-A messaging systems are designed for better and more convenient, reliable message transfer than end-to-end way. Apache Kafka is a messaging system with a unique design and functionality. It is a high-performance, distributed, fault-tolerant, and reliable messaging system.
+Apache Kafka는 일반적으로 Messaging System으로 사용되기도 하지만, 전통적인 Messaging Queue와는 다르게 Consumer가 Event를 읽는다고 하여 즉시 사라지지 않고, 필요한 만큼 여러번 읽을 수 있다는 점에서 차이가 있습니다. 대신 Kafka는 각 Topic마다 Event의 수명을 정의하는 식으로 Event를 관리합니다.
 
-- `Topics`: maintains feeds of messages in categories
-- `Producer`: processes that publish messages to a Kafka topic
-- `Consumer`: processes that subscribe to topics and process the feed of published messages
-- `Broker`: run as a cluster comprised of one or more servers
+Topic들은 여러 Partition으로 분할하여 관리됩니다. 만약 하나의 Topic을 단일 지점에 저장하게 되면, 대규모 환경에서 수많은 Producer와 Consumer가 단일 지점에 짧은 시간에 집중적으로 접근하게 되므로 시스템 장애를 야기할 수 있으며, 더 나아가 서비스 마비로 이어질 수 있습니다. 그렇기에 여러 Broker의 "Bucket"(저장공간)에 Topic을 분산하여 저장, 관리하는 것입니다. 때로는 고가용성 및 내결함성을 목적으로 Topic Partition을 여러 Broker에 복제하여 관리하기도 하고, 해당 Partition에 대한 요청을 처리하기 위해 Partition 단위로 Leader를 선출합니다.
+
+하지만 분산 시스템으로 운영할 경우, Broker 관리, 구성원 간 데이터 동기화나 장애 식별 및 조치, 설정값 및 메타데이터 관리, 리더 선출 등의 다양한 문제가 발생합니다. 이를 전담하여 중앙관리해주는 구성원이 `Apache Zookeeper`입니다. Zookeeper는 Broker와 지속적으로 통신하여 상태를 확인하고, Kafka의 상태정보(Topic 수, Partition 수, Replication 수 등)와 메타데이터(Broker 위치 및 Leader 정보 등)을 관리하면서 Partition의 Leader를 결정하거나, Broker에 장애가 발생하면 이를 감지하여 데이터 복구 및 리더 재선출을 수행하며 장애를 복구합니다. 이러한 기능들을 수행하기에 Kafka를 대규모 분산 시스템으로 사용할 수 있는 것입니다.
+
+> ⚠️ **주의** ⚠️
+> 
+> Apache Kafka 3.5 이후로 Zookeeper는 Deprecated로 지정되었으며, 이를 한층 보완한 KRaft가 제안되었습니다. 현재는 호환성 문제 및 실습 목적으로 Zookeeper를 사용하지만, 추후에 자신의 환경에 Apache Kafka를 배포하여 사용하실 예정이라면 KRaft를 사용하시는 것을 권장합니다. 
+
+> Apache Kafka를 더 자세히 알고 싶다면 [Apache Kafka Docs](https://kafka.apache.org/documentation/#intro_concepts_and_terms)를 참고해주세요.
 
 ### 1-3. Net-SNMP
 
@@ -100,7 +121,7 @@ A distributed, reliable, and available service for efficiently collecting, aggre
 >  SD 카드 분리 전, **반드시 Pi가 __완전히 종료되었는지__ 확인합니다.**
 > 
 > Raspberry Pi는 SD카드를 저장장치로 사용합니다. 
-> 만약 정상 종료 전에 SD 카드를 강제로 제거할 경우, SD 카드가 오염되어 치명적인 오류를 일으킬 수 있습니다. 
+> 만약 정상 종료 전에 SD 카드를 강제로 제거할 경우, SD 카드 내 데이터가 오염되어 치명적인 오류를 일으킬 수 있습니다. 
 >
 > 따라서, SD 카드 분리 전에 하단의 명령어를 입력하여 Pi를 완전히 종료한 후 안전하게 제거해주시기 바랍니다.
 > ```bash
@@ -160,7 +181,7 @@ sudo mv flash /usr/local/bin/flash
 </details>
 <br>
 
-`flash`는 OS 설치 과정에서 설정 파일을 통해 네트워크, 계정, SSH 등을 설정합니다. 실험 진행을 위해 미리 준비한 설정 파일을 다운로드하기 위해, Github Repository를 Clone하겠습니다. 
+`flash`는 OS 설치 과정에서 설정 파일을 통해 네트워크, 계정, SSH 등을 설정합니다. 실습 진행을 위해 미리 준비한 설정 파일을 다운로드하기 위해, Github Repository를 Clone하겠습니다. 
 
 Repository 내부에 Large File이 포함된 관계로, `git-lfs`을 먼저 설치한 뒤 Clone하고, 설치를 진행할 디렉토리로 이동하겠습니다. 하단의 명령어를 입력하여 Clone을 진행해주시기 바랍니다. 
 
@@ -200,13 +221,34 @@ ls -alh # Check all files
 >  ⚠️ **주의** ⚠️
 > 
 > `network-config` 파일의 이름을 <U>**절대로**</U> 변경하시면 안됩니다. <br>
-> `network-config`는 `cloud-init`가 관리하는 시스템이 부팅 시점에 네트워크 설정을 전달하기 위해 사용되는 파일로, 파일 이름을 기준으로 해당 파일 탐색을 시도합니다. <br>
-> HypriotOS 또한 `cloud-init`에 의해 관리되도록 구성되어 있으며, `cloud-init`은 부팅 시 인스턴스의 네트워크 설정을 위해 먼저 로컬 파일시스템(`/boot` 등)에 위치한 `network-config` 파일을 탐색하도록 설정되어있습니다. <br>
+> `network-config`는 시스템이 부팅될 때 초기화를 담당하는 `cloud-init`에게 네트워크 설정을 전달하기 위해 사용되는 파일로, 파일 이름을 기준으로 해당 파일 탐색을 시도합니다. <br>
+> `flash`를 통해 HypriotOS를 설치할 경우 `cloud-init`에 의해 관리되도록 구성되며, 부팅 시 네트워크 설정 초기화를 위해 먼저 로컬 파일시스템(`/boot` 등)에 위치한 `network-config` 파일을 탐색하도록 설정되어있습니다. <br>
 > 만약 파일 이름을 변경하실 경우 `cloud-init`이 네트워크 설정을 찾지 못해 default setting이 반영됩니다. <br>
-> 즉, 후술할 네트워크 설정이 반영되지 않을 뿐더러, 재설정을 위해 OS를 재설치하거나 network 설정파일을 찾아 직접 네트워크 인터페이스를 수정해주어야 하므로 <U>**절대로 파일의 명칭을 변경하면 안됩니다.**</U>
+> 즉, 후술할 네트워크 설정이 반영되지 않을 뿐더러, 재설정을 위해 OS를 재설치하거나 네트워크 설정 파일을 찾아 직접 네트워크 인터페이스 설정을 수정해야 하므로 <U>**절대로 파일의 명칭을 변경하면 안됩니다.**</U>
 > 
 > 참조: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html#source-files
 
+> 📰 참고: `cloud-init`와 초기화 과정
+>
+> `cloud-init`은 클라우드 인스턴스의 초기화에 사용되는 도구로, AWS나 Google Cloud 등의 퍼블릭 클라우드 제공사를 비롯하여, 사설 클라우드 인프라의 프로비저닝 및 베어 메탈 장비 설치에 쓰입니다.
+>
+> 시스템 부팅 과정에서 `cloud-init`은 크게 2단계(Early-boot, Late-boot)에 걸쳐 초기화를 진행합니다.
+>
+> Early-boot 단계에서 Datasource 식별 및 설정 정보 획득, 네트워크 설정을 수행합니다. 먼저, 시스템 내장값을 통해 인스턴스 초기화에 필요한 Datasource를 식별합니다. (여기서 Datasource는 인스턴스 설정 정보를 모두 포함하는 지점입니다.) Public Cloud Provider의 경우라면 외부 서버에서 제공받으며, 베어 메탈 장비(`NoCloud`)의 경우 일반적으로 각 파일 시스템의 Root Directory에서 설정 파일을 탐색합니다. (`/`, `/boot` 등, `lsblk`로 식별되는 주소)
+>
+> Datasource를 식별한 이후, 이로부터 여러 설정 파일을 찾습니다. `meta-data`를 이용해 Instance ID 등의 인스턴스 및 플랫폼 정보를 식별합니다. `user-data`(Public Cloud의 경우 `vender-data`)를 통해 하드웨어 최적화, Hostname 설정, 여러 설정 파일 관리, 기본 사용자 계정 설정, 사용자 정의 스크립트 실행 등의 설정값을 식별합니다. 또한, `network-config`를 통해 네트워크 인터페이스 설정 값을 식별합니다. 
+>
+> 설정값을 모두 파악한 경우, 마지막으로 DNS 설정, IP 주소 설정, Gateway 설정 등 네트워크 설정을 수행합니다.
+>
+> Late-Boot 단계에서는 시스템 프로비저닝에 덜 중요한 작업을 주로 수행하며, 주로 `user-data`/`vender-data`에 정의된 값을 이용하여 초기화를 수행하게 됩니다.
+>
+> 시스템 설정을 위해 `Ansible`이나 `Chef` 등의 도구를 이용해 세분화된 설정을 수행할 수도 있으며, 시스템의 원활한 동작을 위해 필요한 소프트웨어를 다운로드할 수 있으며, `user-data`/`vender-data`에서 정의한 사용자 계정을 생성/설정하며, 여러 스크립트를 실행하게 됩니다.
+>
+> 이러한 동작이 모두 마무리되면, 사용자가 시스템에 접근하여 활용할 수 있는 여건이 마련됩니다.
+> 
+> 참고1: https://cloudinit.readthedocs.io/en/latest/explanation/introduction.html
+> <br>
+> 참고2: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html
 
 ```bash
 pwd # 현재 Directory가 "SmartX-Mini/SmartX-Mini-2025 Collection/Experiment/Lab-2. InterConnect/"인지 확인
@@ -233,7 +275,7 @@ sudo vim network-config
 
 HypriotOS를 SD 카드에 설치하기 위해, SD 카드가 마운트된 지점을 알아내야 합니다. 이를 위해 `fdisk`를 이용하여 SD 카드와 비슷한 크기의 Partition을 찾아보도록 하겠습니다.
 
-SD 카드는 일반적으로 `/dev/sd`로 시작하는 지점에 마운트됩니다. 이 중, 32GB 혹은 16GB에 해당하는 파티션을 찾아야 합니다. 만약 용량이 32GB일 경우 약 29.8 GiB로 표기되며, 16GB일 경우 약 14.6GiB로 표시됩니다. 이에 해당하는 위치를 찾습니다. (하단의 이미지의 경우 `/dev/sdc`에 마운트된 것을 확인할 수 있습니다.)
+SD 카드는 일반적으로 `/dev/sd`로 시작하는 지점에 마운트됩니다. 이 중, 32GB 혹은 16GB에 해당하는 파티션을 찾아야 합니다. 만약 용량이 32GB일 경우 약 29.8 GiB로 표기되며, 16GB일 경우 약 14.6GiB로 표시됩니다. 이에 해당하는 경로를 찾습니다. (하단의 이미지의 경우 `/dev/sdc`에 마운트된 것을 확인할 수 있습니다.)
 
 
 ```bash
@@ -245,7 +287,7 @@ sudo fdisk -l
 다음의 명령어를 입력하여, SD 카드에 HypriotOS를 설치합니다. 종료될 때까지 대기합니다. 이때, 반드시 "Finished"라는 문구가 출력된 직후 종료되었는지 확인합니다. (그렇지 않을 경우, 설정이 정상적으로 반영되지 않을 수도 있습니다.)
 
 ```bash
-flash -u hypriotos-init.yaml -F network-config hypriotos-rpi-v1.12.3.img.zip -d <Your SD Card Directory>
+flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypriotos-rpi-v1.12.3.img.zip
 ```
 
 > 📰 참고: `flash`의 옵션
@@ -303,7 +345,7 @@ netstat -rn
 
 #### 2-2-2. (PI) 패키지 설치
 
-실험을 위해 다음의 패키지를 Pi에 설치합니다.
+실습을 위해 다음의 패키지를 Pi에 설치합니다.
 
 ```bash
 sudo apt update
@@ -829,7 +871,7 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic resource --from
 
 ### 3-1. Lab Summary
 
-이번 실험을 통해 다음의 2개 질문에 답할 수 있습니다.
+이번 실습을 통해 다음의 2개 질문에 답할 수 있습니다.
 
 1. 어떻게 이기종 장치(여기서는 NUC과 Pi)를 물리적으로 상호연결할 수 있는가?
 2. 어떻게 서로 다른 Box에 위치한 2개의 Function 간 Data Transfer(여기서는 Kafka Messaging)를 상호연결할 수 있는가?
