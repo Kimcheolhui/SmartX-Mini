@@ -13,7 +13,7 @@
 
 ![Raspberry Pi 4 Model B](./img/pi4-labelled.png)
 
-라즈베리 파이(Raspberry Pi; 이하 Pi)는 Raspberry Pi 재단에서 디자인한 소형 임베디드 컴퓨터입니다. Pi는 일반적인 컴퓨터에 비해 비교적 저렴한 가격대로 구할 수 있지만, 그만큼 다른 하드웨어 구성과 특성(Property)을 갖습니다. 
+라즈베리 파이(Raspberry Pi; 이하 Pi)는 Raspberry Pi 재단에서 디자인한 소형 임베디드 컴퓨터입니다. Pi는 일반적인 컴퓨터에 비해 비교적 저렴한 가격대로 구할 수 있지만, 그만큼 간소화된 하드웨어 구성과 특성(Property)을 갖습니다. 
 
 일례로 RTC(Real-Time Clock)가 기본적으로 제거되어있어, 부팅할 때마다 시간을 직접 맞춰주어야 합니다. (보통 `ntp`, `rdate`을 활용하여 부팅 시 시간을 조정할 수 있도록 설정합니다.) 이러한 이유로 본 실습에서는 Pi가 `rdate`와 `crontab`을 이용하여 부팅 이후 자동으로 시간을 맞출 수 있도록 설정합니다.
 
@@ -45,7 +45,7 @@ Apache Kafka는 구독-발행 패턴(Pub/Sub Pattern, Publish/Subscribe Pattern)
 
 Apache Kafka는 일반적으로 Messaging System으로 사용되기도 하지만, 전통적인 Messaging Queue와는 다르게 Consumer가 Event를 읽는다고 하여 즉시 사라지지 않고, 필요한 만큼 여러번 읽을 수 있다는 점에서 차이가 있습니다. 대신 Kafka는 각 Topic마다 Event의 수명을 정의하는 식으로 Event를 관리합니다.
 
-Topic들은 여러 Partition으로 분할하여 관리됩니다. 만약 하나의 Topic을 단일 지점에 저장하게 되면, 대규모 환경에서 수많은 Producer와 Consumer가 단일 지점에 짧은 시간에 집중적으로 접근하게 되므로 시스템 장애를 야기할 수 있으며, 더 나아가 서비스 마비로 이어질 수 있습니다. 그렇기에 여러 Broker의 "Bucket"(저장공간)에 Topic을 분산하여 저장, 관리하는 것입니다. 때로는 고가용성 및 내결함성을 목적으로 Topic Partition을 여러 Broker에 복제하여 관리하기도 하고, 해당 Partition에 대한 요청을 처리하기 위해 Partition 단위로 Leader를 선출합니다.
+Topic들은 여러 Partition으로 분할하여 관리됩니다. 만약 하나의 Topic을 단일 지점에 저장하게 되면, 대규모 환경에서 수많은 Producer와 Consumer가 단일 지점에 짧은 시간에 집중적으로 접근하게 되므로 시스템 장애를 야기할 수 있으며, 더 나아가 서비스 마비로 이어질 수 있습니다. 그렇기에 여러 Broker의 "Bucket"(저장공간)에 Topic을 분산하여 저장, 관리하는 것입니다. 때로는 고가용성 및 내결함성을 목적으로 Topic Partition을 여러 Broker에 복제하여 관리하며 해당 Partition에 대한 요청을 처리하기 위해 Partition 단위로 Leader를 선출합니다.
 
 하지만 분산 시스템으로 운영할 경우, Broker 관리, 구성원 간 데이터 동기화나 장애 식별 및 조치, 설정값 및 메타데이터 관리, 리더 선출 등의 다양한 문제가 발생합니다. 이를 전담하여 중앙관리해주는 구성원이 `Apache Zookeeper`입니다. Zookeeper는 Broker와 지속적으로 통신하여 상태를 확인하고, Kafka의 상태정보(Topic 수, Partition 수, Replication 수 등)와 메타데이터(Broker 위치 및 Leader 정보 등)을 관리하면서 Partition의 Leader를 결정하거나, Broker에 장애가 발생하면 이를 감지하여 데이터 복구 및 리더 재선출을 수행하며 장애를 복구합니다. 이러한 기능들을 수행하기에 Kafka를 대규모 분산 시스템으로 사용할 수 있는 것입니다.
 
@@ -53,36 +53,60 @@ Topic들은 여러 Partition으로 분할하여 관리됩니다. 만약 하나�
 > 
 > Apache Kafka 3.5 이후로 Zookeeper는 Deprecated로 지정되었으며, 이를 한층 보완한 KRaft가 제안되었습니다. 현재는 호환성 문제 및 실습 목적으로 Zookeeper를 사용하지만, 추후에 자신의 환경에 Apache Kafka를 배포하여 사용하실 예정이라면 KRaft를 사용하시는 것을 권장합니다. 
 
+이번 실습에서는 Apache Kafka으로 Pi에서 발생한 Event를 NUC의 Consumer로 전달하는 것을 확인함으로써 이기종 간 Data-Interconnect이 이루어질 수 있음을 확인해볼 것입니다.
+
+> 📰️️ 참고  
 > Apache Kafka를 더 자세히 알고 싶다면 [Apache Kafka Docs](https://kafka.apache.org/documentation/#intro_concepts_and_terms)를 참고해주세요.
 
 ### 1-3. Net-SNMP
 
-A suite of software for using and deploying the SNMP Protocol.
+[Net-SNMP](http://www.net-snmp.org/)는 리눅스 운영체제에서 SNMP를 이용하여 네트워크 장비나 컴퓨터, 소형 디바이스 등의 상태를 모니터링할 수 있는 일련의 어플리케이션 모음(Application Suite)입니다.
 
-- Manager: polls agents on the network, correlates, and displays information
-- Agent: collects and stores information, responds to manager requests for information, generates traps
-
-![Net-SNMP](./img/NetSNMP.png)
-
-The SNMP(Simple Network Management Protocol) is used in network management systems to monitor network-attached devices, which include routers, switches, servers, workstations, printers, modem racks, and more.
+여기서 SNMP(Simple Network Management Protocol)는 IP 네트워크에 연결된 디바이스를 관리하고 모니터링하는 L7 프로토콜입니다. 일반적으로 네트워크 상의 라우터나 스위치, 로드밸런서를 원격에서 중앙관리하기 위해 사용됩니다.
 
 ![SNMP](./img/SNMP.png)
 
-### 1-4. Apache-Flume
+SNMP를 통해 네트워크를 관리하는 경우, 역할에 따라 구성원을 다음과 같이 구분할 수 있습니다.
+![SNMP Enumeration](./img/snmp_enumeration.jpg)
+
+|Component|Description|
+|---|---|
+|SNMP Manager| 네트워크를 모니터링하는 중앙 시스템. <br> NMS(Network Management Station)이라고 부르기도 한다. <br> 일반적으로 Host에 SNMP Client를 실행하여 Manager 역할을 수행한다. |
+|SNMP Agent| SNMP Manager의 명령에 따라 상태 정보 수집 및 저장, 설정 변경을 수행하는 요소. <br> 네트워크 장비에 설치된 SNMP Server가 Agent 역할을 수행한다. |
+|Managed Device| SNMP Agent가 설치되어 SNMP에 의해 중앙관리되는 장비. |
+|MIB(Management Information Base)| Managed Device의 네트워크 상태 정보 및 설정을 저장하는 요소. <br> 총 8개 카테고리(시스템, 인터페이스, 주소 변환, IP, UDP, TCP, EGP, ICMP)로 이루어진다. <br> MIB의 각 Object는 고유의 OID(Object ID)를 갖는다. <br> (e.g. `1.3.6.1.2.1.2.2.1.16.2`: 2번 인터페이스에서 수신한 바이트 수) |
+
+Net-SNMP는 리눅스 시스템에 SNMP Manager와 SNMP Agent 역할을 수행할 수 있는 도구를 포함합니다. Agent에게 SNMP 요청을 보낼 수 있는 여러 CLI 도구(`snmpget`, `snmptable`, ...)와, SNMP Agent 역할을 수행할 수 있는 Daemon 어플리케이션(`snmpd`, ...), 이외의 여러 라이브러리 등이 Net-SNMP에 포함됩니다.
+
+![Net-SNMP](./img/NetSNMP.png)
+
+본 실습에서는 Pi에 `snmpd`를 설치한 뒤 Apache Flume을 통해 Pi의 네트워크 인터페이스 상태 정보와 시스템의 상태 정보(RAM 여유 공간, CPU 부하, 디스크 여유 공간)를 수집할 것입니다. 이 경우, Pi가 Managed Device, `snmpd`가 SNMP Agent, Flume이 SNMP Manager 역할에 대응된다고 볼 수 있습니다.
+
+> 📰️️ 참고  
+> 수집될 상태 정보는 실습 과정 중 Flume 배치 때 확인할 `flume-conf.properties` 파일의 `agent.sources.sources1.oidN`에 기록된 OID를 통해 확인 가능합니다.
+
+> 📰️️ 참고  
+> SNMP를 더 자세히 알고 싶다면 [GeeksForGeeks](https://www.geeksforgeeks.org/simple-network-management-protocol-snmp/)를 참고해주세요.
+
+### 1-4. Apache Flume
+
+Flume은 대량의 로그 데이터를 효율적으로 수집, 집계 및 이동하기 위한 분산되고 안정적이며 사용 가능한 서비스입니다. 
+
+Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소로 구성됩니다.
 
 ![Apache Flume](./img/flume.png)
+|Component|Description|
+|---|---|
+|Source|외부 시스템에서 전달된 Event를 수집한다. <br> 이때 Event는 Flume이 식별 가능한 형식으로 작성되어야 한다.|
+|Channel| Source에 의해 수집된 Event를 일시적으로 저장하는 Passive Store이다. <br> Sink가 Event를 회수할 때까지 데이터를 저장한다. <br> Local File System 기반의 File Channel 등이 존재한다. |
+|Sink| Channel로부터 Event를 회수하여 외부 저장 공간이나 다른 Flume Agent에게 전달한다. |
 
-A distributed, reliable, and available service for efficiently collecting, aggregating, and moving large amounts of log data with many customizable sources, which runs asynchronously. Flume Agents consists of three concepts.
+이번 실습에서는 Flume은 `snmpd`로부터 상태 정보를 받아 Kafka로 전달하는 데에 사용됩니다. 실습에서는 Source를 `snmpd`로 설정하여 SNMP를 통해 상태 정보를 수집하며, 이를 Kafka에게 넘겨주게 됩니다. 
 
-- Source: Consumes events having a specific format
-- Channel: Holds the event until consumed
-- Sink: Removes an event from the channel and puts it into an external repository or another source
-
-### 1-5. Docker
-
-"Docker” is a containerization technology that enables the creation and use of Linux® containers. Based on containerization, you can use it for Application deployment.
-
-![docker](./img/docker.png)
+> ⚠️ **주의** ⚠️
+>
+> (2025년 2월 기준) Apache Flume은 2024년 10월 10일 프로젝트 유지 중단을 선언하였으며, Flume 사용자는 다른 서비스로 마이그레이션하도록 안내하였습니다.   
+> 현재는 호환성 문제 및 실습 목적으로 Flume을 사용하지만, 추후에 분산 로그 수집 서비스를 도입할 경우 Fluentd나 Logstash 등을 사용할 것을 권장드립니다.
 
 ## 2. Practice
 
