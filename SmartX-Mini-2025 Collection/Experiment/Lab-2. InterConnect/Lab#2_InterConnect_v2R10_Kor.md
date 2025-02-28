@@ -457,10 +457,15 @@ sudo rdate -s time.bora.net
 
 ### 2-4. Hostname 설정
 
-네트워크와 연결된 모든 장비들은 고유의 IP 주소를 통해 서로를 식별하고 통신합니다. <br>
-하지만 사람은 모든 장비의 IP 주소를 외우고 다닐 수 없습니다. 그렇기에 각 장비에 별명을 부여한 뒤 별명으로 통신을 시도하는 것이 더 편리하죠. <br>
-이러한 목적으로 DNS를 사용하기도 하지만, 주소와 별명의 관계를 직접 정의할 수 있는 방법이 있습니다. <br>
-시스템의 `/etc/hosts` 파일에 관계를 등록하면 별명만으로 장비에 접근할 수 있게 됩니다.
+네트워크와 연결된 모든 장비들은 고유의 IP 주소를 통해 서로를 식별하고 통신합니다.
+
+하지만 사람은 모든 장비의 IP 주소를 외울 수 없으며, 특히 DHCP를 통한 동적 IP 할당이나 클라우드 환경의 컴퓨팅 자원, 쿠버네티스의 Pod나 Service처럼 부팅할 때마다 IP가 변경되는 환경이라면 IP를 직접 입력하여 통신하는 방법은 매우 번거롭고 비효율적입니다.
+
+그렇기에 "별명"(`hostname`)으로 통신으로 시도하는 방법을 주로 사용합니다. 우리가 웹사이트에 URL을 이용하여 접근하면 DNS를 통해 IP 주소로 번역되어 웹서버에 접근할 수 있는 것과 비슷한 방법으로, Pi가 `nuc`이라는 별명으로 접근을 시도하면, OS가 `/etc/hosts`를 참고하여 `nuc`을 실제 NUC의 IP 주소로 번역합니다. 그렇게 Pi가 실제 NUC과 상호작용할 수 있게 됩니다.
+
+즉, `/etc/hosts` 파일은 `hostname`과 실제 IP 주소를 연관짓는 역할을 담당합니다. 만약 어떤 서비스의 IP 주소가 다른 것으로 변경되었다고 하더라도, 통신은 `hostname`을 통해서 이루어지므로 단순히 `/etc/hosts`에 기록된 IP 주소만 변경해주면 원활하게 통신할 수 있는 것입니다.
+
+이후에 이어질 실습 또한 IP 주소 대신 `hostname`을 이용해서 상호작용할 것입니다.
 
 #### 2-4-1. (NUC) Hostname preparation for Kafka
 
@@ -497,7 +502,6 @@ Add 2 lines below the file. **IF your hostname consists of only numbers, you sho
 > NUC의 이름은 Pi의 `/etc/hosts`에 기록할 이름과 동일해야 하며, 추후의 Kafka 설정 시에도 NUC의 Hostname을 써야 하기 때문입니다.
 >
 > NUC의 Hostname 변경은 다음과 같이 진행해주시기 바랍니다. <br>
-> (주의: Pi의 Hostname 변경은 `cloud-init`으로 인해 다른 방식으로 진행해야 합니다.)
 >
 > ```bash
 > # 일시적 수정 (재부팅 시 원상 복구)
@@ -507,7 +511,11 @@ Add 2 lines below the file. **IF your hostname consists of only numbers, you sho
 > # 영구 수정
 > sudo hostnamectl set-hostname <new_name>
 > ```
+>
 > 수정 이후, `/etc/hosts`에 기록된 NUC의 Hostname도 새로운 Hostname으로 반드시 갱신해주시기 바랍니다.
+>
+> Pi의 경우, `cloud-init`으로 인해 영구적 변경을 위해 추가적인 절차를 거쳐야합니다. <br>
+> 방법은 별도로 설명하지 않으며, <https://repost.aws/ko/knowledge-center/linux-static-hostname-rhel7-centos7>을 참고해주십시오.
 
 
 #### 2-4-2. (PI) Hostname preparation for Kafka
