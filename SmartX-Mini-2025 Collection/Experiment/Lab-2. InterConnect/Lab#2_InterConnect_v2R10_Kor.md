@@ -112,13 +112,13 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 
 ![overview](img/overview.png)
 
-> If you have a problem with the internet connection even the box can send a ping to the gateway. You can fix this problem by editing `etc/resolv.conf`. Open `/etc/resolv.conf`
+> 📰️️ 참고
+>
+> 만약 Gateway와 통신이 가능한 상황에서도 Box에서 인터넷 연결 문제가 발생한다면, 하단을 참고하여 `/etc/resolv.conf` 파일에 접근한 뒤 DNS 서버를 다음과 같이 수정해주십시오.
 >
 > ```bash
 > sudo vim /etc/resolv.conf
 > ```
->
-> Add name server like below.
 >
 > ```text
 > ...
