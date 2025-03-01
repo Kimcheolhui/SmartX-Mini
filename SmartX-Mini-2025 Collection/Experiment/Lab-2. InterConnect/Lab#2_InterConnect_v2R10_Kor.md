@@ -138,7 +138,9 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 > sudo killall -9 qemu-system-x86_64  # if can not kill it, use sudo killall -9 kvm
 > ```
 
-환경 구축을 위해 Raspberry Pi에 OS를 설치해야 합니다. 이번 Lab에서는 HypriotOS를 설치하여 사용할 것입니다. 먼저, Micro SD 카드를 리더기에 삽입한 뒤, NUC에 연결해 주십시오.
+Raspberry Pi에 HypriotOS를 설치하겠습니다. HypriotOS는 Raspberry Pi에서 Docker를 실행하는 데에 최적화된, Debian 기반 운영체제입니다. 운영체제에 Docker가 탑재되어 있어 설치 즉시 Docker를 사용할 수 있으며, Docker 최적화를 위해 커널을 비롯하여 파일시스템까지 최적화되어 있습니다. (세부 사항은 [Hypriot Blog](https://blog.hypriot.com/about/#hypriotos:6083a88ee3411b0d17ce02d738f69d47)를 참조해주십시오.)
+
+HypriotOS 설치를 위해 Micro SD 카드를 리더기에 삽입한 뒤, NUC에 연결해 주십시오.
 
 > ⚠️ **주의** ⚠️
 > 
