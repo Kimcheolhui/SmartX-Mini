@@ -361,7 +361,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > ```
 > 
 
-Now, eject the SD card, insert it into the Pi, and power it on. The default login credentials are (ID: `pirate`, Password: `hypriot`).
+Now, eject the SD card, insert it into the Pi, and power it on. The default login credentials are (ID: `pi`, Password: `1234`).
 
 > 📰 Note: About the `hypriotos-init.yaml` file
 > The `hypriotos-init.yaml` file is used as the `/boot/user-data` file on HypriotOS.  
@@ -440,7 +440,7 @@ Since `openssh-server` has been installed on the Pi, you can now access the Pi v
 (From now on, there's no need to repetitively unplug and plug in the monitor, mouse, and keyboard. You can access the Pi via SSH from the NUC.)
 
 ```bash
-ssh pirate@[PI_IP] #ID: pirate PW: hypriot
+ssh pi@[PI_IP] #ID: pi PW: 1234
 ```
 
 > 📰 Note: SSH - Fingerprint Error

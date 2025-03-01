@@ -352,13 +352,13 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > ```
 > 
 
-이제 SD 카드를 분리하여 다시 Pi에 삽입한 뒤, Pi의 전원을 켭니다. ID는 `pirate`, Password는 `hypriot` 입니다.
+이제 SD 카드를 분리하여 다시 Pi에 삽입한 뒤, Pi의 전원을 켭니다. ID는 `pi`, Password는 `1234` 입니다.
 
 > 📰 참고: `hypriotos-init.yaml` 파일에 관하여
 >
 > `hypriotos-init.yaml`은 HypriotOS의 `/boot/user-data` 파일로 사용됩니다. <br>
 > `/boot/user-data` 파일은 사용자 정의 설정을 인스턴스에게 제공할 때 사용되는 파일로, 사용자 생성, Hostname 설정, `/etc/hosts` 자동 초기화 여부 등을 결정합니다. <br>
-> 초기 계정 정보 또한 이곳에서 정의되므로, ID/PW를 잊어버렸을 때 이를 참고합니다.
+> 초기 계정 정보 또한 이곳에서 정의되므로, 설치 전 초기 계정 정보를 변경하거나, ID/PW를 잊어버렸을 때 이를 참고합니다.
 >
 > 참고: https://cloudinit.readthedocs.io/en/stable/explanation/format.html
 
@@ -433,7 +433,7 @@ Pi에 `openssh-server`를 설치하였기 때문에, 외부에서 SSH를 통해 
 (즉, 이제부터 모니터, 마우스, 키보드를 일일이 뽑고 꽂을 필요 없이, NUC에서 SSH로 Pi에 접근하면 됩니다.)
 
 ```bash
-ssh pirate@[PI_IP] #ID: pirate PW: hypriot
+ssh pi@[PI_IP] #ID: pi PW: 1234
 ```
 
 > 📰 참고: Fingerprint 오류
