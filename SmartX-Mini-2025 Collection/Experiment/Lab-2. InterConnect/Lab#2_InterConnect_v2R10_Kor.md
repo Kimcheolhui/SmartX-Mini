@@ -207,7 +207,7 @@ sudo mv flash /usr/local/bin/flash
 </details>
 <br>
 
-`flash`는 OS 설치 과정에서 설정 파일을 통해 네트워크, 계정, SSH 등을 설정합니다. 실습 진행을 위해 미리 준비한 설정 파일을 다운로드하기 위해, Github Repository를 Clone하겠습니다. 
+`flash`는 `cloud-init`에게 설정 파일을 전달하여 네트워크, 계정, SSH 등을 설정합니다. 미리 준비한 설정 파일을 다운로드하기 위해, Github Repository를 Clone하겠습니다. 
 
 Repository 내부에 Large File이 포함된 관계로, `git-lfs`을 먼저 설치한 뒤 Clone하고, 설치를 진행할 디렉토리로 이동하겠습니다. 하단의 명령어를 입력하여 Clone을 진행해주시기 바랍니다. 
 
@@ -340,7 +340,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > sudo cp network-config /mnt/sdcard/network-config
 > sudo umount /mnt/sdcard
 > sudo eject /dev/sda
-> # 이후 NUC에서 SD 카드 분
+> # 이후 NUC에서 SD 카드 분리
 >   ```
 > 2. 한번 더 `flash`를 실행하여 재설치합니다.
 > 3. SD 카드의 모든 파티션을 삭제한 뒤 다시 `flash`를 시도합니다. 이는 다음의 명령어를 통해 수행할 수 있습니다.
@@ -519,8 +519,6 @@ sudo vim /etc/hosts
 ```
 
 파일의 맨 아래에 다음의 두 줄을 추가합니다.
-
-Add 2 lines below the file. **IF your hostname consists of only numbers, you should use other name in the HOSTNAME. Please enter some word that you can memorize. 만약 hostname이 숫자로만 이루어져 있다면, 기억하기 쉬운 다른 이름을 사용해주세요. **
 
 ```text
 [NUC_IP] [NUC_HOSTNAME]
