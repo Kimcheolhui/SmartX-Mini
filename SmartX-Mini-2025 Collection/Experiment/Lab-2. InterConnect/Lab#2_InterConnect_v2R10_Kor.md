@@ -671,13 +671,6 @@ WORKDIR /kafka
 > …
 > ```
 
->  📰 참고: `Dockerfile`의 용도
->
-> Container를 생성하기 위해서는 이의 근간이 되는 Image가 필요합니다. <br>
-> 이러한 이미지를 생성하는 방법 중 하나가 `Dockerfile`입니다.
->
-> `Dockerfile`은 (수정 필요)
-
 #### 2-5-3. (NUC) Docker Image 빌드
 
 `Dockerfile`이 올바르게 작성되어 있다면, 이를 이용하여 `docker build`를 통해 Docker Image 생성을 진행하겠습니다. <br>
@@ -709,13 +702,23 @@ sudo docker build --tag ubuntu-kafka .
 
 #### 2-5-4. (NUC) Docker Container 배치
 
-`ubuntu-kafka` 이미지 생성이 완료된 경우, 다음의 명령어를 통해 Docker Container를 생성합니다. <br>
-하단의 명령어를 통해 생성해야하는 컨테이너는 총 5개이며, 각각 `zookeeper`, `broker0`, `broker1`, `broker2`, `consumer`라는 이름을 갖도록 설정해주십시오. (`[container name]` 대신 위의 이름을 입력하여 실행해주십시오.)
+`ubuntu-kafka` 이미지 생성이 완료된 경우, 다음의 명령어를 통해 Docker Container를 생성하겠습니다. <br>
+컨테이너 각각에게 `zookeeper`, `broker0`, `broker1`, `broker2`, `consumer`라는 이름을 붙이겠습니다. 
+
+NUC에서 터미널 5개를 열고, 각 터미널에 명령어를 하나씩 입력하여 터미널 각각이 Container 1개와 연결되도록 설정합니다.
 
 ```bash
-sudo docker run -it --net=host --name [container name] ubuntu-kafka
+# Terminal #1
+sudo docker run -it --net=host --name zookeeper ubuntu-kafka
+# Terminal #2
+sudo docker run -it --net=host --name broker0 ubuntu-kafka
+# Terminal #3
+sudo docker run -it --net=host --name broker1 ubuntu-kafka
+# Terminal #4
+sudo docker run -it --net=host --name broker2 ubuntu-kafka
+# Terminal #5
+sudo docker run -it --net=host --name consumer ubuntu-kafka
 ```
-(수정 필요; 이렇게 하면 진입해버림. 진입하지 말고 attach로 붙도록 변경해야할 것 같음.)
 
 #### 2-5-5. (NUC - `zookeeper` Container) Zookeeper 설정
 
@@ -827,7 +830,7 @@ Pi에서는 `flume`을 배치할 것이므로, `raspbian-flume`으로 이동해�
 cd ~/SmartX-mini/raspbian-flume
 ```
 
-#### 2-6-3. Check Dockerfile
+#### 2-6-3. (PI) Check Dockerfile
 
 `Dockerfile`을 열어 내용이 하단과 동일한지 확인해주십시오.
 
@@ -867,7 +870,7 @@ WORKDIR /flume
 sudo docker build --tag raspbian-flume .
 ```
 
-#### 2-6-5. Run flume on container
+#### 2-6-5. (PI) Run flume on container
 
 빌드가 완료된 이후, 컨테이너를 생성한 뒤 `flume`을 실행하도록 하겠습니다.
 
