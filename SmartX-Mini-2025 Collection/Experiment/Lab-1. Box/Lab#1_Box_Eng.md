@@ -1,0 +1,655 @@
+# Lab#1. Box Lab
+
+## 0. Objective
+
+![Final Goal](./img/final_goal.png)
+
+In the Box Lab, you will install the OS directly on \*bare metal, then launch virtual machines and containers within it, and connect them to each other using a virtual switch.
+
+\*Bare metal: a hardware without any installed software
+
+Let's take a close look at the overall structure.
+
+![Objective](./img/objective.png)
+
+## 1. Theory
+
+![VM Container](./img/vm_container.png)
+
+- KVM Hypervisor => Virtual Machine
+
+  Within a single physical machine, you can create multiple virtual machines, each functioning as an independent system. Each virtual machine operates separately and is allocated its own dedicated resources. Additionally, users can freely choose and install an OS different from the host OS on each virtual machine. From a usage perspective, virtual machines and physical machines may feel nearly identical. However, virtual machines are significantly heavier than containers and take longer to create.
+
+  In this lab, we will use the KVM Hypervisor, which is natively built into Linux, to create virtual machines.
+
+- Docker Runtime => Container
+
+  One of the key differences between containers and virtual machines is that containers do not have an independent Guest OS layer. Unlike virtual machines, containers share the OS of the physical machine (Host OS). While virtual machines are fully independent, containers are not. The Docker Engine runs on top of the Host OS, allowing isolated environments to be created without the need for individual Guest OS instances. Due to this architecture, containers are much lighter and faster than virtual machines, and creating or deleting container environments is relatively simple.
+
+  To build a container, we will use the Docker Runtime.
+
+![Virutal Switch](./img/switch.png)
+
+- Open vSwitch => Virtual Switch
+
+  A virtual switch operates within the OS like a physical switch. In this lab, we will configure a virtual switch using Open vSwitch and use it to connect virtual machines and containers.
+
+  Open vSwitch is an open-source virtual switch software designed for virtual servers.
+
+  A software-based virtual switch enables a VM to communicate with neighboring VMs and connect to the internet via a physical switch.
+  These switches, powered by CPUs, are known for their flexibility and upgradability, benefiting from virtualization features such as memory overcommit and page sharing.
+  VMs (similarly containers) have logical (virtual) NIC with virtual Ethernet ports so that they can be plugged into the virtual interface (port) of virtual switches.
+
+## 2. Practice
+
+> When you hover over the code block, a copy button appears in the upper right corner. You can click this button to copy the content. This feature is provided for convenience. However, during the practice, you should not simply copy and paste everything as it is. Each student may need to modify certain parts of the commands or files. Therefore, carefully review the document and make sure to adjust the necessary parts accordingly.
+> ![copy button](img/copy.png)
+
+> Please check allocated IP address of your NUC, VM, and container in the ribbon paper.
+> <br> ex) yourname | student ID | NUC's IP | VM's IP | container's IP
+
+### 2-1. NUC: OS Installation
+
+The Host OS to be used in the Lab is as follows. Use the provided installation USB to install the OS.
+OS : Ubuntu Desktop 22.04 LTS(64bit)  
+Download Site : <https://releases.ubuntu.com/22.04/>
+
+#### 2-1-1. Boot configuration
+
+1. While the NUC is powered off, connect the USB for OS installation and then turn on the NUC.
+2. When the boot process begins, press F10 to enter the boot device selection screen.
+3. From the boot device list, select the USB device (e.g., UEFI: SanDisk …).
+4. Choose “Try or Install Ubuntu” to proceed.
+
+#### 2-1-2. Installation
+
+1. Select “Install Ubuntu” (Do not choose “Try Ubuntu”). The installation should be done in English.
+2. In the Keyboard layout step, select “English (US)”.
+3. In the Updates and other software step, under “What apps would you like to install to start with?”, choose “Minimal installation” and proceed to the next step.
+4. In the Installation type step, select “Erase disk and install Ubuntu”, then click “Install Now”.
+5. When the “Write the changes to disks?” prompt appears, click “Continue” to proceed.
+6. Configure the Location settings.
+7. In the “Who are you?” step, enter the User and Computer information as follows.
+
+   - Your name: gist
+   - Your computer's name: nuc<The last three digits of the NUC’s IP address.>  
+     -> If the IP address is XXX.XXX.XXX.109, then the hostname should be nuc109.
+   - Pick a username: gist
+   - For the password, follow the instructions provided by the TAs.
+
+8. Once all settings are complete, click the button to proceed with the final installation.
+9. Once the installation is complete, click the “Restart Now” button to reboot the NUC.
+10. During the restart process, if you see the message “Please remove the installation medium, then press ENTER”, remove the installation USB and press ENTER.
+
+  <details>
+    <summary>
+      Refer to this section in case of an error. (If the installation was successful, you can skip this part)
+    </summary>
+
+If an issue related to booting occurs, follow these steps.
+
+- Select ‘Something else’
+- On /dev/sda or /dev/nvme0n1
+
+- (UEFI), add 512MB EFI partition
+- Add empty partition with 20GB (20480MB) (Select ‘do not use the partition’)
+- Add Etc4 partition on leave memory
+
+- Select Boot loader
+
+  - BIOS: Ext4 partition
+  - UEFI: EFI partition
+
+- If an issue related to LVM occurs, follow these steps.
+
+  1. Go back to first installation type display.
+  2. Select Erase disk
+
+     - Choose none in advance.
+
+  3. Do the steps up to 'where are you?'
+
+  4. Go back from here to first installation type display.
+
+  5. Choose Something else and do the following steps
+  </details>
+
+### 2-2. NUC: Network Configuration
+
+- When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.  
+  **(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)**
+- ‘Temporary’ Network Configuration using GUI
+
+  ![Network Configuration](./img/network_configuration.png)
+
+- Click on the upper right corner of the screen and select “Ethernet (enp88s0 or enp89s0) Connected”. Then, click “Wired Settings”.
+
+  <p align="center">
+    <img src="./img/network_setting1.png" />
+  </p><br>
+
+- In the Ethernet section, click the gear icon on the right to enter the settings tab.
+  <p align="center">
+    <img src="./img/network_setting2.png" />
+  </p><br>
+
+- Switch to the IPv4 tab and enter the assigned network information.
+
+  - IPv4 Method: Manual
+  - Address: The assigned IP address of the NUC.
+  - Enter the Netmask, Gateway, and DNS information as well.
+  <p align="center">
+    <img src="./img/network_setting3.png" />
+  </p><br>
+
+- **Set Prerequisites**
+
+1. Update & Upgrade
+
+   - In this lab, we will use apt, the package manager. To install the necessary packages, first, update the package list to the latest version and then upgrade any available packages.
+
+   ```bash
+   sudo apt update
+   sudo apt upgrade
+   ```
+
+2. Upgrade vim text editor
+
+   - We will use the Vim editor to modify file contents. Install Vim with the following command.
+
+   ```bash
+   sudo apt install vim
+   ```
+
+3. Install net-tools & ifupdown
+
+   - nstall net-tools and ifupdown to run network-related utilities. Then, use the following command to check network interface information:
+
+   ```bash
+   sudo apt install -y net-tools ifupdown
+   ifconfig -a
+   ```
+
+   ![Network Configuration](./img/ifconfig.png)
+
+4. Install openvswitch-switch & make br0 bridge
+
+   - To create a virtual network switch, install openvswitch-switch. Then, create an OVS (Open vSwitch) bridge named br0. The OVS bridge acts as a virtual switch that connects multiple virtual network interfaces. Finally, verify the OVS configuration.
+
+   ```bash
+   sudo apt -y install openvswitch-switch
+   sudo ovs-vsctl add-br br0
+   sudo ovs-vsctl show
+   ```
+
+   ![Ovs Vsctl Show](./img/ovs_vsctl_show.png)
+
+5. Disable netplan
+
+   - To use manual network management with Open vSwitch (OVS), disable and remove systemd-networkd and Netplan.
+
+   ```bash
+   sudo su # Enter superuser mod
+   systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   apt-get --assume-yes purge nplan netplan.io
+   exit # Exit superuser mod
+   ```
+
+- DNS configuration
+
+  ```bash
+  sudo vi /etc/systemd/resolved.conf
+  ```
+
+  Remove the comment symbol (#) to the left of DNS and specify the DNS address.
+
+  > …
+  >
+  > DNS=203.237.32.100 203.237.32.101
+  >
+  > …
+
+- Network interface configuration
+
+  Open /etc/network/interfaces
+
+  ```bash
+  sudo vi /etc/network/interfaces
+  ```
+
+  Configure the network interface `vport_vFunction` as a TAP interface and attach it to your VM.
+
+  **Caution! One tab for indentation**
+
+  Type your NUC's IP in `<your nuc ip>`and gateway IP in `<gateway ip>`(In this lab, **172.29.0.254** is the gateway IP. Please write it without parentheses.)
+
+  **Caution!**
+  If the NUC has two Ethernet ports, the eno1 interface may not be available. Use the ifconfig command to check the network-connected interfaces (enp88s0 or enp89s0).
+
+  For example, run the `ifconfig -a` command in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of eno1 in the text with either enp88s0 or enp89s0, based on the detected network interface.
+
+  Add the contents below.
+
+  ```text
+  auto lo
+  iface lo inet loopback
+
+  auto br0
+  iface br0 inet static
+      address <your nuc ip>
+      netmask 255.255.255.0
+      gateway <gateway ip>
+      dns-nameservers 203.237.32.100
+
+  auto eno1
+  iface eno1 inet manual
+
+  auto vport_vFunction
+  iface vport_vFunction inet manual
+      pre-up ip tuntap add vport_vFunction mode tap
+      up ip link set dev vport_vFunction up
+      post-down ip link del dev vport_vFunction
+  ```
+
+  Save and quit the vim editor.
+
+  **This section is for explaining the above content. It does not need to be entered into a file again.**
+
+  - Loopback Interface Configuration
+    Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
+
+    ```text
+      auto lo
+      iface lo inet loopback
+    ```
+
+  - Bridge Network Interface Configuration
+    Create a virtual bridge network interface named br0 and configure it to activate automatically at boot. Specify the use of a static IP and enter the necessary network settings, including the IP address.
+
+    ```text
+      auto br0
+      iface br0 inet static
+        address <your nuc ip>
+        netmask 255.255.255.0
+        gateway <gateway ip>
+        dns-nameservers 203.237.32.100
+    ```
+
+  - Physical Interface Configuration
+    Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Set it to manual mode without assigning an IP address.
+
+    ```text
+      auto eno1
+      iface eno1 inet manual
+    ```
+
+  - TAP Interface Configuration
+    Create a virtual TAP (Tunnel Access Point) interface named vport_vFunction and configure it to activate at boot. Set it to manual mode, requiring manual network configuration.
+
+    ```text
+      auto vport_vFunction
+      iface vport_vFunction inet manual
+        pre-up ip tuntap add vport_vFunction mode tap
+        up ip link set dev vport_vFunction up
+        post-down ip link del dev vport_vFunction
+    ```
+
+  **Caution!** If the NUC has two Ethernet ports, the eno1 interface will not be available. Therefore, in the block below, replace eno1 with the interface you selected earlier (enp88s0 or enp89s0), choosing the one currently in use.
+
+  ```bash
+  sudo systemctl restart systemd-resolved.service
+  sudo ifup eno1  #change this if you are using two-port NUC
+  ```
+
+  Restart the whole interfaces.
+
+  ```bash
+  sudo su # Enter superuser mod
+  systemctl unmask networking
+  systemctl enable networking
+  systemctl restart networking
+  exit # Exit superuser mod
+  ```
+
+We will make VM attaching vport_vFunction. You can think this TAP as a NIC(Network Interface Card) of VM.
+
+Add the ports eno1 and vport_vFunction to br0.
+
+**Caution!** If the NUC has two Ethernet ports, the eno1 interface will not be available. Therefore, in the block below, replace eno1 with the interface you selected earlier (enp88s0 or enp89s0), choosing the one currently in use.
+
+```bash
+sudo ovs-vsctl add-port br0 eno1   #change this if you are using two-port NUC
+sudo ovs-vsctl add-port br0 vport_vFunction
+sudo ovs-vsctl show
+```
+
+Below is the figure you have configured so far.
+
+![Vport VFunction](./img/vport_vFunction.png)
+
+Restart the whole interfaces.
+
+```bash
+sudo su # Enter superuser mod
+systemctl unmask networking
+systemctl enable networking
+systemctl restart networking
+exit # Exit superuser mod
+```
+
+### 2-3. NUC: Making VM with KVM
+
+- Install required packages to set up and manage KVM
+
+  Install the dependencies required to set up and manage KVM, and download the Ubuntu 22.04.5 image for use inside the VM.
+
+  - qemu-kvm: Provides KVM (Kernel-based Virtualization) support based on QEMU (Quick Emulator).
+  - libvirt-daemon-system: Runs the libvirtd daemon, enabling the management of virtual machines.
+  - libvirt-clients: Provides command-line tools for managing virtual machines.
+  - bridge-utils: Used to configure VM to operate on the same network as the host machine.
+
+  ```bash
+  sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
+  # upgrade KVM
+  # qemu is open-source emulator
+
+  wget https://ftp.lanet.kr/ubuntu-releases/22.04.5/ubuntu-22.04.5-live-server-amd64.iso
+  ```
+
+  Now we are ready to make VM.
+
+- Prepare for Ubuntu VM
+
+  To Make a virtual disk image, enter this command.
+
+  ```bash
+  sudo qemu-img create vFunction22.img -f qcow2 10G
+  ```
+
+  Enter the following command to start the VM in background mode.
+
+  **Be cautious about spacing.**
+
+  ```bash
+  sudo kvm -m 2048 -name tt \
+  -smp cpus=4,maxcpus=4 \
+  -device virtio-net-pci,netdev=net0 \
+  -netdev tap,id=net0,ifname=vport_vFunction,script=no \
+  -boot d vFunction22.img \
+  -cdrom ubuntu-22.04.6-live-server-amd64.iso \
+  -vnc :5 -daemonize \
+  -monitor telnet:127.0.0.1:3010,server,nowait,ipv4 \
+  -cpu host
+  ```
+
+  Configure SNAT using `iptables` command for VM networking.
+
+  Please type your **NUC's ip address** in `<Your ip address>`. (Please write it in the format 172.29.0.X, without parentheses.)
+
+  **Caution!**  
+  If the NUC has two Ethernet ports, the eno1 interface may not be available. Use the ifconfig command to check the network-connected interfaces (enp88s0 or enp89s0).
+
+  ```bash
+  sudo iptables -A FORWARD -i eno1 -j ACCEPT
+  sudo iptables -A FORWARD -o eno1 -j ACCEPT
+  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+  ```
+
+  **This is an explanation of the above command. It does not need to be entered again.**
+
+  - Allow packet forwarding for incoming traffic on the eno1 interface.
+
+    ```text
+    sudo iptables -A FORWARD -i eno1 -j ACCEPT
+    ```
+
+  - Allow packet forwarding for outgoing traffic on the eno1 interface.
+
+    ```text
+    sudo iptables -A FORWARD -o eno1 -j ACCEPT
+    ```
+
+  - SNAT(Source NAT) Configuration:  
+    Translate packets from the internal network (192.168.100.0/24) to the host’s IP before forwarding them to the external network.
+    ```text
+    sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+    ```
+
+  Open /etc/sysctl.conf file.
+
+  ```bash
+  sudo vi /etc/sysctl.conf
+  ```
+
+  Find the line that contains net.ipv4.ip_forward=1 and remove the ( '#' ) comment.
+
+  > #net.ipv4.ip_forward=1
+  > →
+  > net.ipv4.ip_forward=1
+
+  Save and quit the vim editor.
+
+  Run the following command to apply the changes made to the file.
+
+  ```bash
+  sudo sysctl -p
+  ```
+
+- Install Ubuntu VM (control with ‘Enter key’ and ‘Arrow keys’)
+
+  Install VNC viewer and see inside of VM.
+
+  ```bash
+  sudo apt install tigervnc-viewer
+  ```
+
+  Turn on this VM
+
+  ```bash
+  vncviewer localhost:5
+  ```
+
+  You will see the Ubuntu installation screen inside the viewer.
+
+  ![Install Ubuntu](./img/install_ubuntu.png)
+
+  Installation Steps
+
+  1. On the language selection screen, set the language to English.
+  2. **(Important)** On the “Installer update available” screen, select “Continue without updating”.
+  3. On the “Keyboard configuration” screen, set all options to English (US).
+  4. On the “Choose the type of installation” screen, ensure that “Ubuntu Server” is selected (marked with an (X)), then click Done.
+  5. Enter the “Network configuration” screen and click “Edit IPv4” as shown below.
+     ![Ubuntu Network](./img/ubuntu_network.png)
+  6. Configure the settings based on the information below.
+
+     > IPv4 Method → Manual
+     >
+     > subnet: 172.29.0.0/24  
+     > Address: < your VM IP >  
+     > Gateway: 172.29.0.254  
+     > Name Servers: 203.237.32.100
+
+     Please leave the “Search domains” field empty.
+
+     Also, when writing `<your VM IP>`, remove the brackets and use the format 172.29.0.X.
+
+  7. On the “Proxy configuration” screen, leave it blank and proceed to the next step.
+  8. On the “Ubuntu archive mirror configuration” screen, simply click Done to proceed.
+  9. On the “Storage configuration” screen, proceed without making any changes by continuously clicking Done. When the “Confirm destructive action” prompt appears, click Continue to proceed.
+  10. On the “Profile configuration” screen, enter the following details as shown below.
+      - Your name: vm
+      - Your servers name: vm<The last three digits of the VM’s IP address>  
+        -> For example, if the IP address is XXX.XXX.XXX.179, then the hostname should be vm179.
+      - Pick a username: vm
+      - Set the password to be the same as the NUC’s password.
+  11. On the “Upgrade to Ubuntu Pro” screen, ensure that “Skip for now” is selected (marked with an (X)), then proceed.
+  12. On the “SSH configuration” screen, make no changes and click Done to proceed.
+  13. On the “Featured server snaps” screen, do not select anything and click Done to proceed.
+  14. A screen displaying the installation progress will appear.
+  15. Once the installation is complete, the following screen will appear with a “Reboot Now” button. However, **do not press the button yet;** instead, follow the instructions below.
+      ![Ubuntu Network](./img/ubuntu-installation-done.png)
+
+- Installation Completed
+
+  Once the Ubuntu installation is complete inside the VM and you see the `Reboot Now` button, enter the following command in the terminal of Host OS to shut down the VM.
+
+  ```bash
+  sudo killall -9 kvm
+  ```
+
+  Boot VM again (mac should be different from others).
+
+  ```bash
+  sudo kvm -m 1024 -name tt \
+  -smp cpus=2,maxcpus=2 \
+  -device virtio-net-pci,netdev=net0 \
+  -netdev tap,id=net0,ifname=vport_vFunction,script=no
+  -boot d vFunction22.img
+  ```
+
+### 2-4. OVS connects with KVM
+
+- Check configuration
+
+  ```bash
+  sudo ovs-vsctl show
+  ```
+
+  ![Ovs Vsctl](./img/ovs-vsctl.png)
+
+### 2-5. Install docker
+
+To add the Docker repository, configure apt to support HTTPS and install the required packages.
+
+```bash
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg lsb-release
+```
+
+```bash
+sudo apt update
+```
+
+Install Docker
+
+```bash
+sudo apt install docker.io -y
+```
+
+Create /etc/docker directory
+
+```bash
+sudo mkdir -p /etc/docker
+```
+
+Set up the Docker daemon
+
+```bash
+cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+```
+
+Create /etc/systemd/system/docker.service.d
+
+```bash
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo systemctl daemon-reload
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo systemctl start docker.socket
+```
+
+### 2-7. Check docker installation
+
+Run the following command to check if Docker is running.
+
+```bash
+sudo docker run hello-world
+```
+
+If it doesn’t work, please try several times. Nevertheless, if you are not successful, try running from the installing `docker-ce`, `docker-ce-cli`, `containerd.io`
+
+If it works correctly, the following output will be displayed.
+
+![1](./img/1.png)
+
+### 2-8. Make Container
+
+Create a container named c1. This container will be based on the ubuntu:22.04 image and will run /bin/bash upon its initial execution. The --net=none option is used to ensure that the container is not connected to any network.
+
+```bash
+sudo docker run -it --net=none --name c1 ubuntu:22.04 /bin/bash
+```
+
+Pressing ctrl + p, q allows you to exit the container without stopping it.
+
+※ docker attach [container_name]: Re-enter a container that was detached using ctrl + p, q.
+
+### 2-9. Connect docker container
+
+Install OVS-docker utility in host machine **(Not inside of Docker container)**
+
+```bash
+sudo docker start c1
+sudo ovs-docker del-port br0 veno1 c1
+sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]
+# please type gateway IP and docker container IP.
+```
+
+When writing --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP], remove the brackets `[]` and use the format 172.29.0.X.  
+For example: --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
+
+Enter to docker container
+
+```bash
+sudo docker attach c1
+```
+
+Run the following command inside the container to install network-related tools.
+
+```bash
+apt update
+apt install -y net-tools
+apt install -y iputils-ping
+```
+
+### 2-10. Check connectivity: VM & Container
+
+Check connectivity with ping command from docker to VM.
+
+```bash
+ping <VM IP address>
+# please type this command in the container.
+```
+
+For example, ping 172.29.0.X
+
+Similarly, run the following command inside the VM to install network-related tools and send a ping to the container.
+
+```bash
+sudo apt update
+sudo apt install -y net-tools
+sudo apt install -y iputils-ping
+```
+
+```bash
+ping <Docker container IP address>
+# please type this command in the VM.
+```
+
+**Finally, you can check that the container and the VM are connected.**
+
+### 2-Appendix. Keep Docker network configuration
+
+Whenever NUC is rebooted, network configuration of Docker container is initialized by executing commands in `rc.local` file.
