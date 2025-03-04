@@ -1,18 +1,26 @@
 # Lab#3. IoT Lab
 
-## 0. Concept
+## 0. Lab Introduction
 
 <img width="916" alt="image" src="https://user-images.githubusercontent.com/63437430/161034315-b201ae9e-463e-44d3-a02f-4796a90f6ee4.png">
 
-- Raspberry Pi Box for IoT Sensors & Anchors
-- NUC Box for IoT-Cloud Hub
-- Tower Box for IoT-Cloud Service Visualization
+**이번 Lab의 목표는 IoT 센서를 활용하여 데이터를 수집하고, 이를 서버에 전달하는 IoT-Cloud Hub를 구축하는 것입니다.**
 
-### 0-1. Node.js
+### 0-1. Lab Goal
 
-Node.js is an open-source, cross-platform, back-end JavaScript runtime environment that runs on the V8 engine and executes JavaScript code outside a web browser. Node.js lets developers use JavaScript to write command line tools and for server-side scripting—running scripts server-side to produce dynamic web page content before the page is sent to the user's web browser. Consequently, Node.js represents a "JavaScript everywhere" paradigm, unifying web-application development around a single programming language, rather than different languages for server-side and client-side scripts.
+- 라즈베리파이를 이용한 IoT 센서 데이터 수집
+- 센서 데이터를 클라우드 서버로 전송
+- Node.js 기반의 웹 서버를 통해 실시간 데이터 시각화
 
----
+이번 Lab에서는 라즈베리파이(Raspberry Pi) 를 사용하여 센서 데이터를 수집하고, 이를 NUC 서버에서 처리하여 시각화하는 과정을 실습합니다.
+
+### 0-2. IoT-Cloud 시스템이 왜 필요한가?
+
+IoT 기기에서 수집되는 데이터는 개별적으로는 의미가 적지만, 이를 클라우드에서 통합 및 분석하면 강력한 정보나 인사이트를 얻을 수 있습니다. 이러한 데이터는 실시간 모니터링, 자동화, 원격 제어 등의 다양한 분야에서 활용됩니다. Tower Lab에서 진행한 모니터링 시스템 구축과 그 필요성이 비슷하며, 이 Lab에서는 IoT를 활용한 모니터링 시스템이라고 볼 수 있습니다.
+
+### 0-3. Node.js
+
+Node.js는 오픈 소스, 크로스 플랫폼을 지원하는 백엔드 JavaScript 런타임 환경으로, V8 엔진에서 실행되며 웹 브라우저 외부에서도 JavaScript 코드를 실행할 수 있습니다. Node.js를 사용하면 개발자가 JavaScript로 명령줄 도구(Command Line Tool)를 작성하거나, 서버 측 스크립트(Server-Side Scripting)를 실행하여 웹 페이지가 사용자에게 전송되기 전에 동적으로 콘텐츠를 생성할 수 있습니다. 결과적으로, Node.js는 "JavaScript everywhere" 패러다임을 실현하여, 서버와 클라이언트에서 각각 다른 언어를 사용할 필요 없이 단일 프로그래밍 언어(JavaScript)로 웹 애플리케이션을 개발할 수 있도록 해줍니다. 이번 Lab에서는 IoT 센서 데이터를 저장하고 간단한 시각화를 위해 Node.js를 사용합니다.
 
 ## 1. Preparation
 
@@ -45,7 +53,7 @@ apt-get install vim
 Open Server code and change NUC IP
 
 ```bash
-vi SmartX-Mini/IoT-labs/webserver.js
+vi /SmartX-Mini/IoT-labs/webserver.js
 ```
 
 <img width="418" alt="image" src="https://user-images.githubusercontent.com/63437430/160828580-7201f53f-e66a-40d3-8682-ca237476b20a.png">
