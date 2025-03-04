@@ -29,7 +29,7 @@ Node.js is an open-source, cross-platform, back-end JavaScript runtime environme
 Run a Docker Container
 
 ```bash
-sudo docker run -it --net=host --dns=203.237.32.100 --name=webserver lshyeung/smartx_webserver
+sudo docker run -it --net=host --dns=203.237.32.100 --name=webserver cheolhuikim/smartx-box-mini
 ```
 
 On container
@@ -104,6 +104,8 @@ sudo apt install -y build-essential python3-dev
 
 sudo pip3 install .
 ```
+
+# 위에 설치하는 거 약간 시간이 걸림
 
 <details>
 <summary>Package Versions (Expand)</summary>
