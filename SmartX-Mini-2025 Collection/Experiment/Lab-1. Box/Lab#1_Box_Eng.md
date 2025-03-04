@@ -278,7 +278,7 @@ If an issue related to booting occurs, follow these steps.
     ```
 
   - Physical Interface Configuration
-    Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Set it to manual mode without assigning an IP address.
+    Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Instead of assigning an IP address directly to eno1, it will be treated as a member of br0.
 
     ```text
       auto eno1
@@ -437,7 +437,7 @@ exit # Exit superuser mod
   sudo sysctl -p
   ```
 
-- Install Ubuntu VM (control with ‘Enter key’ and ‘Arrow keys’)
+- Install Ubuntu VM
 
   Install VNC viewer and see inside of VM.
 
@@ -455,7 +455,7 @@ exit # Exit superuser mod
 
   ![Install Ubuntu](./img/install_ubuntu.png)
 
-  Installation Steps
+  Installation Steps (Control using the 'Enter key' and the 'arrow keys'.)
 
   1. On the language selection screen, set the language to English.
   2. **(Important)** On the “Installer update available” screen, select “Continue without updating”.

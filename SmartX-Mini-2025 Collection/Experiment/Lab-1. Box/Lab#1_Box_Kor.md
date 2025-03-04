@@ -270,7 +270,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
     ```
 
   - 물리적 인터페이스 설정
-    eno1(물리적 이더넷 인터페이스)을 부팅 시 자동으로 활성화합니다. 그리고 IP 주소 할당 없이 수동(manual) 모드로 설정합니다.
+    eno1(물리적 이더넷 인터페이스)을 부팅 시 자동으로 활성화합니다. eno1에게는 직접 IP 주소를 할당하지 않을 것이고, br0에 속하는 구성원으로 다룰 것입니다.
 
     ```text
       auto eno1
@@ -430,7 +430,7 @@ exit # Exit superuser mod
   sudo sysctl -p
   ```
 
-- Install Ubuntu VM (control with ‘Enter key’ and ‘Arrow keys’)
+- Install Ubuntu VM
 
   VNC viewer를 설치하여 VM의 작동을 확인합니다.
 
@@ -448,7 +448,7 @@ exit # Exit superuser mod
 
   ![Install Ubuntu](./img/install_ubuntu.png)
 
-  설치 단계
+  설치 단계 (Enter키와 방향키를 사용하여 설치를 진행합니다.)
 
   1. 언어 설정 화면에서 English로 설정합니다.
   2. **(중요)** "Installer update available" 화면에서는 "Continue without updating"을 선택합니다.
