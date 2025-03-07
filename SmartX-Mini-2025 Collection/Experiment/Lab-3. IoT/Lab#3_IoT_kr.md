@@ -22,6 +22,10 @@ IoT 기기에서 수집되는 데이터는 개별적으로는 의미가 크지 �
 
 Node.js는 오픈 소스, 크로스 플랫폼을 지원하는 백엔드 JavaScript 런타임 환경으로, V8 엔진에서 실행되며 웹 브라우저 외부에서도 JavaScript 코드를 실행할 수 있습니다. Node.js를 사용하면 개발자가 JavaScript로 명령줄 도구(Command Line Tool)를 작성하거나, 서버 측 스크립트(Server-Side Scripting)를 실행하여 웹 페이지가 사용자에게 전송되기 전에 동적으로 콘텐츠를 생성할 수 있습니다. 결과적으로, Node.js는 "JavaScript everywhere" 패러다임을 실현하여, 서버와 클라이언트에서 각각 다른 언어를 사용할 필요 없이 단일 프로그래밍 언어(JavaScript)로 웹 애플리케이션을 개발할 수 있도록 해줍니다. 이번 Lab에서는 IoT 센서 데이터를 저장하고 간단한 시각화를 위해 Node.js를 사용합니다.
 
+### 0-4. Adafruit_python_DHT
+
+온습도 센서를 손쉽게 사용하기 위해 Adafruit_python_DHT를 사용합니다. Adafruit_python_DHT는 Adafruit에서 제공하는 Python 라이브러리로, DHT11, DHT22, AM2302 등의 온습도 센서를 Raspberry Pi 및 BeagleBone과 같은 SBC(Single Board Computer)에서 쉽게 사용할 수 있도록 지원합니다. 이 라이브러리는 센서 데이터를 읽고 처리하는 기능을 제공하며, 간단한 Python 코드로 온도 및 습도를 측정할 수 있습니다.
+
 ## 1. Preparation
 
 <img src="img/pi-gpio.png" alt="pi gpio" width="450">
@@ -84,11 +88,11 @@ vi /SmartX-Mini/IoT-labs/webserver.js
 git clone https://github.com/adafruit/Adafruit_python_DHT.git
 ```
 
-> ## **Adafruit_python_DHT란?**
->
-> (설명 추가 필요)
+> **Adafruit_python_DHT?** `0-4. Adafruit_python_DHT` 참고
 
-라즈베리파이 버전 4를 3으로 인식할 수 있도록 Adafruit_DHT의 패키지 Installer를 수정해줘야합니다. (왜 그래야하는지도 간단하게 추가하기)
+라즈베리파이 버전 4를 3으로 인식할 수 있도록 Adafruit_DHT의 패키지 Installer를 수정해줘야합니다.
+
+> **Why?** 라즈베리파이 4의 SoC(System on Chip)는 BCM2711이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 BCM2711을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
 
 우선, 파일을 열어줍니다
 
@@ -119,8 +123,6 @@ def pi_version():
 ```
 
 패키지 Installer를 수정했으므로, 이제 필요한 패키지들을 설치해줍니다. 약간 시간이 걸릴 수 있습니다.
-
-(한 5분 동안 읽어볼 article 추가해볼까?)
 
 ```bash
 
