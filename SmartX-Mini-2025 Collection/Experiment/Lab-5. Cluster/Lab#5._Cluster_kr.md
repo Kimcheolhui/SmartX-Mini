@@ -44,6 +44,8 @@
 
 #### 2-1-2. From All NUCs
 
+sudo hostname <name>은 해당 명령어를 입력하는 machine의 hostname을 임시로 <name>으로 지정한다. 다만 해당 machine을 reboot할 경우, 기존 hostname으로 돌아가게 된다. 이번 Lab에서는 쿠버네티스 클러스터 구성 편의를 위해, 각 NUC에 임시 hostname을 설정하고자 한다.
+
 ```shell
 # From NUC 1 :
 sudo hostname nuc01
