@@ -255,7 +255,7 @@ vi ~/SmartX-mini/IoT-labs/RPI_transfer.py
 
 #### 2-5-1. Web Server 실행하기 ( in NUC )
 
-아까 NUC 실행했던 도커 컨테이너 내부에서 다음의 명령어를 실행해주세요. 다음의 명령어는 `webserver.js`라는 웹서버 코드를 실행합니다.
+NUC에서 실행했던 도커 컨테이너 내부에서 다음의 명령어를 실행해주세요. 다음의 명령어는 `webserver.js`라는 웹서버 코드를 실행합니다.
 
 ```bash
 cd /SmartX-Mini/IoT-labs
