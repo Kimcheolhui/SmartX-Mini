@@ -2,7 +2,6 @@
 
 ## 0. Objective
 
-- In Lab1 Box Lab, we deployed virtual machine and docker container for deploy isolated applications in specific enviornment
 - Kubernetes can automate deployment, scaling and management applications that containerized by docker. It is called container orchestrator.
 - In this section, we combine 3 NUC machine with Kubernetes.
   - 1 Master -> NUC1
@@ -10,22 +9,39 @@
 - On this cluster, we will install distributed storage system called ceph.
   - With similar concept with docker - kubernetes, Rook is open source cloud-native Ceph strogae orchestrator for K8S.
 
+**(수정) Ceph 내용 삭제**
 **(추가) master, worker 구조가 뭘 의미하는지?**
 
 ## 1. Concept
 
 ### 1-1. Docker Containers
 
-![Docker Containers](img/1.png)
+(수정 후 순서)
+
+1. 도커에 대한 간단한 설명
+2. 왼쪽 이미지
+3. 오른쪽 이미지
 
 - **Docker** is an open platform for building, shipping and running distributed applications. It gives programmers, development teams and operations engineers the common toolbox they need to take advantage of the distributed and networked nature of modern applications.
 
+**(추가) 도커에 대한 좀 더 자세한 설명**
+
+**(수정) 사진 분리 필요**
+
+- 왼쪽은 가상머신과의 차이를 설명하면서 보여주고
+- 오른쪽은 도커를 활용하는 관점에서 어떻게 구성되어 있는지 설명
+  ![Docker Containers](img/1.png)
+
 ### 1-2. Container Orchestration
+
+**(추가) Container Orchestration이란 무엇이며, 왜 등장했고, 왜 필요하며, 어디에 사용하는지?**
 
 ![Container Orchestration](img/2.png)
 
 - **Container orchestration** refers to the process of organizing the work of individual components and application layers.
 - **Container orchestration engines** all allow users to control when containers start and stop, group them into clusters, and coordinate all of the processes that compose an application. Container orchestration tools allow users to guide container deployment and automate updates, health monitoring, and failover procedures.
+
+**(추가) 현재 가장 많이 쓰이는 건 K8s다.**
 
 ### 1-3. Kubernetes
 
@@ -45,6 +61,8 @@
 ![Lab Preparation](img/7.png)
 
 #### 2-1-2. From All NUCs
+
+**(추가) 각 노드에서 openssh-server 설치하기**
 
 sudo hostname <name>은 해당 명령어를 입력하는 machine의 hostname을 임시로 <name>으로 지정한다. 다만 해당 machine을 reboot할 경우, 기존 hostname으로 돌아가게 된다. 이번 Lab에서는 쿠버네티스 클러스터 구성 편의를 위해, 각 NUC에 임시 hostname을 설정하고자 한다.
 
@@ -82,8 +100,6 @@ sudo vi /etc/hosts
  <IP Address of NUC 3>  nuc03
 ```
 
-**(추가) openssh-server 설치하는 작업 추가해야함**
-
 #### 2-1-2. Check Connectivity
 
 ```shell
@@ -106,6 +122,9 @@ ping nuc02
 
 **(추가) 새로운 터미널 여는 단축키 설명**
 
+**(추가) Nuc01에서만 실행**
+**(추가) nuc01에서 3개의 터미널을 열고, 각각 nuc01, nuc02, nuc03을 작업할거임.**
+
 예시)  
 <img width="116" alt="스크린샷 2022-05-24 오후 1 12 53" src="https://user-images.githubusercontent.com/65757344/169947428-3d028493-cf5e-4463-a9ea-d04f3bd56b99.png">  
 **username은 netcs**이고  
@@ -113,6 +132,10 @@ hostname은 nuc01입니다!!!
 
 **username is netcs**  
 and hostname is nuc01!!!
+
+**(추가) 현재 username은 gist로 통일되어 있습니다. 위 사진 지우기**
+
+**(추가) 화면 세팅 어떻게 하는 걸 추천하는 지 추가하기**
 
 ```shell
 # In new terminal
@@ -177,6 +200,8 @@ sudo swapoff -a
 
 #### 2-3-2. Install Kubernetes
 
+**(경고) 무작정 다 때려넣지 말고, 실행이 잘 되는지 확인할 것**
+
 ```shell
 # From All NUCs
 sudo apt-get update && sudo apt-get install -y apt-transport-https curl ipvsadm wget
@@ -201,8 +226,28 @@ sudo apt install -y kubeadm=1.28.1-1.1 kubelet=1.28.1-1.1 kubectl=1.28.1-1.1
 ```shell
 # From NUC1
 kubeadm init --pod-network-cidr=10.244.0.0/16
-
 ```
+
+(추가) 만약 preflight 오류가 발생했다면 다음의 명령어를 실행할 것
+
+- The issue occurs because the bridge-nf-call-iptables kernel module is missing or no loaded. Kebernetes requires this module to enable iptables rules for bridges traffic, and if it's missing, kubeadm initialization fails.
+- This can happend due to:
+  1. The br_netfilter module is not loaded.
+  2. The `/proc/sys/net/bridge/bridge-nf-call-iptables` file does not exit because the kernel module is missing.
+  3. The host system does not have necessary kernel configurations.
+
+```shell
+# br_netfilter kernel module load하기
+sudo modeprobe br_netfilter
+
+# 아래 명령어로 br_netfilter가 잘 loaded된 것을 확인했으면
+lsmod | grep br_netfilter
+
+# kubeadm을 다시 한 번 실행
+kubeadm init --pod-network-cidr=10.244.0.0/16
+```
+
+이제 다시
 
 ```shell
 # From NUC1
@@ -269,6 +314,10 @@ kubectl get node
 
 **(추가) 결과 스크린샷 추가해야함**
 
+**(추가) Not ready 상태인 이유 추가할 것**
+
+- CNI와 연계해서 설명
+
 ### 2-5. Kubenetes Network Plugin Installation
 
 **(추가) CNI란? Objective에서 설명해도 좋을 듯**
@@ -287,6 +336,8 @@ kubectl get po -n kube-system -o wide
 ```
 
 ![Kubenetes Network Plugin Installation](img/10.png)
+
+**(수정) Nginx 부분 전부 삭제**
 
 ### 2-6. Nginx Deploy
 
@@ -337,76 +388,42 @@ watch kubectl get pods --all-namespaces -o wide
 
 **Lab 내용이 한참 부족하다. 단순히 쿠버네티스 클러스터 구축하고 Nginx 띄우는 게 실습 내용의 전부라면, 이건 의미가 없는 Lab이다. 적어도 Pod, Deployment, Service를 띄우게는 해봐야한다. Deployment랑 Service 붙여서 각 Pod가 어디에 위치하는지, 각 요청마다 어떤 pod가 해당 요청을 처리하는지 볼 수 있어야 한다. 가능하다면 간단한 Rolling update까지**
 
-## (Optional) K3S installation
+### 2-7. my-simple-app 실습
 
-설치하기 전, docke, openssh-server, ssh, vim, tet-tools가 설치되어 있어야합니다.
+1. cd ~
+2. mkdir k8s && cd k8s
+3. vim simple-app.yml 하고 파일 복붙
+4. kubectl apply -f simple-app.yml
+5. kubectl get pod -o wide -> my-simple-app 파드 확인 + Pod IP 확인
+6. 해당 Pod IP:5000으로 웹사이트에서 확인해보기
+7. kubectl delete -f simple-app.yml
+8. kubectl get pods -> pod 삭제된 것 확인 -> 브라우저 접속 안되는 거 확인
+9. 이제 deploymeyt 작성 및 실행
+10. kubectl get pods 확인 -> 각 pod의 ip:5000로 직접 들어가보기 -> 값이 다른 것 확인
+11. service 작성 및 실행 및 kubectl svc로 Cluster IP 확인
+12. Cluster IP:80 (80은 없어도 됨) 브라우저 방문해서 값 달라지는 거 확인
+13. Pod 개수 들리기 -> Deployment 수정 -> Pod 확인
+14. 아까 그 웹사이트 방문해서 새로고침 연타 -> 새로운 Pod 반영 확인
+15. 이제 rolling update 확인
 
-### 1. To set firewall using ufw
+- kubectl set image deployment/simple-app-deployment simple-app=cheolhuikim/my-simple-app:v2
+- kubectl rollout status deployment/simple-app-deployment
+  - rollout 상태 확인
+- kubectl get pods
+  - 현재 pod 상태 보면 Terminating 중인 게 좀 있을거임.
 
-![commnad](img/k3s1.png)
+16. 웹사이트 방문 -> 새로고침 -> version 2로 변경됨
+17. 버전 업데이트 rollback
 
-모든 눅에 위 테이블 속 All nodes 에 해당하는 포트를 개방합니다.
-Agents : 워커 노드가 될 눅
-Servers : 마스터 노드가 될 눅
+- oh no!! 우리 서비스에 치명적인 오류가 있었어요! 빠르게 이전 버전으로 되돌려 봅시다.
+- kubectl rollout undo deployment/simple-app-deployment
 
-#### 1-1. port-forwarding
+끝!
 
-```shell
-# How to use ufw
-sudo ufw enable # ufw가 켜져 있는지 아닌지 확인 할 수 있습니다.
-sudo ufw status # ufw의 상태가 inactivate 상태라면 해당 명령어를 통해 활성화 시켜줍니다.
-sudo ufw allow {start}:{end}/tcp # to open tcp port method if, need to open 2379~2380 ports, ufw allow 2379:2380/tcp
-sudo ufw allow 2380/udp # to open udp port method
-# 위 방법으로 모두 세팅한 후, 다시 ufw status 를 통해 열려있는지 확인합니다.
-```
+# 3. Review
 
-#### 1-2. Master Node port-forwarding
+<lab 요약>
 
-```shell
-# from Master mode(NUC1)
-sudo ufw allow 2379:2380/tcp
-```
+<why this lab?>
 
-#### 1-3. Worker Node port-forwarding
-
-```shell
-# from Master mode(NUC2, 3)
-sudo ufw allow 6443/tcp
-```
-
-### 2. Install K3s (NUC1)
-
-마스터 노드(NUC01)에서 실행하여 실질적인 마스터 노드로 만들어 줍니다.
-
-```shell
-# from Master mode(NUC1)
-curl -sfL https://get.k3s.io | sh -
-```
-
-### 3. Join Worker Node.
-
-#### 3-1. 마스터 노드에서 token 조회하기
-
-```shell
-# from Master mode(NUC1)
-cat /var/lib/rancher/k3s/server/node-token
-```
-
-위 명령어로 얻은 토큰을 활용하여 NUC2, NUC3를 worker node로 join 합니다.
-
-#### 3-2. 워커노드 조인
-
-NUC2, NUC3에서 진행합니다.
-
-```shell
-# from Worker mode(NUC2.3)
-curl -sfL https://get.k3s.io | K3S_URL=https://{nuc01_IP}:6443 K3S_TOKEN={token} sh -
-```
-
-#### 3-3. 노드 상태 확인 및 포드 확인
-
-```shell
-# from Master mode(NUC1)
-kubectl get nodes
-kubectl get pods --all-namespaces
-```
+<lab 전체 과정 요약>
