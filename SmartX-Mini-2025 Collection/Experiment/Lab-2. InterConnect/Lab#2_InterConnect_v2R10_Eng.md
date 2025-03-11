@@ -461,7 +461,7 @@ ssh pi@[PI_IP] #ID: pi PW: 1234
 > To resolve this error, remove the previous fingerprint using the following command and then try reconnecting via SSH:
 >
 > ```bash
-> ssh-keygen -f "home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
+> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
 > ```
 
 ### 2-3. (PI) Configuring `crontab` for Time Synchronization

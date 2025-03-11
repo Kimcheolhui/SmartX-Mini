@@ -454,7 +454,7 @@ ssh pi@[PI_IP] #ID: pi PW: 1234
 > 이후 다시 SSH 연결을 시도합니다.
 >
 > ```bash
-> ssh-keygen -f "home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
+> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
 > ```
 
 ### 2-3. (PI) 시간 동기화를 위한 `crontab` 설정
