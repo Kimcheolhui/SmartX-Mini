@@ -1,6 +1,6 @@
 # Lab#3. IoT Lab
 
-## 0. Lab Introduction
+## 0. Objective
 
 <img width="916" alt="image" src="https://user-images.githubusercontent.com/63437430/161034315-b201ae9e-463e-44d3-a02f-4796a90f6ee4.png">
 

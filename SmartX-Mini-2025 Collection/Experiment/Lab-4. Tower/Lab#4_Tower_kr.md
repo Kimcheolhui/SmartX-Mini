@@ -1,6 +1,6 @@
 # Lab#4. Tower Lab
 
-## 0. Lab Introduction
+## 0. Objective
 
 <img width="450" alt="overall objective" src="https://user-images.githubusercontent.com/82452337/160807997-9caadb51-b363-4e82-bbb2-e1f5888b08b3.png">
 
