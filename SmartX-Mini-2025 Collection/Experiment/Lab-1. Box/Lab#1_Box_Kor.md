@@ -646,6 +646,22 @@ ping <Docker container IP address>
 
 **최종적으로, container와 VM의 네트워크가 연결되었음을 확인할 수 있습니다.**
 
-### 2-Appendix. Keep Docker network configuration
+## 3. Lab Summary
+
+이 Lab의 목표는 가상 스위치를 생성해보고, VM과 Container 사이의 통신을 가상 스위치를 통해 실행해보는 것이었습니다.  
+여러분은 하나의 NUC 안에 직접 VM과 Docker container를 생성하고, 네트워크 인터페이스 설정을 통해 두 요소 간의 통신이 가능하도록 만들었습니다.
+
+### (Recall) 가상화 기술이 왜 필요한가?
+
+VM, container와 같은 가상화 기술은 컴퓨팅 자원을 효율적으로 사용하고, 개발 및 운영을 유연하게 하기 위해 필요합니다. 가상화 기술을 사용하여 다양한 프로세스가 격리된 환경에서 작동하도록 만들 수 있습니다. 이러한 점을 바탕으로, 가상화 기술을 사용하면 다양한 환경(온프레미스, 클라우드)에서 프로그램이 원활하게 실행될 수 있는 것입니다.
+
+### 주요 과정 요약
+
+1. NUC의 네트워크 설정
+2. 가상 스위치 설정
+3. VM 생성 및 네트워크 설정
+4. Docker container 생성 및 VM과의 통신 확인
+
+### Appendix. Keep Docker network configuration
 
 Whenever NUC is rebooted, network configuration of Docker container is initialized by executing commands in `rc.local` file.

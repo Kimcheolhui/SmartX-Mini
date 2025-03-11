@@ -651,6 +651,22 @@ ping <Docker container IP address>
 
 **Finally, you can check that the container and the VM are connected.**
 
-### 2-Appendix. Keep Docker network configuration
+## 3. Lab Summary
+
+The goal of this lab was to create a virtual switch and establish communication between a VM and a container through the virtual switch.
+You have created a VM and a Docker container within a single NUC, configured network interfaces, and enabled communication between the two components.
+
+### (Recall) Why is Virtualization Technology Necessary?
+
+Virtualization technologies such as VMs and containers are essential for optimizing computing resource utilization and ensuring flexibility in development and operations. By using virtualization, various processes can run in isolated environments. This enables applications to function seamlessly across different environments, including on-premises and cloud platforms.
+
+### Key Process Summary
+
+1. Configuring the network on the NUC
+2. Setting up a virtual switch
+3. Creating a VM and configuring its network settings
+4. Creating a Docker container and verifying communication with the VM
+
+### Appendix. Keep Docker network configuration
 
 Whenever NUC is rebooted, network configuration of Docker container is initialized by executing commands in `rc.local` file.
