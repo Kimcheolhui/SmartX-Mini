@@ -190,120 +190,120 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    exit # Exit superuser mod
    ```
 
-- DNS configuration
+   - DNS configuration
 
-  ```bash
-  sudo vi /etc/systemd/resolved.conf
-  ```
+   ```bash
+   sudo vi /etc/systemd/resolved.conf
+   ```
 
-  DNS 왼편에 있는 주석표시 /# 을 제거해주고 DNS 주소를 명시합니다.
+   DNS 왼편에 있는 주석표시 /# 을 제거해주고 DNS 주소를 명시합니다.
 
-  > …
-  >
-  > DNS=203.237.32.100 203.237.32.101
-  >
-  > …
+   > …
+   >
+   > DNS=203.237.32.100 203.237.32.101
+   >
+   > …
 
-- Network interface configuration
+   - Network interface configuration
 
-  /etc/network/interfaces 파일을 엽니다.
+   /etc/network/interfaces 파일을 엽니다.
 
-  ```bash
-  sudo vi /etc/network/interfaces
-  ```
+   ```bash
+   sudo vi /etc/network/interfaces
+   ```
 
-  `vport_vFunction`을 TAP 인터페이스로 설정하고 VM에 연결합니다.
+   `vport_vFunction`을 TAP 인터페이스로 설정하고 VM에 연결합니다.
 
-  **!!!들여쓰기는 Tab 한번입니다!!!**  
-  **Caution! One tab for indentation**
+   **!!!들여쓰기는 Tab 한번입니다!!!**  
+    **Caution! One tab for indentation**
 
-  `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다.(이때 괄호는 제외하고 입력해야 합니다.)
+   `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다.(이때 괄호는 제외하고 입력해야 합니다.)
 
-  **주의!**
-  NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.
+   **주의!**
+   NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.
 
-  아래의 내용을 추가합니다.
+   아래의 내용을 추가합니다.
 
-  ```text
-  auto lo
-  iface lo inet loopback
+   ```text
+   auto lo
+   iface lo inet loopback
 
-  auto br0
-  iface br0 inet static
-      address <your nuc ip>
-      netmask 255.255.255.0
-      gateway <gateway ip>
-      dns-nameservers 203.237.32.100
+   auto br0
+   iface br0 inet static
+       address <your nuc ip>
+       netmask 255.255.255.0
+       gateway <gateway ip>
+       dns-nameservers 203.237.32.100
 
-  auto eno1
-  iface eno1 inet manual
+   auto eno1
+   iface eno1 inet manual
 
-  auto vport_vFunction
-  iface vport_vFunction inet manual
-      pre-up ip tuntap add vport_vFunction mode tap
-      up ip link set dev vport_vFunction up
-      post-down ip link del dev vport_vFunction
-  ```
+   auto vport_vFunction
+   iface vport_vFunction inet manual
+       pre-up ip tuntap add vport_vFunction mode tap
+       up ip link set dev vport_vFunction up
+       post-down ip link del dev vport_vFunction
+   ```
 
-  파일을 저장하고 vim editor에서 나옵니다.
+   파일을 저장하고 vim editor에서 나옵니다.
 
-  **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.**
+   > **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.**
+   >
+   > - Loopback 인터페이스 설정
+   >   Loopback 인터페이스를 자동으로 활성화하고, loopback(자기 자신을 참조하는 가상 네트워크 인터페이스)으로 설정합니다.
+   >
+   >   ```text
+   >   auto lo
+   >   iface lo inet loopback
+   >   ```
+   >
+   > - Bridge 네트워크 인터페이스 설정
+   >   br0라는 가상 브릿지(Bridge) 네트워크 인터페이스를 생성하고 부팅 시에 자동으로 활성화되도록 합니다. 정적 ip를 사용하도록 명시하고, IP 주소 등의 네트워크 설정 값을 입력합니다.
+   >
+   >   ```text
+   >   auto br0
+   >   iface br0 inet static
+   >     address <your nuc ip>
+   >     netmask 255.255.255.0
+   >     gateway <gateway ip>
+   >     dns-nameservers 203.237.32.100
+   >   ```
+   >
+   > - 물리적 인터페이스 설정
+   >   eno1(물리적 이더넷 인터페이스)을 부팅 시 자동으로 활성화합니다. eno1에게는 직접 IP 주소를 할당하지 않을 것이고, br0에 속하는 구성원으로 다룰 것입니다.
+   >
+   >   ```text
+   >   auto eno1
+   >   iface eno1 inet manual
+   >   ```
+   >
+   > - TAP 인터페이스 생성
+   >   vport_vFunction이라는 가상 TAP(Tunnel Access Point) 인터페이스를 생성하고 부팅 시 활성화되도록 합니다. 수동으로 네트워크를 설정해야 하는 수동(manual) 모드로 지정합니다.
+   >
+   >   ```text
+   >   auto vport_vFunction
+   >   iface vport_vFunction inet manual
+   >     pre-up ip tuntap add vport_vFunction mode tap
+   >     up ip link set dev vport_vFunction up
+   >     post-down ip link del dev vport_vFunction
+   >   ```
 
-  - Loopback 인터페이스 설정
-    Loopback 인터페이스를 자동으로 활성화하고, loopback(자기 자신을 참조하는 가상 네트워크 인터페이스)으로 설정합니다.
+**주의!** 만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)
 
-    ```text
-      auto lo
-      iface lo inet loopback
-    ```
+```bash
+sudo systemctl restart systemd-resolved.service
+sudo ifup eno1  #change this if you are using two-port NUC
+```
 
-  - Bridge 네트워크 인터페이스 설정
-    br0라는 가상 브릿지(Bridge) 네트워크 인터페이스를 생성하고 부팅 시에 자동으로 활성화되도록 합니다. 정적 ip를 사용하도록 명시하고, IP 주소 등의 네트워크 설정 값을 입력합니다.
+전체 interface를 다시 시작합니다.
 
-    ```text
-      auto br0
-      iface br0 inet static
-        address <your nuc ip>
-        netmask 255.255.255.0
-        gateway <gateway ip>
-        dns-nameservers 203.237.32.100
-    ```
-
-  - 물리적 인터페이스 설정
-    eno1(물리적 이더넷 인터페이스)을 부팅 시 자동으로 활성화합니다. eno1에게는 직접 IP 주소를 할당하지 않을 것이고, br0에 속하는 구성원으로 다룰 것입니다.
-
-    ```text
-      auto eno1
-      iface eno1 inet manual
-    ```
-
-  - TAP 인터페이스 생성
-    vport_vFunction이라는 가상 TAP(Tunnel Access Point) 인터페이스를 생성하고 부팅 시 활성화되도록 합니다. 수동으로 네트워크를 설정해야 하는 수동(manual) 모드로 지정합니다.
-
-    ```text
-      auto vport_vFunction
-      iface vport_vFunction inet manual
-        pre-up ip tuntap add vport_vFunction mode tap
-        up ip link set dev vport_vFunction up
-        post-down ip link del dev vport_vFunction
-    ```
-
-  **주의!** 만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)
-
-  ```bash
-  sudo systemctl restart systemd-resolved.service
-  sudo ifup eno1  #change this if you are using two-port NUC
-  ```
-
-  전체 interface를 다시 시작합니다.
-
-  ```bash
-  sudo su # Enter superuser mod
-  systemctl unmask networking
-  systemctl enable networking
-  systemctl restart networking
-  exit # Exit superuser mod
-  ```
+```bash
+sudo su # Enter superuser mod
+systemctl unmask networking
+systemctl enable networking
+systemctl restart networking
+exit # Exit superuser mod
+```
 
 vport_vFunction을 연결한 가상 머신(VM)을 만들겠습니다. 이 TAP(vport_vFunction)은 VM의 NIC(네트워크 인터페이스 카드)라고 생각하면 됩니다.
 
@@ -390,45 +390,46 @@ exit # Exit superuser mod
   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
   ```
 
-  **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.**
+> **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.**
+>
+> - 인터페이스 eno1에서 들어오는 패킷의 포워딩을 허용합니다.
+>
+>   ```text
+>   sudo iptables -A FORWARD -i eno1 -j ACCEPT
+>   ```
+>
+> - 인터페이스 eno1에서 나가는 패킷의 포워딩을 허용합니다.
+>
+>   ```text
+>   sudo iptables -A FORWARD -o eno1 -j ACCEPT
+>   ```
+>
+> - SNAT(Source NAT) 설정:  
+>   내부 네트워크(192.168.100.0/24)의 패킷을 호스트의 IP로 변환하여 외부로 전달합니다.
+>
+>   ```text
+>   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+>   ```
 
-  - 인터페이스 eno1에서 들어오는 패킷의 포워딩을 허용합니다.
+아래의 명령어를 입력하여 /etc/sysctl.conf 파일을 엽니다.
 
-    ```text
-    sudo iptables -A FORWARD -i eno1 -j ACCEPT
-    ```
+```bash
+sudo vi /etc/sysctl.conf
+```
 
-  - 인터페이스 eno1에서 나가는 패킷의 포워딩을 허용합니다.
+net.ipv4.ip_forward=1 이라고 쓰인 부분을 찾아 ( '#' ) 주석을 제거합니다.
 
-    ```text
-    sudo iptables -A FORWARD -o eno1 -j ACCEPT
-    ```
+> #net.ipv4.ip_forward=1
+> →
+> net.ipv4.ip_forward=1
 
-  - SNAT(Source NAT) 설정:  
-    내부 네트워크(192.168.100.0/24)의 패킷을 호스트의 IP로 변환하여 외부로 전달합니다.
-    ```text
-    sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
-    ```
+저장 후에 vim editor를 나옵니다.
 
-  아래의 명령어를 입력하여 /etc/sysctl.conf 파일을 엽니다.
+아래의 명령어를 실행하여 수정한 파일의 내용을 적용합니다.
 
-  ```bash
-  sudo vi /etc/sysctl.conf
-  ```
-
-  net.ipv4.ip_forward=1 이라고 쓰인 부분을 찾아 ( '#' ) 주석을 제거합니다.
-
-  > #net.ipv4.ip_forward=1
-  > →
-  > net.ipv4.ip_forward=1
-
-  저장 후에 vim editor를 나옵니다.
-
-  아래의 명령어를 실행하여 수정한 파일의 내용을 적용합니다.
-
-  ```bash
-  sudo sysctl -p
-  ```
+```bash
+sudo sysctl -p
+```
 
 - Install Ubuntu VM
 

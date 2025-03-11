@@ -186,16 +186,16 @@ If an issue related to booting occurs, follow these steps.
 
 5. Disable netplan
 
-   - To use manual network management with Open vSwitch (OVS), disable and remove systemd-networkd and Netplan.
+- To use manual network management with Open vSwitch (OVS), disable and remove systemd-networkd and Netplan.
 
-   ```bash
-   sudo su # Enter superuser mod
-   systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   apt-get --assume-yes purge nplan netplan.io
-   exit # Exit superuser mod
-   ```
+  ```bash
+  sudo su # Enter superuser mod
+  systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  apt-get --assume-yes purge nplan netplan.io
+  exit # Exit superuser mod
+  ```
 
 - DNS configuration
 
@@ -255,63 +255,63 @@ If an issue related to booting occurs, follow these steps.
 
   Save and quit the vim editor.
 
-  **This section is for explaining the above content. It does not need to be entered into a file again.**
+> **This section is for explaining the above content. It does not need to be entered into a file again.**
+>
+> - Loopback Interface Configuration
+>   Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
+>
+>   ```text
+>   auto lo
+>   iface lo inet loopback
+>   ```
+>
+> - Bridge Network Interface Configuration
+>   Create a virtual bridge network interface named br0 and configure it to activate automatically at boot. Specify the use of a static IP and enter the necessary network settings, including the IP address.
+>
+>   ```text
+>   auto br0
+>   iface br0 inet static
+>       address <your nuc ip>
+>       netmask 255.255.255.0
+>       gateway <gateway ip>
+>       dns-nameservers 203.237.32.100
+>   ```
+>
+> - Physical Interface Configuration
+>   Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Instead of assigning an IP address directly to eno1, it will be treated as a member of br0.
+>
+>   ```text
+>   auto eno1
+>   iface eno1 inet manual
+>   ```
+>
+> - TAP Interface Configuration
+>   Create a virtual TAP (Tunnel Access Point) interface named vport_vFunction and configure it to activate at boot. Set it to manual mode, requiring manual network configuration.
+>
+>   ```text
+>   auto vport_vFunction
+>   iface vport_vFunction inet manual
+>       pre-up ip tuntap add vport_vFunction mode tap
+>       up ip link set dev vport_vFunction up
+>       post-down ip link del dev vport_vFunction
+>   ```
 
-  - Loopback Interface Configuration
-    Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
+**Caution!** If the NUC has two Ethernet ports, the eno1 interface will not be available. Therefore, in the block below, replace eno1 with the interface you selected earlier (enp88s0 or enp89s0), choosing the one currently in use.
 
-    ```text
-      auto lo
-      iface lo inet loopback
-    ```
+```bash
+sudo systemctl restart systemd-resolved.service
+sudo ifup eno1  #change this if you are using two-port NUC
+```
 
-  - Bridge Network Interface Configuration
-    Create a virtual bridge network interface named br0 and configure it to activate automatically at boot. Specify the use of a static IP and enter the necessary network settings, including the IP address.
+Restart the whole interfaces.
 
-    ```text
-      auto br0
-      iface br0 inet static
-        address <your nuc ip>
-        netmask 255.255.255.0
-        gateway <gateway ip>
-        dns-nameservers 203.237.32.100
-    ```
-
-  - Physical Interface Configuration
-    Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Instead of assigning an IP address directly to eno1, it will be treated as a member of br0.
-
-    ```text
-      auto eno1
-      iface eno1 inet manual
-    ```
-
-  - TAP Interface Configuration
-    Create a virtual TAP (Tunnel Access Point) interface named vport_vFunction and configure it to activate at boot. Set it to manual mode, requiring manual network configuration.
-
-    ```text
-      auto vport_vFunction
-      iface vport_vFunction inet manual
-        pre-up ip tuntap add vport_vFunction mode tap
-        up ip link set dev vport_vFunction up
-        post-down ip link del dev vport_vFunction
-    ```
-
-  **Caution!** If the NUC has two Ethernet ports, the eno1 interface will not be available. Therefore, in the block below, replace eno1 with the interface you selected earlier (enp88s0 or enp89s0), choosing the one currently in use.
-
-  ```bash
-  sudo systemctl restart systemd-resolved.service
-  sudo ifup eno1  #change this if you are using two-port NUC
-  ```
-
-  Restart the whole interfaces.
-
-  ```bash
-  sudo su # Enter superuser mod
-  systemctl unmask networking
-  systemctl enable networking
-  systemctl restart networking
-  exit # Exit superuser mod
-  ```
+```bash
+sudo su # Enter superuser mod
+systemctl unmask networking
+systemctl enable networking
+systemctl restart networking
+exit # Exit superuser mod
+```
 
 We will make VM attaching vport_vFunction. You can think this TAP as a NIC(Network Interface Card) of VM.
 
@@ -397,45 +397,46 @@ exit # Exit superuser mod
   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
   ```
 
-  **This is an explanation of the above command. It does not need to be entered again.**
+> **This is an explanation of the above command. It does not need to be entered again.**
+>
+> - Allow packet forwarding for incoming traffic on the eno1 interface.
+>
+>   ```text
+>   sudo iptables -A FORWARD -i eno1 -j ACCEPT
+>   ```
+>
+> - Allow packet forwarding for outgoing traffic on the eno1 interface.
+>
+>   ```text
+>   sudo iptables -A FORWARD -o eno1 -j ACCEPT
+>   ```
+>
+> - SNAT(Source NAT) Configuration:  
+>   Translate packets from the internal network (192.168.100.0/24) to the host’s IP before forwarding them to the external network.
+>
+>   ```text
+>   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+>   ```
 
-  - Allow packet forwarding for incoming traffic on the eno1 interface.
+Open /etc/sysctl.conf file.
 
-    ```text
-    sudo iptables -A FORWARD -i eno1 -j ACCEPT
-    ```
+```bash
+sudo vi /etc/sysctl.conf
+```
 
-  - Allow packet forwarding for outgoing traffic on the eno1 interface.
+Find the line that contains net.ipv4.ip_forward=1 and remove the ( '#' ) comment.
 
-    ```text
-    sudo iptables -A FORWARD -o eno1 -j ACCEPT
-    ```
+> #net.ipv4.ip_forward=1
+> →
+> net.ipv4.ip_forward=1
 
-  - SNAT(Source NAT) Configuration:  
-    Translate packets from the internal network (192.168.100.0/24) to the host’s IP before forwarding them to the external network.
-    ```text
-    sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
-    ```
+Save and quit the vim editor.
 
-  Open /etc/sysctl.conf file.
+Run the following command to apply the changes made to the file.
 
-  ```bash
-  sudo vi /etc/sysctl.conf
-  ```
-
-  Find the line that contains net.ipv4.ip_forward=1 and remove the ( '#' ) comment.
-
-  > #net.ipv4.ip_forward=1
-  > →
-  > net.ipv4.ip_forward=1
-
-  Save and quit the vim editor.
-
-  Run the following command to apply the changes made to the file.
-
-  ```bash
-  sudo sysctl -p
-  ```
+```bash
+sudo sysctl -p
+```
 
 - Install Ubuntu VM
 
