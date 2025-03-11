@@ -10,6 +10,8 @@
 - On this cluster, we will install distributed storage system called ceph.
   - With similar concept with docker - kubernetes, Rook is open source cloud-native Ceph strogae orchestrator for K8S.
 
+**(추가) master, worker 구조가 뭘 의미하는지?**
+
 ## 1. Concept
 
 ### 1-1. Docker Containers
@@ -57,6 +59,8 @@ sudo hostname nuc03
 
 From All NUCs: Change hostname in /etc/hostname
 
+**(좀 더 명확한 설명 추가)**
+
 ```shell
 sudo rm /etc/hostname
 # ex) echo nuc01 | sudo tee /etc/hostname
@@ -78,6 +82,8 @@ sudo vi /etc/hosts
  <IP Address of NUC 3>  nuc03
 ```
 
+**(추가) openssh-server 설치하는 작업 추가해야함**
+
 #### 2-1-2. Check Connectivity
 
 ```shell
@@ -95,6 +101,10 @@ ping nuc02
 ```
 
 #### 2-1-3. From NUC1
+
+**(수정) username은 gist고, hostname은 nuc01임**
+
+**(추가) 새로운 터미널 여는 단축키 설명**
 
 예시)  
 <img width="116" alt="스크린샷 2022-05-24 오후 1 12 53" src="https://user-images.githubusercontent.com/65757344/169947428-3d028493-cf5e-4463-a9ea-d04f3bd56b99.png">  
@@ -157,6 +167,9 @@ ssh <NUC3 username>@nuc03
 
 #### 2-3-1. Swapoff
 
+**(추가) 스왑 메모리가 뭔지?**
+**(추가) 스왑 메모리를 왜 꺼야하는지?**
+
 ```shell
 # From All NUCs
 sudo swapoff -a
@@ -183,6 +196,8 @@ sudo apt install -y kubeadm=1.28.1-1.1 kubelet=1.28.1-1.1 kubectl=1.28.1-1.1
 
 지금부터 sudo su 로 root에서 실행합니다
 
+**(수정) sudo su가 뭔지 설명해야함. 아니면 아예 sudo su에서 작업을 하지 말거나.**
+
 ```shell
 # From NUC1
 kubeadm init --pod-network-cidr=10.244.0.0/16
@@ -195,6 +210,8 @@ kubeadm init --pod-network-cidr=10.244.0.0/16
  sudo rm -rf /var/lib/rook
  sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all # 계속 실패한다면 이 명령어를 사용해 보세요
 ```
+
+**(수정) 토큰값이 상당히 길다. scp로 NUC02, NUC03에 전달하는 과정 추가할 것**
 
 - kubeadm을 실행하면 아래와 같이 Kubernetes Cluster에 참여할 수 있는 토큰값이 발급됩니다.
 - **토큰 정보를** 지금 입력하지 말고, 2-4-3 파트에서 사용하기 위해 **저장해둡니다.**
@@ -250,7 +267,12 @@ sudo kubeadm join <NUC1 IP>:6443 --token <YOUR TOKEN> --discovery-token-ca-cert-
 kubectl get node
 ```
 
+**(추가) 결과 스크린샷 추가해야함**
+
 ### 2-5. Kubenetes Network Plugin Installation
+
+**(추가) CNI란? Objective에서 설명해도 좋을 듯**
+**(추가) Flannel이란?**
 
 ```shell
 # From NUC1
@@ -267,6 +289,8 @@ kubectl get po -n kube-system -o wide
 ![Kubenetes Network Plugin Installation](img/10.png)
 
 ### 2-6. Nginx Deploy
+
+**(추가) nginx란**
 
 make nginx.yaml on your directory
 
@@ -310,6 +334,8 @@ watch kubectl get pods --all-namespaces -o wide
 - Enter following address in web browser
 
   `http://<your Nginx Pod IP>:80`
+
+**Lab 내용이 한참 부족하다. 단순히 쿠버네티스 클러스터 구축하고 Nginx 띄우는 게 실습 내용의 전부라면, 이건 의미가 없는 Lab이다. 적어도 Pod, Deployment, Service를 띄우게는 해봐야한다. Deployment랑 Service 붙여서 각 Pod가 어디에 위치하는지, 각 요청마다 어떤 pod가 해당 요청을 처리하는지 볼 수 있어야 한다. 가능하다면 간단한 Rolling update까지**
 
 ## (Optional) K3S installation
 
