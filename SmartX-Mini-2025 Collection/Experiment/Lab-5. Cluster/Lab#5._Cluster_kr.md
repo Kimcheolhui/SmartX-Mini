@@ -106,41 +106,54 @@ Master-Worker 패턴은 하나의 **Master**가 전체 작업을 여러 개의 �
 
 ## 2. Lab Preparation
 
-![Lab Preparation](img/7.png)
+![Lab Preparation](img/network.png)
 
-#### 2-1-2. From All NUCs
+### 2-1. 모든 NUC에서 다음의 작업 수행
 
-**(추가) 각 노드에서 openssh-server 설치하기**
+#### 2-1-1. hostname 설정
 
-sudo hostname <name>은 해당 명령어를 입력하는 machine의 hostname을 임시로 <name>으로 지정한다. 다만 해당 machine을 reboot할 경우, 기존 hostname으로 돌아가게 된다. 이번 Lab에서는 쿠버네티스 클러스터 구성 편의를 위해, 각 NUC에 임시 hostname을 설정하고자 한다.
+`sudo hostname <name>`은 해당 명령어를 입력하는 노드(머신)의 hostname을 임시로 <name>으로 지정합니다. 다만 해당 설정은 현재 로그인된 세션에서만 적용되기 때문에, 새로운 터미널을 열거나 노드를 reboot할 경우에는 기존 hostname으로 돌아가게 됩니다. 이번 Lab에서는 쿠버네티스 클러스터 구성 편의를 위해, 각 NUC에 설정된 hostname을 변경합니다.
+
+\*조교의 안내를 받아 nuc01, nuc02, nuc03의 역할을 부여 받으시기 바랍니다.
+
+##### hostname 임시 변경
 
 ```shell
-# From NUC 1 :
+# At NUC 1 :
 sudo hostname nuc01
-# From NUC 2 :
+# At NUC 2 :
 sudo hostname nuc02
-# From NUC 3 :
+# At NUC 3 :
 sudo hostname nuc03
 ```
 
-From All NUCs: Change hostname in /etc/hostname
+##### 임시 변경된 hostname 확인
 
-**(좀 더 명확한 설명 추가)**
+```shell
+# 역할에 따라 nuc01, nuc02, 또는 nuc03 값이 출력되면 정상
+hostname
+```
+
+`/etc/hostname`은 시스템이 부팅될 때 사용할 hostname을 저장하는 파일입니다. `echo <hostname>`을 사용하여 새로운 hostname이 `/etc/hostname` 파일에 기록하면, 재부팅 이후에도 변경된 hostname이 유지됩니다. 하지만 `/etc/hostname`을 변경했다고 해서 현재 세션에서 바로 적용되는 것은 아닙니다. 변경 사항을 즉시 적용하려면 추가적으로 `sudo hostname <name>` 명령어를 실행해야합니다. (하지만 우리는 바로 직전에 해당 명령어를 실행했으니 괜찮습니다.)
 
 ```shell
 sudo rm /etc/hostname
-# ex) echo nuc01 | sudo tee /etc/hostname
-# if this is being executed on NUC 1
-echo {NUC Hostname: One of nuc01, nuc02, nuc03} | sudo tee /etc/hostname
+hostname | sudo tee /etc/hostname
 ```
 
-**Change `{NUC Hostname: One of nuc01, nuc02, nuc03}` to selected hostname above (01~03)**
+> 보충 설명) `hostname`의 출력값이 pipe(`|`)를 통해 `/etc/hostname` 파일로 전달됩니다.
 
-From All NUCs: Append the following context into /etc/hosts
+#### 2-1-2. hosts IP 정보 등록
+
+각 노드에서 nuc01, nuc02, nuc03에 해당하는 hosts의 IP 정보를 등록합니다. 모든 NUC에서 다음의 작업을 수행합니다.
+
+`/etc/hosts` 파일 진입
 
 ```shell
 sudo vi /etc/hosts
 ```
+
+다음의 context를 붙여넣고 저장합니다.
 
 ```text
  <IP Address of NUC 1>  nuc01
@@ -148,52 +161,35 @@ sudo vi /etc/hosts
  <IP Address of NUC 3>  nuc03
 ```
 
-#### 2-1-2. Check Connectivity
+#### 2-1-3. Connectivity 확인
+
+각 노드에서 다른 노드로 연결이 잘 이루어지는지 ping을 사용해 확인합니다.
+
+> **`ping`이란?** ping은 네트워크에서 특정 호스트가 정상적으로 연결되어 있는지 확인하는 명령어입니다. 대상 호스트로 ICMP Echo Request 패킷을 전송하고, 해당 호스트가 ICMP Echo Reply를 반환하면 연결이 정상적으로 이루어졌음을 의미합니다. 이를 통해 네트워크 연결 상태, 응답 시간(RTT), 패킷 손실 여부 등을 확인할 수 있습니다.
 
 ```shell
-# From NUC 1
+# At NUC 1
 ping nuc02
 ping nuc03
 
-# From NUC 2
+# At NUC 2
 ping nuc01
 ping nuc03
 
-# From NUC 3
+# At NUC 3
 ping nuc01
 ping nuc02
 ```
 
-#### 2-1-3. From NUC1
+#### 2-1-4. 원격 접속 세팅
 
-**(수정) username은 gist고, hostname은 nuc01임**
-
-**(추가) 새로운 터미널 여는 단축키 설명**
-
-**(추가) Nuc01에서만 실행**
-**(추가) nuc01에서 3개의 터미널을 열고, 각각 nuc01, nuc02, nuc03을 작업할거임.**
-
-예시)  
-<img width="116" alt="스크린샷 2022-05-24 오후 1 12 53" src="https://user-images.githubusercontent.com/65757344/169947428-3d028493-cf5e-4463-a9ea-d04f3bd56b99.png">  
-**username은 netcs**이고  
-hostname은 nuc01입니다!!!
-
-**username is netcs**  
-and hostname is nuc01!!!
-
-**(추가) 현재 username은 gist로 통일되어 있습니다. 위 사진 지우기**
-
-**(추가) 화면 세팅 어떻게 하는 걸 추천하는 지 추가하기**
+각 노드에서 다음의 명령어를 실행합니다. 다른 노드에서 해당 노드로 원격 접속을 가능하게 하기 위한 패키지입니다.
 
 ```shell
-# In new terminal
-ssh <nuc2 username>@nuc02
-
-# In another new terminal
-ssh <nuc3 username>@nuc03
+sudo apt install -y openssh-server
 ```
 
-#### 2-1-4. Setting containerd
+#### 2-1-5. containerd 설정
 
 ```bash
 # For All NUCs
@@ -203,16 +199,32 @@ containerd config default | sudo tee /etc/containerd/config.toml
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 ```
 
-#### 2-1-5. Reboot All NUC
+#### 2-1-6. At NUC1
+
+**(추가) 화면 세팅 어떻게 하는 걸 추천하는 지 추가하기**
+
+NUC1에서 다음의 명령어를 실행하여, NUC2와 NUC3에 원격 접속이 정상적으로 이뤄지는지 확인합니다.
+
+\*컴시이실 실습의 경우 <nuc username>은 gist로 통일되어 있습니다.
 
 ```shell
-# From All NUCs
+# In new terminal
+# e.g. ssh gist@nuc02
+ssh <nuc2 username>@nuc02
+
+# In another new terminal
+# e.g. ssh gist@nuc03
+ssh <nuc3 username>@nuc03
+```
+
+#### 2-1-7. NUC 재부팅
+
+```shell
+# For All NUCs
 sudo reboot
 ```
 
-# 지금부터 NUC1 학생 자리에서 모든 작업을 시작합니다. NUC2, NUC3 학생은 NUC1자리로 가서 작업을 시작합니다.
-
-# From now on, every thing goes with NUC1 student's seat. Students in NUC2, NUC3 should start work at NUC1 student's seat.
+# 지금부터 NUC1 학생 자리에서 모든 작업을 시작합니다. NUC2, NUC3 학생은 NUC1자리로 가서 함께 작업을 진행합니다.
 
 ### 2-2. Preparations for Clustering
 
@@ -221,14 +233,25 @@ sudo reboot
 docker version
 ```
 
-# From NUC1
+## At NUC1
+
+NUC1에서 NUC2와 NUC3에 원격 접속합니다.
 
 ```shell
+# 새로운 터미털에서
 ssh <NUC2 username>@nuc02
+
+# 새로운 터미털에서
 ssh <NUC3 username>@nuc03
 ```
 
-### 2-3. Kubernets Installation(For All NUCs)
+> ### 화면 세팅 Tip
+>
+> 각 원격 접속마다 별도의 터미널 **창**을 띄우게 되면 조작이 번거롭습니다. 다음의 사진과 같이 3개의 터미널 **탭**을 띄우고, 2번째와 3번째 탭에는 각각 NUC2와 NUC3에 원격 접속하도록 합니다.
+> 새로운 터미널 탭을 띄우는 단축키는 `Ctrl + Shift + T`입니다.
+> <img src='img/screen-setup.png' alt='screen setup'>
+
+### 2-3. 쿠버네티스 설치(For All NUCs)
 
 ![Kubernets Installation](img/8.png)
 
@@ -238,8 +261,7 @@ ssh <NUC3 username>@nuc03
 
 #### 2-3-1. Swapoff
 
-**(추가) 스왑 메모리가 뭔지?**
-**(추가) 스왑 메모리를 왜 꺼야하는지?**
+<b>스왑 메모리(Swap Memory)</b>는 물리적 RAM이 부족할 때, 디스크 공간의 일부를 가상 메모리처럼 사용하는 기능입니다. 하지만 Kubernetes는 노드의 메모리 사용량을 정확히 파악하고 스케줄링해야 하기 때문에, 스왑을 사용하면 예측 불가능한 성능 문제가 발생할 수 있습니다. 특히, 컨테이너의 메모리 제한이 제대로 적용되지 않거나, 스왑으로 인해 응답 속도가 느려지는 문제가 발생할 수 있어, 안정적인 클러스터 운영을 위해 Kubernetes에서는 스왑을 비활성화해야 합니다.
 
 ```shell
 # From All NUCs
@@ -248,10 +270,10 @@ sudo swapoff -a
 
 #### 2-3-2. Install Kubernetes
 
-**(경고) 무작정 다 때려넣지 말고, 실행이 잘 되는지 확인할 것**
+> **주의)** 각각의 실행이 정상적으로 이뤄지는지 확인하면서 진행할 것
 
 ```shell
-# From All NUCs
+# At All NUCs
 sudo apt-get update && sudo apt-get install -y apt-transport-https curl ipvsadm wget
 
 curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
@@ -263,180 +285,133 @@ sudo apt update
 sudo apt install -y kubeadm=1.28.1-1.1 kubelet=1.28.1-1.1 kubectl=1.28.1-1.1
 ```
 
+이로써 쿠버네티스 클러스터를 구성하기 위한 준비를 마쳤습니다.
+
 ### 2-4. Kubernetes Configuration
+
+이제 쿠버네티스 클러스터를 실제로 구축하도록 하겠습니다.
 
 #### 2-4-1. Kubernetes Master Setting(For NUC1)
 
-지금부터 sudo su 로 root에서 실행합니다
-
-**(수정) sudo su가 뭔지 설명해야함. 아니면 아예 sudo su에서 작업을 하지 말거나.**
-
 ```shell
 # From NUC1
-kubeadm init --pod-network-cidr=10.244.0.0/16
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
-(추가) 만약 preflight 오류가 발생했다면 다음의 명령어를 실행할 것
+> ⚠️ **만약 preflight 오류가 발생했다면 다음의 작업을 진행해주세요**
+>
+> <img src='img/preflight-error.png' alt='preflight error' width='900'>
+>
+> **오류 원인**
+>
+> 해당 이슈는 bridge-nf-call-iptables kernel module이 누락되거나 로드되지 않았기 때문에 발생합니다. 쿠버네티스는 bridges traffic에 대한 iptables 규칙을 활성화하기위해 이 모듈이 필요하며, 이 모듈이 누락되면 kubeadm 초기화에 실패합니다.
+>
+> **해결 방법**
+>
+> ```shell
+> # br_netfilter kernel module load하기
+> sudo modeprobe br_netfilter
+> # 아래 명령어로 br_netfilter가 잘 loaded된 것을 확인했으면
+> lsmod | grep br_netfilter
+> # kubeadm을 다시 한 번 실행
+> kubeadm init --pod-network-cidr=10.244.0.0/16
+> ```
 
-- The issue occurs because the bridge-nf-call-iptables kernel module is missing or no loaded. Kebernetes requires this module to enable iptables rules for bridges traffic, and if it's missing, kubeadm initialization fails.
-- This can happend due to:
-  1. The br_netfilter module is not loaded.
-  2. The `/proc/sys/net/bridge/bridge-nf-call-iptables` file does not exit because the kernel module is missing.
-  3. The host system does not have necessary kernel configurations.
+kubeadm 명령어가 정상적으로 실행됐다면, 아래 사진과 같이 쿠버네티스 클러스터에 Join할 수 있는 토큰을 포함한 명령어가 생성됩니다. 해당 명령어를 별도의 텍스트 파일로 저장하거나, 사라지지 않도록 해주시기 바랍니다.
 
-```shell
-# br_netfilter kernel module load하기
-sudo modeprobe br_netfilter
+<img src='img/kubeadm-init.png' alt='kubeadm init'>
 
-# 아래 명령어로 br_netfilter가 잘 loaded된 것을 확인했으면
-lsmod | grep br_netfilter
-
-# kubeadm을 다시 한 번 실행
-kubeadm init --pod-network-cidr=10.244.0.0/16
-```
-
-이제 다시
-
-```shell
-# From NUC1
-# Cleanup Rook Configuration
- sudo rm -rf /var/lib/rook
- sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all # 계속 실패한다면 이 명령어를 사용해 보세요
-```
-
-**(수정) 토큰값이 상당히 길다. scp로 NUC02, NUC03에 전달하는 과정 추가할 것**
-
-- kubeadm을 실행하면 아래와 같이 Kubernetes Cluster에 참여할 수 있는 토큰값이 발급됩니다.
-- **토큰 정보를** 지금 입력하지 말고, 2-4-3 파트에서 사용하기 위해 **저장해둡니다.**
-- You can get token value that can join Kubernetes Cluster like below when you execute kubeadm.
-- Please don't enter **token information** right now, but **save** it to use at part 2-4-3.
-- if you failed here. please check port-port forwarding refer to https://kubernetes.io/docs/reference/networking/ports-and-protocols/ (ubuntu uses ufw as the default firewall.)
-  ![commnad](img/9.png)
+NUC1에서 다음의 명령어를 실행합니다.
 
 ```shell
-# From NUC1
-## make kubectl work for your non-root user.
+# At NUC1
 rm -r $HOME/.kube
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-kubectl taint nodes --all node-role.kubernetes.io/master- # taint에서 포드를 스케쥴링 할 수 없는 경우 사용합니다
+# master node도 woreker node처럼 Pod를 배포할 수 있게 해주는 명령어입니다. 이번 실습에서는 입력하지 않아도 됩니다.
+# kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 
-#### 2-4-2. Kubernetes Worker Setting(For NUC2, NUC3) [최초 진행 시에는 사용하지 않아도 됩니다!]
+#### 2-4-2. Kubernetes Worker Setting(For NUC2, NUC3) [쿠버네티스 클러스터 reset시 사용하며, 최초 진행 시에는 사용하지 않아도 됩니다!]
 
 ```shell
 # From NUC2, NUC3
 # sudo kubeadm reset -f
 # sudo rm -r /etc/cni/net.d
 # sudo ipvsadm --clear
-
 ```
 
 #### 2-4-3. Worker Join
 
-- 2-4-1 파트에서 발급받은 토큰 정보를 가져옵니다.
-- Bring your token information you got at part 2-4-1.
-- Master에서 발급받은 토큰을 NUC2, NUC3에 입력해줍니다. 커맨드는 아래와 같이 구성되어 있습니다.
-- Enter token from Master to NUC2, NUC3. Command is consists of like following.
-  1. sudo
-  2. kubeadm join <NUC1 IP>:6443 --token <YOUR TOKEN> --discovery-token-ca-cert-hash <YOUR HASH>
-  3. --ignore-preflight-errors=all
+이제 Worker Nodes를 쿠버네티스 클러스터에 Join합니다.
 
-![commnad](img/9.png)
+<img src='img/kubeadm-init-2.png' alt='kubeadm init'>
 
 ```shell
-## NUC1에 NUC2, NUC3를 추가하여 클러스터를 구성합니다.
-## Consist cluster by adding NUC2, NUC3 to NUC1.
-## 빨간 칸 안에 있는 명령어를 복사하고, 앞에 sudo를 붙여 sudo 권한으로 실행하며, --ignore-preflight-errors=all을 붙여서 실행시킵니다.
-## Copy command in red rectangle, prefix 'sudo' to run with sudo previlege and run command with option '--ignore-preflight-errors=all'.
-sudo kubeadm join <NUC1 IP>:6443 --token <YOUR TOKEN> --discovery-token-ca-cert-hash <YOUR HASH> --ignore-preflight-errors=all # 계속 실패할 경우 --ignore-preflight-errors=all 옵션을 붙여 시도합니다!
+# 빨간 칸 안에 있는 명령어를 복사하고, 앞에 `sudo`를 붙여 NUC2와 NUC3에 입력합니다.
+# (에러) preflight 에러 발생 시, --ignore-preflight-errors=all 맨 뒤에 붙여서 다시 입력합니다.
 ```
 
 #### 2-4-4. Check Nodes at NUC1
 
 ```shell
-# From NUC1
+# At NUC1
 kubectl get node
 ```
 
-**(추가) 결과 스크린샷 추가해야함**
+<img src='img/get-node-notready.png' alt='get node notreay'>
 
-**(추가) Not ready 상태인 이유 추가할 것**
-
-- CNI와 연계해서 설명
+위 사진에서 nuc02와 nuc03이 NotReady 상태인 이유는 네트워크 플러그인(CNI)이 아직 설치되지 않았거나, 워커 노드가 마스터 노드에 정상적으로 조인되지 않았기 때문입니다. Kubernetes에서는 클러스터 내 네트워크가 설정되지 않으면 노드를 Ready 상태로 만들지 않으며, kubeadm join이 제대로 실행되지 않은 경우에도 NotReady 상태가 유지됩니다. 이를 해결하려면 CNI를 설치하고, 워커 노드가 정상적으로 조인되었는지 확인해야 합니다. 바로 이어지는 section에서 CNI를 설치해보겠습니다.
 
 ### 2-5. Kubenetes Network Plugin Installation
 
-**(추가) CNI란? Objective에서 설명해도 좋을 듯**
-**(추가) Flannel이란?**
+#### CNI란?
+
+<b>CNI(Container Network Interface)</b>는 쿠버네티스 클러스터에서 컨테이너 간 네트워크를 설정하고 관리하는 표준 인터페이스입니다. 쿠버네티스는 기본적으로 네트워크 기능을 자체적으로 제공하지 않으며, CNI 플러그인을 사용해 각 `Pod`들이 서로 통신할 수 있도록 합니다.
+
+#### Flannel이란?
+
+`Flannel`은 쿠버네티스에서 가장 많이 사용되는 CNI 플러그인 중 하나로, 간단한 네트워크 오버레이(overlay)를 제공하여 Pod간 통신을 가능하게 해줍니다. Flannel은 노드 간 네트워크를 VXLAN, Host-GW 등의 방식으로 구현하며, 다른 복잡한 네트워크 정책 관리 기능은 제공하지 않고 기본적인 Pod-to-Pod 통신을 보장하는 역할을 합니다. Flannel 외에도 Calico, Cilium, Weave 같은 다른 CNI 플러그인도 많이 사용됩니다.
 
 ```shell
-# From NUC1
-# flannel을 사용합니다 https://github.com/flannel-io/flannel
+# At NUC1
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
 
 ```shell
-# From NUC1 -> Check Weave works
+# At NUC1 -> 노드 상태 확인
 kubectl get nodes
+```
+
+Flannel CNI 설치 후 약간의 시간이 지나고 위 명령어를 입력하면, 아래와 같이 각 worker node의 status가 Ready로 변경된 것을 확인할 수 있습니다.
+
+<img src='img/get-node-ready.png' alt='get node notreay'>
+
+```shell
+# At NUC1 -> kube-system 네임스페이스의 모든 Pod 확인
 kubectl get po -n kube-system -o wide
 ```
 
+> **명령어 보충 설명**
+>
+> `kubectl get po -n kube-system -o wide`
+>
+> `kubectl get po` → 현재 클러스터에서 실행 중인 `Pod` 목록을 조회
+>
+> `-n kube-system` → 쿠버네티스 내부 시스템 Pod가 실행되는 `kube-system` 네임스페이스에서만 조회
+>
+> `-o wide` → Pod의 추가 정보(IP, 노드 위치 등)를 포함하여 출력
+>
+> 이 명령어를 실행하면 Flannel을 포함한 쿠버네티스 내부 관리용 Pod(Nodes Controller, DNS, Scheduler 등)의 상태를 확인할 수 있습니다.
+>
+> 더 자세한 내용은 공식 [Kubernetes 문서](https://kubernetes.io/ko/docs/concepts/overview/components/)에서 확인할 수 있으며, 이번 실습에서는 자세히 다루지 않습니다.
+
 ![Kubenetes Network Plugin Installation](img/10.png)
 
-**(수정) Nginx 부분 전부 삭제**
+이로써 쿠버네티스 클러스터의 네트워크 구성이 완료되었습니다. Flannel을 통해 Pod 간 네트워크 통신이 가능해졌으며, 이제 클러스터 내부에서 여러 애플리케이션을 배포할 수 있습니다.
 
-### 2-6. Nginx Deploy
-
-**(추가) nginx란**
-
-make nginx.yaml on your directory
-
-```shell
-apiVersion: v1
-kind: Pod
-metadata:
-  name: my-nginx-pod
-spec:
-  containers:
-  - name: my-nginx-container
-    image: nginx:latest
-    ports:
-    - containerPort: 80
-      protocol: TCP
-
-  - name: ubuntu-sidecar-container
-    image: alicek106/rr-test:curl
-    command: ["tail"]
-    args: ["-f", "/dev/null"] # 포드가 종료되지 않도록 유지합니다
-```
-
-#### 2-7-1. Deploy Nginx on the Cluster
-
-```shell
-# From NUC1
-kubectl apply -f nginx.yaml
-
-# From NUC1
-## Check WordPress Container
-watch kubectl get pods --all-namespaces
-```
-
-#### 2-7-2. Access Nginx
-
-```shell
-# From NUC1 check nginx pod ip
-watch kubectl get pods --all-namespaces -o wide
-```
-
-- Enter following address in web browser
-
-  `http://<your Nginx Pod IP>:80`
-
-**Lab 내용이 한참 부족하다. 단순히 쿠버네티스 클러스터 구축하고 Nginx 띄우는 게 실습 내용의 전부라면, 이건 의미가 없는 Lab이다. 적어도 Pod, Deployment, Service를 띄우게는 해봐야한다. Deployment랑 Service 붙여서 각 Pod가 어디에 위치하는지, 각 요청마다 어떤 pod가 해당 요청을 처리하는지 볼 수 있어야 한다. 가능하다면 간단한 Rolling update까지**
-
-### 2-7. my-simple-app 실습
+### 3. kubernetes example
 
 1. cd ~
 2. mkdir k8s && cd k8s
