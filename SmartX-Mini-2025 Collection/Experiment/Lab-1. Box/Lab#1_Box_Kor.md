@@ -521,12 +521,7 @@ sudo sysctl -p
 Docker 리포지토리 추가를 위해 apt를 HTTPS 지원 가능하도록 설정하고, 필요한 패키지를 설치합니다.
 
 ```bash
-sudo apt update
 sudo apt install -y ca-certificates curl gnupg lsb-release
-```
-
-```bash
-sudo apt update
 ```
 
 Docker를 설치합니다.

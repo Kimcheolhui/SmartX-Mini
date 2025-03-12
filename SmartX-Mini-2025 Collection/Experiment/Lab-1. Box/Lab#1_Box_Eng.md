@@ -525,12 +525,7 @@ sudo sysctl -p
 To add the Docker repository, configure apt to support HTTPS and install the required packages.
 
 ```bash
-sudo apt update
 sudo apt install -y ca-certificates curl gnupg lsb-release
-```
-
-```bash
-sudo apt update
 ```
 
 Install Docker
