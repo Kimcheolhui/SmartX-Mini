@@ -11,7 +11,7 @@
 - 1개의 Master -> NUC1
 - 2개의 Workers -> NUC2, NUC3
 
-### Master-Worker 구조란?
+#### Master-Worker 구조란?
 
 <img src='img/master-worker.png' alt='master-worker pattern' width="450">
 
@@ -21,45 +21,88 @@ Master-Worker 패턴은 하나의 **Master**가 전체 작업을 여러 개의 �
 
 ### 1-1. Docker Containers
 
-(수정 후 순서)
+<img src='img/docker.png' alt='docker icon' width='225'>
 
-1. 도커에 대한 간단한 설명
-2. 왼쪽 이미지
-3. 오른쪽 이미지
+<b>도커(Docker)</b>는 컨테이너 기술을 활용하여 애플리케이션을 보다 쉽게 개발, 배포, 실행할 수 있도록 도와주는 오픈소스 플랫폼입니다. 도커를 사용하면 애플리케이션과 해당 애플리케이션이 의존하는 라이브러리, 실행 환경을 하나의 단위(컨테이너)로 패키징하여 운영체제(OS) 환경에 독립적인 배포가 가능합니다.
 
-- **Docker** is an open platform for building, shipping and running distributed applications. It gives programmers, development teams and operations engineers the common toolbox they need to take advantage of the distributed and networked nature of modern applications.
+#### 도커와 가상 머신(VM)의 차이
 
-**(추가) 도커에 대한 좀 더 자세한 설명**
+도커는 기존의 가상 머신(Virtual Machine)과 비교하여 더 가볍고 빠른 실행 환경을 제공하고, 효율적인 자원 사용을 가능케 합니다.
 
-**(수정) 사진 분리 필요**
+![Docker Containers Diagram](img/docker-diagram.png)
 
-- 왼쪽은 가상머신과의 차이를 설명하면서 보여주고
-- 오른쪽은 도커를 활용하는 관점에서 어떻게 구성되어 있는지 설명
-  ![Docker Containers](img/1.png)
+#### 사진 좌측
 
-### 1-2. Container Orchestration
+- 가상 머신(VM): 하이퍼바이저(Hypervisor)를 사용하여 여러 개의 운영체제(Guest OS)를 실행하며, 각 OS가 별도의 자원을 사용하기 때문에 무겁고 부팅 속도가 느립니다.
+- 도커 컨테이너: 하나의 운영체제(OS) 커널을 공유하면서도 컨테이너별로 독립된 환경에서 실행됩니다. 컨테이너는 필요한 애플리케이션과 라이브러리만 포함하도록 경량화되었으며, 유연하고 빠른 실행과 배포가 가능합니다.
 
-**(추가) Container Orchestration이란 무엇이며, 왜 등장했고, 왜 필요하며, 어디에 사용하는지?**
+#### 사진 우측
 
-![Container Orchestration](img/2.png)
+도커는 클라이언트(Client)-서버(Server) 아키텍쳐를 기반으로 동작하며, 다음으로 구성되어 있습니다.
 
-- **Container orchestration** refers to the process of organizing the work of individual components and application layers.
-- **Container orchestration engines** all allow users to control when containers start and stop, group them into clusters, and coordinate all of the processes that compose an application. Container orchestration tools allow users to guide container deployment and automate updates, health monitoring, and failover procedures.
+1. 개발자(docker client)가 도커 명령어 실행
 
-**(추가) 현재 가장 많이 쓰이는 건 K8s다.**
+   - `docker build`, `docker pull`, `docker run` 등의 명령어를 통해 도커 활용
 
-### 1-3. Kubernetes
+2. Docker Daemon (서버) 처리
 
-![](img/3.png)
+   - 컨테이너와 도커 이미지 등을 생성하고 관리
+   - 개발자가 입력한 명령어를 실질적으로 실행하는 역할
 
-- **Kubernetes** is an open-source system for automating deployment, scaling, and management of containerized applications.
+3. Image Registry (이미지 저장소)
 
-#### 1-3-1. **Kubernetes** **Features**
+   - 애플리케이션의 컨테이너 이미지는 `Docker Hub`와 같은 원격 저장소에서 관리됩니다.
+   - AWS ECR과 같은 클라우드형 이미지 Registry나 사설 Registry를 사용할 수도 있습니다.
 
-- **Horizontal scaling**: Scale your application up and down with a simple command, with a UI, or automatically based on CPU usage.
-- **Self-healing:** Restarts containers that fail, replaces and reschedules containers when nodes die, kills containers that don't respond to your user-defined health check, and doesn't advertise them to clients until they are ready to serve.
-- **Service discovery and load balancing:** No need to modify your application to use an unfamiliar service discovery mechanism. Kubernetes gives containers their own IP addresses and a single DNS name for a set of containers, and can load-balance across them.
-- **Storage Orchestration:** Automatically mount the storage system of your choice, whether from local storage, a public cloud provider
+### 1-2. 컨테이너 오케스트레이션(Container Orchestration)
+
+컨테이너 기술이 널리 사용되면서 여러 개의 컨테이너를 자동으로 배포,관리, 스케일링(확장)하는 방법이 필요해졌습니다. 컨테이너 오케스트레이션은 이러한 문제를 해결하기 위해 등장했습니다.
+
+#### 왜 Container Orchestration이 필요한가?
+
+1. **컨테이너 개수 증가**
+   - 단일 서버에서 몇 개의 Container를 실행하고 관리하는 것은 어렵지 않지만, 대규모 애플리케이션에서는 **수백~수천 개**의 컨테이너를 사용하기 때문에 관리가 쉽지 않음.
+2. **자동화 및 관리 효율성**
+   - 컨테이너의 배포, 네트워크 설정, 로드 밸런싱, 모니터링, 장애 발생 시 자동 복구 등의 기능이 필요함.
+3. **고가용성 & 확장성 보장**
+   - 특정 컨테이너가 다운되면 자동으로 재시작하거나, 트래픽 증가 시 컨테이너 개수를 자동으로 늘릴 수 있어야 함.
+
+대표적으로 다음과 같은 기능을 제공합니다.
+
+1. **자동화된 배포 및 업데이트**
+
+   - 컨테이너를 자동으로 배포하고, 새로운 버전이 나오면 점진적으로 업데이트 진행 (Rolling Update)
+
+2. **로드 밸런싱 & 서비스 디스커버리**
+
+   - 트래픽을 여러 컨테이너로 분산하여 부하를 최소화하고, 컨테이너 간 통신을 자동으로 설정
+
+3. **자동 복구(Self-healing)**
+
+   - 장애가 발생한 컨테이너를 자동으로 감지하고, 새로운 컨테이너로 대체하여 서비스 중단 방지
+
+4. **클러스터 리소스 최적화**
+
+   - 컨테이너가 클러스터의 CPU, 메모리 등을 효율적으로 활용할 수 있도록 스케줄링
+
+<img src='img/container-orch.png' alt='container orchestration tool' width="900">
+
+위 사진은 대표적인 컨테이터 오케스트레이션 도구입니다. 현재는 <b>Kubernetes(K8s)</b>가 가장 널리 사용되고 있습니다. (맨 앞(K)과 뒤(s), 그리고 나머지 알파벳의 개수 '8'을 사용하여 K8s라고도 부릅니다.)
+
+### 1-3. 쿠버네티스(Kubernetes)
+
+<img src='img/k8s-arch.png' alt='k8s arch' width='900'>
+
+[**Kubernetes**](https://kubernetes.io/)는 컨테이너화된 애플리케이션의 배포, 스케일링, 관리를 자동화하는 **오픈소스 오케스트레이션 시스템**입니다.
+
+#### 1-3-1. **Kubernetes 주요 기능**
+
+- **수평 확장(Horizontal Scaling)**: 간단한 명령어, UI 또는 CPU 샤용량을 기반으로 한 자동화(Auto-scaling)의 방식으로 애플리케이션의 규모를 확장(Scaling)할 수 있습니다.
+- **자가 복구(Self-healing)**: 문제가 생긴 컨테이너를 재시작하거나, 문제가 생긴 노드(서버, 머신)에서 실행되고 있는 컨테이너들을 다른 노드의 컨테이너로 교체 혹은 재할당할 수 있으며, 사전 정의된 Health check에 응답하지 않는 컨테이너를 Kill할 수 있습니다. 문제가 해결되기 전까지는 문제가 생긴 노드(혹은 컨테이너)는 Clients에게 노출되지 않습니다.
+- **서비스 검색 및 로드 밸런싱(Service Discovery & Load Balancing)**: 각 컨테이너에 고유한 IP를 부여하고, 클러스터 DNS 기반 서비스 검색을 할 수 있는 Service Discovery 기능을 제공합니다. 또한 Load Balancing을 사용해 여러 컨테이너에 트래픽을 분산할 수 있습니다.
+- **스토리지 오케스트레이션(Storage Orchestration)**: 로컬 스토리지, 퍼블릭 클라우드 스토리지(NFS, Ceph, AWS EBS, GCP Persistent Disk 등) 등의 다양한 스토리지를 손쉽게 컨테이너에 마운트(Mount)하여 사용할 수 있습니다.
+
+쿠버네티스는 현재 <b>클라우드 환경(AWS, GCP, Azure) 및 온프레미스(자체 서버)</b>에서 가장 널리 사용되는 컨테이너 오케스트레이션 도구입니다.
 
 ## 2. Lab Preparation
 
