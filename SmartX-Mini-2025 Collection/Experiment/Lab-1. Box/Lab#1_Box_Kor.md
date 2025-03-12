@@ -486,7 +486,7 @@ sudo sysctl -p
 
 - Installation Completed
 
-  VM 내에서 ubuntu의 설치가 완료되어 `Reboot Now` 버튼이 보이면, Host OS의 터미널에서 아래의 명령어를 입력하여 VM을 종료합니다.
+  VM 내에서 ubuntu의 설치가 완료되어 `Reboot Now` 버튼이 보이면, ⚠️ **Host OS의 터미널을 새로 하나 생성한 뒤에** 아래의 명령어를 입력하여 VM을 종료합니다.
 
   ```bash
   sudo killall -9 kvm
@@ -498,7 +498,7 @@ sudo sysctl -p
   sudo kvm -m 1024 -name tt \
   -smp cpus=2,maxcpus=2 \
   -device virtio-net-pci,netdev=net0 \
-  -netdev tap,id=net0,ifname=vport_vFunction,script=no
+  -netdev tap,id=net0,ifname=vport_vFunction,script=no \
   -boot d vFunction22.img
   ```
 

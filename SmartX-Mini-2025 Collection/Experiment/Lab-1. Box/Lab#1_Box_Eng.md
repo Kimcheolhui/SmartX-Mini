@@ -492,7 +492,7 @@ sudo sysctl -p
 
 - Installation Completed
 
-  Once the Ubuntu installation is complete inside the VM and you see the `Reboot Now` button, enter the following command in the terminal of Host OS to shut down the VM.
+  When the installation of Ubuntu inside the VM is complete and the `Reboot Now` button appears, ⚠️ **open a new terminal on the Host OS** and enter the following command to shut down the VM.
 
   ```bash
   sudo killall -9 kvm
@@ -504,7 +504,7 @@ sudo sysctl -p
   sudo kvm -m 1024 -name tt \
   -smp cpus=2,maxcpus=2 \
   -device virtio-net-pci,netdev=net0 \
-  -netdev tap,id=net0,ifname=vport_vFunction,script=no
+  -netdev tap,id=net0,ifname=vport_vFunction,script=no \
   -boot d vFunction22.img
   ```
 
