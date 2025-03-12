@@ -183,12 +183,10 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    - Open vSwitch(OVS)를 기반으로 수동 네트워크 관리 방법을 사용하기 위해서 systemd-networkd 및 Netplan을 비활성화하고 제거합니다.
 
    ```bash
-   sudo su # Enter superuser mod
-   systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   apt-get --assume-yes purge nplan netplan.io
-   exit # Exit superuser mod
+   sudo systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   sudo systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   sudo systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   sudo apt-get --assume-yes purge nplan netplan.io
    ```
 
    - DNS configuration
@@ -302,11 +300,9 @@ sudo ifup eno1  #change this if you are using two-port NUC
 전체 interface를 다시 시작합니다.
 
 ```bash
-sudo su # Enter superuser mod
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
-exit # Exit superuser mod
+sudo systemctl unmask networking
+sudo systemctl enable networking
+sudo systemctl restart networking
 ```
 
 vport_vFunction을 연결한 가상 머신(VM)을 만들겠습니다. 이 TAP(vport_vFunction)은 VM의 NIC(네트워크 인터페이스 카드)라고 생각하면 됩니다.
@@ -330,11 +326,9 @@ sudo ovs-vsctl show
 전체 interface를 다시 시작합니다.
 
 ```bash
-sudo su # Enter superuser mod
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
-exit # Exit superuser mod
+sudo systemctl unmask networking
+sudo systemctl enable networking
+sudo systemctl restart networking
 ```
 
 ### 2-3. NUC: Making VM with KVM
@@ -631,7 +625,7 @@ apt install -y iputils-ping
 ping 명령어를 사용하여 Docker container 내부에서 VM으로 통신이 잘 이루어지는지 확인합니다.
 
 ```bash
-ping <VM IP address>
+ping <VM IP(Extra IP)>
 # please type this command in the container.
 ```
 

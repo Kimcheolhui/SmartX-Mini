@@ -190,12 +190,10 @@ If an issue related to booting occurs, follow these steps.
 - To use manual network management with Open vSwitch (OVS), disable and remove systemd-networkd and Netplan.
 
   ```bash
-  sudo su # Enter superuser mod
-  systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-  systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-  systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-  apt-get --assume-yes purge nplan netplan.io
-  exit # Exit superuser mod
+  sudo systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  sudo systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  sudo systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  sudo apt-get --assume-yes purge nplan netplan.io
   ```
 
 - DNS configuration
@@ -308,11 +306,9 @@ sudo ifup eno1  #change this if you are using two-port NUC
 Restart the whole interfaces.
 
 ```bash
-sudo su # Enter superuser mod
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
-exit # Exit superuser mod
+sudo systemctl unmask networking
+sudo systemctl enable networking
+sudo systemctl restart networking
 ```
 
 We will make VM attaching vport_vFunction. You can think this TAP as a NIC(Network Interface Card) of VM.
@@ -336,11 +332,9 @@ Below is the figure you have configured so far.
 Restart the whole interfaces.
 
 ```bash
-sudo su # Enter superuser mod
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
-exit # Exit superuser mod
+sudo systemctl unmask networking
+sudo systemctl enable networking
+sudo systemctl restart networking
 ```
 
 ### 2-3. NUC: Making VM with KVM
@@ -635,7 +629,7 @@ apt install -y iputils-ping
 Check connectivity with ping command from docker to VM.
 
 ```bash
-ping <VM IP address>
+ping <VM IP(Extra IP)>
 # please type this command in the container.
 ```
 
