@@ -474,7 +474,7 @@ sudo sysctl -p
      > IPv4 Method → Manual
      >
      > subnet: 172.29.0.0/24  
-     > Address: < your VM IP >  
+     > Address: < VM IP(Extra IP) >  
      > Gateway: 172.29.0.254  
      > Name Servers: 203.237.32.100
 
