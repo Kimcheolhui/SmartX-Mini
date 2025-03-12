@@ -64,11 +64,12 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
 1. Install Ubuntu를 선택합니다. (Try Ubuntu X) 언어는 English로 진행해야합니다.
 2. Keyboard layout 설정 단계에서도 "English(US)"로 설정합니다.
-3. Updates and other software 단계에서 "What apps would you like to install to start with?" 영역에서 "Minimal installation"을 선택하고 다음 단계로 넘어갑니다.
-4. Installation type 단계에서 "Erase disk and install Ubuntu"를 선택하고 "Install now" 버튼을 누릅니다.
-5. Write the changes to disks? 창이 뜨면 Continue를 눌러 계속 진행합니다.
-6. Location 설정을 합니다.
-7. User 정보와 Computer 정보를 입력하는 "Who are you" 단계에 진입했다면 다음과 같이 설정합니다.
+3. Wireless 탭이 뜨면, "I don't want to connect to a Wi-Fi network right now"를 선택하고 넘어갑니다.
+4. Updates and other software 단계에서 "What apps would you like to install to start with?" 영역에서 "Minimal installation"을 선택하고 다음 단계로 넘어갑니다.
+5. Installation type 단계에서 "Erase disk and install Ubuntu"를 선택하고 "Install now" 버튼을 누릅니다.
+6. Write the changes to disks? 창이 뜨면 Continue를 눌러 계속 진행합니다.
+7. Location 설정 화면에서 "South Korea Time"을 선택합니다.
+8. User 정보와 Computer 정보를 입력하는 "Who are you" 단계에 진입했다면 다음과 같이 설정합니다.
 
    - Your name: gist
    - Your computer's name: nuc<NUC IP주소의 마지막 3자리 숫자>  
@@ -76,9 +77,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    - Pick a username: gist
    - 비밀번호의 경우, 조교의 안내에 따라 설정을 진행합니다.
 
-8. 모든 설정이 완료되었다면 버튼을 눌러 최종 설치를 진행합니다.
-9. 설치가 완료되면, "Restart now" 버튼을 눌러 NUC을 다시 시작합니다.
-10. 재시작 과정에서 "Please remove the installation medium, then press ENTER" 메세지가 보이면, 설치 USB를 제거한 뒤에 ENTER 키를 누릅니다.
+9. 모든 설정이 완료되었다면 버튼을 눌러 최종 설치를 진행합니다.
+10. 설치가 완료되면, "Restart now" 버튼을 눌러 NUC을 다시 시작합니다.
+11. 재시작 과정에서 "Please remove the installation medium, then press ENTER" 메세지가 보이면, 설치 USB를 제거한 뒤에 ENTER 키를 누릅니다.
 
   <details>
     <summary>에러 발생 시 참고(정상 설치가 되었다면 이 부분은 생략합니다.)</summary>
@@ -110,7 +111,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 ### 2-2. NUC: Network Configuration
 
 - 로그인 화면이 보이면, 계정 정보를 입력하여 로그인합니다. 이제부터는 초기 네트워크 설정을 진행할 것입니다.  
-  **(중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!)**
+  <span style="color: red;"><b>(중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!)</b></span>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -219,8 +220,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다.(이때 괄호는 제외하고 입력해야 합니다.)
 
-   **주의!**
-   NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.
+   **주의!**  
+   <span style="color: red;">
+   NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</span>
 
    아래의 내용을 추가합니다.
 
@@ -288,7 +290,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    >     post-down ip link del dev vport_vFunction
    >   ```
 
-**주의!** 만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)
+**주의!**  
+<span style="color: red;">
+만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)</span>
 
 ```bash
 sudo systemctl restart systemd-resolved.service
@@ -310,7 +314,8 @@ vport_vFunction을 연결한 가상 머신(VM)을 만들겠습니다. 이 TAP(vp
 'br0'에 포트 'eno1' 및 'vport_vFunction'을 추가합니다.
 
 **주의!**  
-만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야합니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용 중인 것을 선택합니다.)
+<span style="color: red;">
+만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야합니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용 중인 것을 선택합니다.)</span>
 
 ```bash
 sudo ovs-vsctl add-port br0 eno1   #change this if you are using two-port NUC
@@ -382,7 +387,8 @@ exit # Exit superuser mod
   **NUC's ip address**을 하단의 `<Your ip address>`에 기입합니다.(이때, **괄호는 지우고** 172.29.0.X의 형식으로 작성합니다.)
 
   **주의!**  
-  만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)
+  <span style="color: red;">
+  만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</span>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT

@@ -65,11 +65,12 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
 1. Select “Install Ubuntu” (Do not choose “Try Ubuntu”). The installation should be done in English.
 2. In the Keyboard layout step, select “English (US)”.
-3. In the Updates and other software step, under “What apps would you like to install to start with?”, choose “Minimal installation” and proceed to the next step.
-4. In the Installation type step, select “Erase disk and install Ubuntu”, then click “Install Now”.
-5. When the “Write the changes to disks?” prompt appears, click “Continue” to proceed.
-6. Configure the Location settings.
-7. In the “Who are you?” step, enter the User and Computer information as follows.
+3. If the Wireless tab appears, select “I don’t want to connect to a Wi-Fi network right now” and proceed.
+4. In the Updates and other software step, under “What apps would you like to install to start with?”, choose “Minimal installation” and proceed to the next step.
+5. In the Installation type step, select “Erase disk and install Ubuntu”, then click “Install Now”.
+6. When the “Write the changes to disks?” prompt appears, click “Continue” to proceed.
+7. On the Location settings screen, select “South Korea Time.”
+8. In the “Who are you?” step, enter the User and Computer information as follows.
 
    - Your name: gist
    - Your computer's name: nuc<The last three digits of the NUC’s IP address.>  
@@ -77,9 +78,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    - Pick a username: gist
    - For the password, follow the instructions provided by the TAs.
 
-8. Once all settings are complete, click the button to proceed with the final installation.
-9. Once the installation is complete, click the “Restart Now” button to reboot the NUC.
-10. During the restart process, if you see the message “Please remove the installation medium, then press ENTER”, remove the installation USB and press ENTER.
+9. Once all settings are complete, click the button to proceed with the final installation.
+10. Once the installation is complete, click the “Restart Now” button to reboot the NUC.
+11. During the restart process, if you see the message “Please remove the installation medium, then press ENTER”, remove the installation USB and press ENTER.
 
   <details>
     <summary>
@@ -117,7 +118,7 @@ If an issue related to booting occurs, follow these steps.
 ### 2-2. NUC: Network Configuration
 
 - When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.  
-  **(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)**
+  <span style="color: red;"><b>(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)</b></span>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -225,10 +226,9 @@ If an issue related to booting occurs, follow these steps.
 
   Type your NUC's IP in `<your nuc ip>`and gateway IP in `<gateway ip>`(In this lab, **172.29.0.254** is the gateway IP. Please write it without parentheses.)
 
-  **Caution!**
-  If the NUC has two Ethernet ports, the eno1 interface may not be available. Use the ifconfig command to check the network-connected interfaces (enp88s0 or enp89s0).
-
-  For example, run the `ifconfig -a` command in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of eno1 in the text with either enp88s0 or enp89s0, based on the detected network interface.
+  **Caution!**  
+  <span style="color: red;">
+  If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`). For example, enter `ifconfig -a` in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of `eno1` in the text with either `enp88s0` or `enp89s0`, depending on the active interface.</span>
 
   Add the contents below.
 
@@ -296,7 +296,9 @@ If an issue related to booting occurs, follow these steps.
 >       post-down ip link del dev vport_vFunction
 >   ```
 
-**Caution!** If the NUC has two Ethernet ports, the eno1 interface will not be available. Therefore, in the block below, replace eno1 with the interface you selected earlier (enp88s0 or enp89s0), choosing the one currently in use.
+**Caution!**  
+<span style="color: red;">
+If the NUC has two Ethernet ports, the `eno1` interface will not be available. Therefore, in the block below, replace `eno1` with the interface you selected earlier (`enp88s0` or `enp89s0`), choosing the one currently in use.</span>
 
 ```bash
 sudo systemctl restart systemd-resolved.service
@@ -317,7 +319,9 @@ We will make VM attaching vport_vFunction. You can think this TAP as a NIC(Netwo
 
 Add the ports eno1 and vport_vFunction to br0.
 
-**Caution!** If the NUC has two Ethernet ports, the eno1 interface will not be available. Therefore, in the block below, replace eno1 with the interface you selected earlier (enp88s0 or enp89s0), choosing the one currently in use.
+**Caution!**  
+<span style="color: red;">
+If the NUC has two Ethernet ports, the `eno1` interface will not be available. Therefore, in the block below, replace `eno1` with the interface you selected earlier (`enp88s0` or `enp89s0`), choosing the one currently in use.</span>
 
 ```bash
 sudo ovs-vsctl add-port br0 eno1   #change this if you are using two-port NUC
@@ -389,7 +393,8 @@ exit # Exit superuser mod
   Please type your **NUC's ip address** in `<Your ip address>`. (Please write it in the format 172.29.0.X, without parentheses.)
 
   **Caution!**  
-  If the NUC has two Ethernet ports, the eno1 interface may not be available. Use the ifconfig command to check the network-connected interfaces (enp88s0 or enp89s0).
+  <span style="color: red;">
+  If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`).</span>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
