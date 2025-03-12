@@ -118,7 +118,7 @@ If an issue related to booting occurs, follow these steps.
 ### 2-2. NUC: Network Configuration
 
 - When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.  
-  <span style="color: red;"><b>(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)</b></span>
+  <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -224,9 +224,9 @@ If an issue related to booting occurs, follow these steps.
 
   Type your NUC's IP in `<your nuc ip>`and gateway IP in `<gateway ip>`(In this lab, **172.29.0.254** is the gateway IP. Please write it without parentheses.)
 
-  **Caution!**  
-  <span style="color: red;">
-  If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`). For example, enter `ifconfig -a` in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of `eno1` in the text with either `enp88s0` or `enp89s0`, depending on the active interface.</span>
+  ⚠️ **Caution!** ⚠️  
+  <b>
+  If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`). For example, enter `ifconfig -a` in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of `eno1` in the text with either `enp88s0` or `enp89s0`, depending on the active interface.</b>
 
   Add the contents below.
 
@@ -294,9 +294,9 @@ If an issue related to booting occurs, follow these steps.
 >       post-down ip link del dev vport_vFunction
 >   ```
 
-**Caution!**  
-<span style="color: red;">
-If the NUC has two Ethernet ports, the `eno1` interface will not be available. Therefore, in the block below, replace `eno1` with the interface you selected earlier (`enp88s0` or `enp89s0`), choosing the one currently in use.</span>
+⚠️ **Caution!** ⚠️  
+<b>
+If the NUC has two Ethernet ports, the `eno1` interface will not be available. Therefore, in the block below, replace `eno1` with the interface you selected earlier (`enp88s0` or `enp89s0`), choosing the one currently in use.</b>
 
 ```bash
 sudo systemctl restart systemd-resolved.service
@@ -315,9 +315,9 @@ We will make VM attaching vport_vFunction. You can think this TAP as a NIC(Netwo
 
 Add the ports eno1 and vport_vFunction to br0.
 
-**Caution!**  
-<span style="color: red;">
-If the NUC has two Ethernet ports, the `eno1` interface will not be available. Therefore, in the block below, replace `eno1` with the interface you selected earlier (`enp88s0` or `enp89s0`), choosing the one currently in use.</span>
+⚠️ **Caution!** ⚠️  
+<b>
+If the NUC has two Ethernet ports, the `eno1` interface will not be available. Therefore, in the block below, replace `eno1` with the interface you selected earlier (`enp88s0` or `enp89s0`), choosing the one currently in use.</b>
 
 ```bash
 sudo ovs-vsctl add-port br0 eno1   #change this if you are using two-port NUC
@@ -386,9 +386,9 @@ sudo systemctl restart networking
 
   Please type your **NUC's ip address** in `<Your ip address>`. (Please write it in the format 172.29.0.X, without parentheses.)
 
-  **Caution!**  
-  <span style="color: red;">
-  If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`).</span>
+  ⚠️ **Caution!** ⚠️  
+  <b>
+  If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`).</b>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
@@ -604,8 +604,8 @@ sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gat
 When writing --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP], remove the brackets `[]` and use the format 172.29.0.X.  
 For example: --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
 
-<span style="color: red;">If there were no issues, proceed to the next step.  
-If there was a typo or mistake while executing the `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` command, execute `sudo ovs-docker del-port br0 veno1 c1` and then re-run `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`.</span>
+<b>⚠️ If there were no issues, skip this part. ⚠  
+If there was a typo or mistake while executing the `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` command, execute `sudo ovs-docker del-port br0 veno1 c1` and then re-run `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`.</b>
 
 Enter to docker container
 

@@ -111,7 +111,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 ### 2-2. NUC: Network Configuration
 
 - 로그인 화면이 보이면, 계정 정보를 입력하여 로그인합니다. 이제부터는 초기 네트워크 설정을 진행할 것입니다.  
-  <span style="color: red;"><b>(중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!)</b></span>
+  <b>⚠️(중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!)⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -157,7 +157,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
 3. Install net-tools & ifupdown
 
-   - network 관련 유틸리티를 실행하기 위해 net-tools와 ifupdown을 설치합니다. 그리고 ip addr show 명령어를 통해 network interface 정보를 확인합니다.
+   - network 관련 유틸리티를 실행하기 위해 net-tools와 ifupdown을 설치합니다. 그리고 `ifconfig -a` 명령어를 통해 network interface 정보를 확인합니다.
 
    ```bash
    sudo apt install -y net-tools ifupdown
@@ -218,9 +218,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다.(이때 괄호는 제외하고 입력해야 합니다.)
 
-   **주의!**  
-   <span style="color: red;">
-   NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</span>
+   ⚠️ **주의!** ⚠️  
+   <b>
+   NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</b>
 
    아래의 내용을 추가합니다.
 
@@ -288,9 +288,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    >     post-down ip link del dev vport_vFunction
    >   ```
 
-**주의!**  
-<span style="color: red;">
-만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)</span>
+⚠️ **주의!** ⚠️  
+<b>
+만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)</b>
 
 ```bash
 sudo systemctl restart systemd-resolved.service
@@ -309,9 +309,9 @@ vport_vFunction을 연결한 가상 머신(VM)을 만들겠습니다. 이 TAP(vp
 
 'br0'에 포트 'eno1' 및 'vport_vFunction'을 추가합니다.
 
-**주의!**  
-<span style="color: red;">
-만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야합니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용 중인 것을 선택합니다.)</span>
+⚠️ **주의!** ⚠️  
+<b>
+만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야합니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용 중인 것을 선택합니다.)</b>
 
 ```bash
 sudo ovs-vsctl add-port br0 eno1   #change this if you are using two-port NUC
@@ -380,9 +380,9 @@ sudo systemctl restart networking
 
   **NUC's ip address**을 하단의 `<Your ip address>`에 기입합니다.(이때, **괄호는 지우고** 172.29.0.X의 형식으로 작성합니다.)
 
-  **주의!**  
-  <span style="color: red;">
-  만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</span>
+  ⚠️ **주의!** ⚠️  
+  <b>
+  만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</b>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
@@ -600,8 +600,8 @@ sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gat
 위의 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP] 작성 시에 `[]`은 빼고, 172.29.0.X의 형식으로 작성해주시기 바랍니다.  
 예를 들어, --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
 
-<span style="color: red;"> 아무 문제가 없었다면, 다음 단계로 넘어갑니다.  
-만약, `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` 명령어를 실행하는 과정에서 오타나 실수가 있었다면 `sudo ovs-docker del-port br0 veno1 c1` 명령어를 실행하고 다시 `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`를 실행합니다.</span>
+<b> ⚠️ 아무 문제가 없었다면, 이 부분은 생략합니다. ⚠️  
+만약, `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` 명령어를 실행하는 과정에서 오타나 실수가 있었다면 `sudo ovs-docker del-port br0 veno1 c1` 명령어를 실행하고 다시 `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`를 실행합니다.</b>
 
 Docker container 안으로 진입합니다.
 
