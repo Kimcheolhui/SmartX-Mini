@@ -253,7 +253,7 @@ If an issue related to booting occurs, follow these steps.
 
   Save and quit the vim editor.
 
-> **This section is for explaining the above content. It does not need to be entered into a file again.**
+> ⚠️ **This section is for explaining the above content. It does not need to be entered into a file again.** ⚠️
 >
 > - Loopback Interface Configuration
 >   Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
@@ -396,7 +396,7 @@ sudo systemctl restart networking
   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
   ```
 
-> **This is an explanation of the above command. It does not need to be entered again.**
+> ⚠️ **This is an explanation of the above command. It does not need to be entered again.** ⚠️
 >
 > - Allow packet forwarding for incoming traffic on the eno1 interface.
 >

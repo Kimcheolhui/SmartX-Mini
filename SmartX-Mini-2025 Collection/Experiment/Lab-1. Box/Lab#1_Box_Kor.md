@@ -247,7 +247,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    파일을 저장하고 vim editor에서 나옵니다.
 
-   > **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.**
+   > ⚠️ **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.** ⚠️
    >
    > - Loopback 인터페이스 설정
    >   Loopback 인터페이스를 자동으로 활성화하고, loopback(자기 자신을 참조하는 가상 네트워크 인터페이스)으로 설정합니다.
@@ -390,7 +390,7 @@ sudo systemctl restart networking
   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
   ```
 
-> **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.**
+> ⚠️ **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.** ⚠️
 >
 > - 인터페이스 eno1에서 들어오는 패킷의 포워딩을 허용합니다.
 >
