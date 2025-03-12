@@ -593,13 +593,15 @@ ctrl + p, q를 누르면 container를 종료하지 않고 container 밖으로 �
 
 ```bash
 sudo docker start c1
-sudo ovs-docker del-port br0 veno1 c1
 sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]
 # please type gateway IP and docker container IP.
 ```
 
 위의 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP] 작성 시에 `[]`은 빼고, 172.29.0.X의 형식으로 작성해주시기 바랍니다.  
 예를 들어, --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
+
+<span style="color: red;"> 아무 문제가 없었다면, 다음 단계로 넘어갑니다.  
+만약, `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` 명령어를 실행하는 과정에서 오타나 실수가 있었다면 `sudo ovs-docker del-port br0 veno1 c1` 명령어를 실행하고 다시 `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`를 실행합니다.</span>
 
 Docker container 안으로 진입합니다.
 

@@ -597,13 +597,15 @@ Install OVS-docker utility in host machine **(Not inside of Docker container)**
 
 ```bash
 sudo docker start c1
-sudo ovs-docker del-port br0 veno1 c1
 sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]
 # please type gateway IP and docker container IP.
 ```
 
 When writing --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP], remove the brackets `[]` and use the format 172.29.0.X.  
 For example: --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
+
+<span style="color: red;">If there were no issues, proceed to the next step.  
+If there was a typo or mistake while executing the `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` command, execute `sudo ovs-docker del-port br0 veno1 c1` and then re-run `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`.</span>
 
 Enter to docker container
 
