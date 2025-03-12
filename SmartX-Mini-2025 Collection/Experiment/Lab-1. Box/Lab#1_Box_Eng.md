@@ -356,8 +356,6 @@ sudo systemctl restart networking
   wget https://ftp.lanet.kr/ubuntu-releases/22.04.5/ubuntu-22.04.5-live-server-amd64.iso
   ```
 
-  Now we are ready to make VM.
-
 - Prepare for Ubuntu VM
 
   To Make a virtual disk image, enter this command.
@@ -376,7 +374,7 @@ sudo systemctl restart networking
   -device virtio-net-pci,netdev=net0 \
   -netdev tap,id=net0,ifname=vport_vFunction,script=no \
   -boot d vFunction22.img \
-  -cdrom ubuntu-22.04.6-live-server-amd64.iso \
+  -cdrom ubuntu-22.04.5-live-server-amd64.iso \
   -vnc :5 -daemonize \
   -monitor telnet:127.0.0.1:3010,server,nowait,ipv4 \
   -cpu host
@@ -393,7 +391,7 @@ sudo systemctl restart networking
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
   sudo iptables -A FORWARD -o eno1 -j ACCEPT
-  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
   ```
 
 > ⚠️ **This is an explanation of the above command. It does not need to be entered again.** ⚠️
@@ -414,7 +412,7 @@ sudo systemctl restart networking
 >   Translate packets from the internal network (192.168.100.0/24) to the host’s IP before forwarding them to the external network.
 >
 >   ```text
->   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+>   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC ip address>
 >   ```
 
 Open /etc/sysctl.conf file.
@@ -458,12 +456,11 @@ sudo sysctl -p
   Installation Steps (Control using the 'Enter key' and the 'arrow keys'.)
 
   1. On the language selection screen, set the language to English.
-  2. **(Important)** On the “Installer update available” screen, select “Continue without updating”.
-  3. On the “Keyboard configuration” screen, set all options to English (US).
-  4. On the “Choose the type of installation” screen, ensure that “Ubuntu Server” is selected (marked with an (X)), then click Done.
-  5. Enter the “Network configuration” screen and click “Edit IPv4” as shown below.
+  2. On the “Keyboard configuration” screen, set all options to English (US).
+  3. On the “Choose the type of installation” screen, ensure that “Ubuntu Server” is selected (marked with an (X)), then click Done.
+  4. Enter the “Network configuration” screen and click “Edit IPv4” as shown below.
      ![Ubuntu Network](./img/ubuntu_network.png)
-  6. Configure the settings based on the information below.
+  5. Configure the settings based on the information below.
 
      > IPv4 Method → Manual
      >
@@ -474,11 +471,12 @@ sudo sysctl -p
 
      Please leave the “Search domains” field empty.
 
-     Also, when writing `<your VM IP>`, remove the brackets and use the format 172.29.0.X.
+     Also, when writing `< VM IP(Extra IP) >`, remove the brackets and use the format 172.29.0.X.
 
-  7. On the “Proxy configuration” screen, leave it blank and proceed to the next step.
-  8. On the “Ubuntu archive mirror configuration” screen, simply click Done to proceed.
-  9. On the “Storage configuration” screen, proceed without making any changes by continuously clicking Done. When the “Confirm destructive action” prompt appears, click Continue to proceed.
+  6. On the “Proxy configuration” screen, leave it blank and proceed to the next step.
+  7. On the “Ubuntu archive mirror configuration” screen, simply click Done to proceed.
+  8. **(Important)** On the “Installer update available” screen, select “Continue without updating”.
+  9. On the "Guided storage configuration", “Storage configuration” screens, proceed without making any changes by continuously clicking Done. When the “Confirm destructive action” prompt appears, click Continue to proceed.
   10. On the “Profile configuration” screen, enter the following details as shown below.
       - Your name: vm
       - Your servers name: vm<The last three digits of the VM’s IP address>  

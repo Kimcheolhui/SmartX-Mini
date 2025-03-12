@@ -350,8 +350,6 @@ sudo systemctl restart networking
   wget https://ftp.lanet.kr/ubuntu-releases/22.04.5/ubuntu-22.04.5-live-server-amd64.iso
   ```
 
-  이제 VM을 만들 준비가 되었습니다.
-
 - Prepare for Ubuntu VM
 
   VM에서 사용할 가상 디스크 image를 만들기 위해, 아래의 명령어를 실행합니다.
@@ -370,7 +368,7 @@ sudo systemctl restart networking
   -device virtio-net-pci,netdev=net0 \
   -netdev tap,id=net0,ifname=vport_vFunction,script=no \
   -boot d vFunction22.img \
-  -cdrom ubuntu-22.04.6-live-server-amd64.iso \
+  -cdrom ubuntu-22.04.5-live-server-amd64.iso \
   -vnc :5 -daemonize \
   -monitor telnet:127.0.0.1:3010,server,nowait,ipv4 \
   -cpu host
@@ -387,7 +385,7 @@ sudo systemctl restart networking
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
   sudo iptables -A FORWARD -o eno1 -j ACCEPT
-  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
   ```
 
 > ⚠️ **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.** ⚠️
@@ -408,7 +406,7 @@ sudo systemctl restart networking
 >   내부 네트워크(192.168.100.0/24)의 패킷을 호스트의 IP로 변환하여 외부로 전달합니다.
 >
 >   ```text
->   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+>   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
 >   ```
 
 아래의 명령어를 입력하여 /etc/sysctl.conf 파일을 엽니다.
@@ -452,12 +450,11 @@ sudo sysctl -p
   설치 단계 (Enter키와 방향키를 사용하여 설치를 진행합니다.)
 
   1. 언어 설정 화면에서 English로 설정합니다.
-  2. **(중요)** "Installer update available" 화면에서는 "Continue without updating"을 선택합니다.
-  3. "Keyboard configuration" 화면에서는 모든 부분을 English(US)로 설정합니다.
-  4. "Choose the type of installation" 화면에서는 "Ubuntu Server" 부분에 (X) 표시가 되어있는지 확인하고 Done을 누릅니다.
-  5. "Network configuration" 화면에 진입하여 아래와 같이 "Edit IPv4"를 눌러줍니다.
+  2. "Keyboard configuration" 화면에서는 모든 부분을 English(US)로 설정합니다.
+  3. "Choose the type of installation" 화면에서는 "Ubuntu Server" 부분에 (X) 표시가 되어있는지 확인하고 Done을 누릅니다.
+  4. "Network configuration" 화면에 진입하여 아래와 같이 "Edit IPv4"를 눌러줍니다.
      ![Ubuntu Network](./img/ubuntu_network.png)
-  6. 아래 내용을 참고하여 설정해줍니다.
+  5. 아래 내용을 참고하여 설정해줍니다.
 
      > IPv4 Method → Manual
      >
@@ -466,15 +463,14 @@ sudo sysctl -p
      > Gateway: 172.29.0.254  
      > Name Servers: 203.237.32.100
 
-     Search domains에는 아무것도 적지 않습니다!  
-      Please leave the “Search domains” field empty.
+     Search domains에는 아무것도 적지 않습니다!
 
-     그리고 위의 `< your VM IP >` 작성 시에 **괄호는 지우고** 172.29.0.X의 형식으로 작성해야 합니다.  
-      Also, when writing `<your VM IP>`, remove the brackets and use the format 172.29.0.X.
+     그리고 위의 `< VM IP(Extra IP) >` 작성 시에 **괄호는 지우고** 172.29.0.X의 형식으로 작성해야 합니다.
 
-  7. "Proxy configuration" 화면에서는 아무것도 입력하지 않고 넘어갑니다.
-  8. "Ubuntu archive mirror configuration" 화면에서도 Done을 눌러 넘어갑니다.
-  9. "Storage configuration" 화면에서도 내용을 수정하지 않고 Done을 계속 눌러서 넘어갑니다. 마지막에 "Confirm destructive action" 창이 뜨면 Continue를 눌러 넘어갑니다.
+  6. "Proxy configuration" 화면에서는 아무것도 입력하지 않고 넘어갑니다.
+  7. "Ubuntu archive mirror configuration" 화면에서도 Done을 눌러 넘어갑니다.
+  8. **(중요)** "Installer update available" 화면에서는 "Continue without updating"을 선택합니다.
+  9. "Guided storage configuration", "Storage configuration" 화면에서도 내용을 수정하지 않고 Done을 계속 눌러서 넘어갑니다. 마지막에 "Confirm destructive action" 창이 뜨면 Continue를 눌러 넘어갑니다.
   10. "Profile configuration" 화면에서는 아래와 같이 입력합니다.
       - Your name: vm
       - Your servers name: vm<VM IP주소의 마지막 3자리 숫자>  
