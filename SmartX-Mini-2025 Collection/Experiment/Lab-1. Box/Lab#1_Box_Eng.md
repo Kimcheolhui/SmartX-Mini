@@ -65,11 +65,12 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
 1. Select “Install Ubuntu” (Do not choose “Try Ubuntu”). The installation should be done in English.
 2. In the Keyboard layout step, select “English (US)”.
-3. In the Updates and other software step, under “What apps would you like to install to start with?”, choose “Minimal installation” and proceed to the next step.
-4. In the Installation type step, select “Erase disk and install Ubuntu”, then click “Install Now”.
-5. When the “Write the changes to disks?” prompt appears, click “Continue” to proceed.
-6. Configure the Location settings.
-7. In the “Who are you?” step, enter the User and Computer information as follows.
+3. If the Wireless tab appears, select “I don’t want to connect to a Wi-Fi network right now” and proceed.
+4. In the Updates and other software step, under “What apps would you like to install to start with?”, choose “Minimal installation” and proceed to the next step.
+5. In the Installation type step, select “Erase disk and install Ubuntu”, then click “Install Now”.
+6. When the “Write the changes to disks?” prompt appears, click “Continue” to proceed.
+7. On the Location settings screen, select “South Korea Time.”
+8. In the “Who are you?” step, enter the User and Computer information as follows.
 
    - Your name: gist
    - Your computer's name: nuc<The last three digits of the NUC’s IP address.>  
@@ -77,9 +78,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    - Pick a username: gist
    - For the password, follow the instructions provided by the TAs.
 
-8. Once all settings are complete, click the button to proceed with the final installation.
-9. Once the installation is complete, click the “Restart Now” button to reboot the NUC.
-10. During the restart process, if you see the message “Please remove the installation medium, then press ENTER”, remove the installation USB and press ENTER.
+9. Once all settings are complete, click the button to proceed with the final installation.
+10. Once the installation is complete, click the “Restart Now” button to reboot the NUC.
+11. During the restart process, if you see the message “Please remove the installation medium, then press ENTER”, remove the installation USB and press ENTER.
 
   <details>
     <summary>
@@ -117,7 +118,7 @@ If an issue related to booting occurs, follow these steps.
 ### 2-2. NUC: Network Configuration
 
 - When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.  
-  **(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)**
+  <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -189,12 +190,10 @@ If an issue related to booting occurs, follow these steps.
 - To use manual network management with Open vSwitch (OVS), disable and remove systemd-networkd and Netplan.
 
   ```bash
-  sudo su # Enter superuser mod
-  systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-  systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-  systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-  apt-get --assume-yes purge nplan netplan.io
-  exit # Exit superuser mod
+  sudo systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  sudo systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  sudo systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+  sudo apt-get --assume-yes purge nplan netplan.io
   ```
 
 - DNS configuration
@@ -225,10 +224,9 @@ If an issue related to booting occurs, follow these steps.
 
   Type your NUC's IP in `<your nuc ip>`and gateway IP in `<gateway ip>`(In this lab, **172.29.0.254** is the gateway IP. Please write it without parentheses.)
 
-  **Caution!**
-  If the NUC has two Ethernet ports, the eno1 interface may not be available. Use the ifconfig command to check the network-connected interfaces (enp88s0 or enp89s0).
-
-  For example, run the `ifconfig -a` command in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of eno1 in the text with either enp88s0 or enp89s0, based on the detected network interface.
+  ⚠️ **Caution!** ⚠️  
+  <b>
+  If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`). For example, enter `ifconfig -a` in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of `eno1` in the text with either `enp88s0` or `enp89s0`, depending on the active interface.</b>
 
   Add the contents below.
 
@@ -255,7 +253,7 @@ If an issue related to booting occurs, follow these steps.
 
   Save and quit the vim editor.
 
-> **This section is for explaining the above content. It does not need to be entered into a file again.**
+> ⚠️ **This section is for explaining the above content. It does not need to be entered into a file again.** ⚠️
 >
 > - Loopback Interface Configuration
 >   Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
@@ -296,7 +294,9 @@ If an issue related to booting occurs, follow these steps.
 >       post-down ip link del dev vport_vFunction
 >   ```
 
-**Caution!** If the NUC has two Ethernet ports, the eno1 interface will not be available. Therefore, in the block below, replace eno1 with the interface you selected earlier (enp88s0 or enp89s0), choosing the one currently in use.
+⚠️ **Caution!** ⚠️  
+<b>
+If the NUC has two Ethernet ports, the `eno1` interface will not be available. Therefore, in the block below, replace `eno1` with the interface you selected earlier (`enp88s0` or `enp89s0`), choosing the one currently in use.</b>
 
 ```bash
 sudo systemctl restart systemd-resolved.service
@@ -306,18 +306,18 @@ sudo ifup eno1  #change this if you are using two-port NUC
 Restart the whole interfaces.
 
 ```bash
-sudo su # Enter superuser mod
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
-exit # Exit superuser mod
+sudo systemctl unmask networking
+sudo systemctl enable networking
+sudo systemctl restart networking
 ```
 
 We will make VM attaching vport_vFunction. You can think this TAP as a NIC(Network Interface Card) of VM.
 
 Add the ports eno1 and vport_vFunction to br0.
 
-**Caution!** If the NUC has two Ethernet ports, the eno1 interface will not be available. Therefore, in the block below, replace eno1 with the interface you selected earlier (enp88s0 or enp89s0), choosing the one currently in use.
+⚠️ **Caution!** ⚠️  
+<b>
+If the NUC has two Ethernet ports, the `eno1` interface will not be available. Therefore, in the block below, replace `eno1` with the interface you selected earlier (`enp88s0` or `enp89s0`), choosing the one currently in use.</b>
 
 ```bash
 sudo ovs-vsctl add-port br0 eno1   #change this if you are using two-port NUC
@@ -332,11 +332,9 @@ Below is the figure you have configured so far.
 Restart the whole interfaces.
 
 ```bash
-sudo su # Enter superuser mod
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
-exit # Exit superuser mod
+sudo systemctl unmask networking
+sudo systemctl enable networking
+sudo systemctl restart networking
 ```
 
 ### 2-3. NUC: Making VM with KVM
@@ -358,8 +356,6 @@ exit # Exit superuser mod
   wget https://ftp.lanet.kr/ubuntu-releases/22.04.5/ubuntu-22.04.5-live-server-amd64.iso
   ```
 
-  Now we are ready to make VM.
-
 - Prepare for Ubuntu VM
 
   To Make a virtual disk image, enter this command.
@@ -378,7 +374,7 @@ exit # Exit superuser mod
   -device virtio-net-pci,netdev=net0 \
   -netdev tap,id=net0,ifname=vport_vFunction,script=no \
   -boot d vFunction22.img \
-  -cdrom ubuntu-22.04.6-live-server-amd64.iso \
+  -cdrom ubuntu-22.04.5-live-server-amd64.iso \
   -vnc :5 -daemonize \
   -monitor telnet:127.0.0.1:3010,server,nowait,ipv4 \
   -cpu host
@@ -388,16 +384,17 @@ exit # Exit superuser mod
 
   Please type your **NUC's ip address** in `<Your ip address>`. (Please write it in the format 172.29.0.X, without parentheses.)
 
-  **Caution!**  
-  If the NUC has two Ethernet ports, the eno1 interface may not be available. Use the ifconfig command to check the network-connected interfaces (enp88s0 or enp89s0).
+  ⚠️ **Caution!** ⚠️  
+  <b>
+  If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`).</b>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
   sudo iptables -A FORWARD -o eno1 -j ACCEPT
-  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
   ```
 
-> **This is an explanation of the above command. It does not need to be entered again.**
+> ⚠️ **This is an explanation of the above command. It does not need to be entered again.** ⚠️
 >
 > - Allow packet forwarding for incoming traffic on the eno1 interface.
 >
@@ -415,7 +412,7 @@ exit # Exit superuser mod
 >   Translate packets from the internal network (192.168.100.0/24) to the host’s IP before forwarding them to the external network.
 >
 >   ```text
->   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+>   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC ip address>
 >   ```
 
 Open /etc/sysctl.conf file.
@@ -459,27 +456,27 @@ sudo sysctl -p
   Installation Steps (Control using the 'Enter key' and the 'arrow keys'.)
 
   1. On the language selection screen, set the language to English.
-  2. **(Important)** On the “Installer update available” screen, select “Continue without updating”.
-  3. On the “Keyboard configuration” screen, set all options to English (US).
-  4. On the “Choose the type of installation” screen, ensure that “Ubuntu Server” is selected (marked with an (X)), then click Done.
-  5. Enter the “Network configuration” screen and click “Edit IPv4” as shown below.
+  2. On the “Keyboard configuration” screen, set all options to English (US).
+  3. On the “Choose the type of installation” screen, ensure that “Ubuntu Server” is selected (marked with an (X)), then click Done.
+  4. Enter the “Network configuration” screen and click “Edit IPv4” as shown below.
      ![Ubuntu Network](./img/ubuntu_network.png)
-  6. Configure the settings based on the information below.
+  5. Configure the settings based on the information below.
 
      > IPv4 Method → Manual
      >
      > subnet: 172.29.0.0/24  
-     > Address: < your VM IP >  
+     > Address: < VM IP(Extra IP) >  
      > Gateway: 172.29.0.254  
      > Name Servers: 203.237.32.100
 
      Please leave the “Search domains” field empty.
 
-     Also, when writing `<your VM IP>`, remove the brackets and use the format 172.29.0.X.
+     Also, when writing `< VM IP(Extra IP) >`, remove the brackets and use the format 172.29.0.X.
 
-  7. On the “Proxy configuration” screen, leave it blank and proceed to the next step.
-  8. On the “Ubuntu archive mirror configuration” screen, simply click Done to proceed.
-  9. On the “Storage configuration” screen, proceed without making any changes by continuously clicking Done. When the “Confirm destructive action” prompt appears, click Continue to proceed.
+  6. On the “Proxy configuration” screen, leave it blank and proceed to the next step.
+  7. On the “Ubuntu archive mirror configuration” screen, simply click Done to proceed.
+  8. **(Important)** On the “Installer update available” screen, select “Continue without updating”.
+  9. On the "Guided storage configuration", “Storage configuration” screens, proceed without making any changes by continuously clicking Done. When the “Confirm destructive action” prompt appears, click Continue to proceed.
   10. On the “Profile configuration” screen, enter the following details as shown below.
       - Your name: vm
       - Your servers name: vm<The last three digits of the VM’s IP address>  
@@ -495,7 +492,7 @@ sudo sysctl -p
 
 - Installation Completed
 
-  Once the Ubuntu installation is complete inside the VM and you see the `Reboot Now` button, enter the following command in the terminal of Host OS to shut down the VM.
+  When the installation of Ubuntu inside the VM is complete and the `Reboot Now` button appears, ⚠️ **open a new terminal on the Host OS** and enter the following command to shut down the VM.
 
   ```bash
   sudo killall -9 kvm
@@ -507,7 +504,7 @@ sudo sysctl -p
   sudo kvm -m 1024 -name tt \
   -smp cpus=2,maxcpus=2 \
   -device virtio-net-pci,netdev=net0 \
-  -netdev tap,id=net0,ifname=vport_vFunction,script=no
+  -netdev tap,id=net0,ifname=vport_vFunction,script=no \
   -boot d vFunction22.img
   ```
 
@@ -526,12 +523,7 @@ sudo sysctl -p
 To add the Docker repository, configure apt to support HTTPS and install the required packages.
 
 ```bash
-sudo apt update
 sudo apt install -y ca-certificates curl gnupg lsb-release
-```
-
-```bash
-sudo apt update
 ```
 
 Install Docker
@@ -603,13 +595,15 @@ Install OVS-docker utility in host machine **(Not inside of Docker container)**
 
 ```bash
 sudo docker start c1
-sudo ovs-docker del-port br0 veno1 c1
 sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]
 # please type gateway IP and docker container IP.
 ```
 
 When writing --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP], remove the brackets `[]` and use the format 172.29.0.X.  
 For example: --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
+
+<b>⚠️ If there were no issues, skip this part. ⚠  
+If there was a typo or mistake while executing the `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` command, execute `sudo ovs-docker del-port br0 veno1 c1` and then re-run `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`.</b>
 
 Enter to docker container
 
@@ -630,7 +624,7 @@ apt install -y iputils-ping
 Check connectivity with ping command from docker to VM.
 
 ```bash
-ping <VM IP address>
+ping <VM IP(Extra IP)>
 # please type this command in the container.
 ```
 

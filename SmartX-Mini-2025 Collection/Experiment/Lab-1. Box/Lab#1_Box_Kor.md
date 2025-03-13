@@ -64,11 +64,12 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
 1. Install Ubuntu를 선택합니다. (Try Ubuntu X) 언어는 English로 진행해야합니다.
 2. Keyboard layout 설정 단계에서도 "English(US)"로 설정합니다.
-3. Updates and other software 단계에서 "What apps would you like to install to start with?" 영역에서 "Minimal installation"을 선택하고 다음 단계로 넘어갑니다.
-4. Installation type 단계에서 "Erase disk and install Ubuntu"를 선택하고 "Install now" 버튼을 누릅니다.
-5. Write the changes to disks? 창이 뜨면 Continue를 눌러 계속 진행합니다.
-6. Location 설정을 합니다.
-7. User 정보와 Computer 정보를 입력하는 "Who are you" 단계에 진입했다면 다음과 같이 설정합니다.
+3. Wireless 탭이 뜨면, "I don't want to connect to a Wi-Fi network right now"를 선택하고 넘어갑니다.
+4. Updates and other software 단계에서 "What apps would you like to install to start with?" 영역에서 "Minimal installation"을 선택하고 다음 단계로 넘어갑니다.
+5. Installation type 단계에서 "Erase disk and install Ubuntu"를 선택하고 "Install now" 버튼을 누릅니다.
+6. Write the changes to disks? 창이 뜨면 Continue를 눌러 계속 진행합니다.
+7. Location 설정 화면에서 "South Korea Time"을 선택합니다.
+8. User 정보와 Computer 정보를 입력하는 "Who are you" 단계에 진입했다면 다음과 같이 설정합니다.
 
    - Your name: gist
    - Your computer's name: nuc<NUC IP주소의 마지막 3자리 숫자>  
@@ -76,9 +77,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    - Pick a username: gist
    - 비밀번호의 경우, 조교의 안내에 따라 설정을 진행합니다.
 
-8. 모든 설정이 완료되었다면 버튼을 눌러 최종 설치를 진행합니다.
-9. 설치가 완료되면, "Restart now" 버튼을 눌러 NUC을 다시 시작합니다.
-10. 재시작 과정에서 "Please remove the installation medium, then press ENTER" 메세지가 보이면, 설치 USB를 제거한 뒤에 ENTER 키를 누릅니다.
+9. 모든 설정이 완료되었다면 버튼을 눌러 최종 설치를 진행합니다.
+10. 설치가 완료되면, "Restart now" 버튼을 눌러 NUC을 다시 시작합니다.
+11. 재시작 과정에서 "Please remove the installation medium, then press ENTER" 메세지가 보이면, 설치 USB를 제거한 뒤에 ENTER 키를 누릅니다.
 
   <details>
     <summary>에러 발생 시 참고(정상 설치가 되었다면 이 부분은 생략합니다.)</summary>
@@ -110,7 +111,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 ### 2-2. NUC: Network Configuration
 
 - 로그인 화면이 보이면, 계정 정보를 입력하여 로그인합니다. 이제부터는 초기 네트워크 설정을 진행할 것입니다.  
-  **(중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!)**
+  <b>⚠️(중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!)⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -156,7 +157,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
 3. Install net-tools & ifupdown
 
-   - network 관련 유틸리티를 실행하기 위해 net-tools와 ifupdown을 설치합니다. 그리고 ip addr show 명령어를 통해 network interface 정보를 확인합니다.
+   - network 관련 유틸리티를 실행하기 위해 net-tools와 ifupdown을 설치합니다. 그리고 `ifconfig -a` 명령어를 통해 network interface 정보를 확인합니다.
 
    ```bash
    sudo apt install -y net-tools ifupdown
@@ -182,12 +183,10 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    - Open vSwitch(OVS)를 기반으로 수동 네트워크 관리 방법을 사용하기 위해서 systemd-networkd 및 Netplan을 비활성화하고 제거합니다.
 
    ```bash
-   sudo su # Enter superuser mod
-   systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-   apt-get --assume-yes purge nplan netplan.io
-   exit # Exit superuser mod
+   sudo systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   sudo systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   sudo systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+   sudo apt-get --assume-yes purge nplan netplan.io
    ```
 
    - DNS configuration
@@ -219,8 +218,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다.(이때 괄호는 제외하고 입력해야 합니다.)
 
-   **주의!**
-   NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.
+   ⚠️ **주의!** ⚠️  
+   <b>
+   NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</b>
 
    아래의 내용을 추가합니다.
 
@@ -247,7 +247,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    파일을 저장하고 vim editor에서 나옵니다.
 
-   > **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.**
+   > ⚠️ **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.** ⚠️
    >
    > - Loopback 인터페이스 설정
    >   Loopback 인터페이스를 자동으로 활성화하고, loopback(자기 자신을 참조하는 가상 네트워크 인터페이스)으로 설정합니다.
@@ -288,7 +288,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    >     post-down ip link del dev vport_vFunction
    >   ```
 
-**주의!** 만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)
+⚠️ **주의!** ⚠️  
+<b>
+만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)</b>
 
 ```bash
 sudo systemctl restart systemd-resolved.service
@@ -298,19 +300,18 @@ sudo ifup eno1  #change this if you are using two-port NUC
 전체 interface를 다시 시작합니다.
 
 ```bash
-sudo su # Enter superuser mod
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
-exit # Exit superuser mod
+sudo systemctl unmask networking
+sudo systemctl enable networking
+sudo systemctl restart networking
 ```
 
 vport_vFunction을 연결한 가상 머신(VM)을 만들겠습니다. 이 TAP(vport_vFunction)은 VM의 NIC(네트워크 인터페이스 카드)라고 생각하면 됩니다.
 
 'br0'에 포트 'eno1' 및 'vport_vFunction'을 추가합니다.
 
-**주의!**  
-만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야합니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용 중인 것을 선택합니다.)
+⚠️ **주의!** ⚠️  
+<b>
+만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야합니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용 중인 것을 선택합니다.)</b>
 
 ```bash
 sudo ovs-vsctl add-port br0 eno1   #change this if you are using two-port NUC
@@ -325,11 +326,9 @@ sudo ovs-vsctl show
 전체 interface를 다시 시작합니다.
 
 ```bash
-sudo su # Enter superuser mod
-systemctl unmask networking
-systemctl enable networking
-systemctl restart networking
-exit # Exit superuser mod
+sudo systemctl unmask networking
+sudo systemctl enable networking
+sudo systemctl restart networking
 ```
 
 ### 2-3. NUC: Making VM with KVM
@@ -351,8 +350,6 @@ exit # Exit superuser mod
   wget https://ftp.lanet.kr/ubuntu-releases/22.04.5/ubuntu-22.04.5-live-server-amd64.iso
   ```
 
-  이제 VM을 만들 준비가 되었습니다.
-
 - Prepare for Ubuntu VM
 
   VM에서 사용할 가상 디스크 image를 만들기 위해, 아래의 명령어를 실행합니다.
@@ -371,7 +368,7 @@ exit # Exit superuser mod
   -device virtio-net-pci,netdev=net0 \
   -netdev tap,id=net0,ifname=vport_vFunction,script=no \
   -boot d vFunction22.img \
-  -cdrom ubuntu-22.04.6-live-server-amd64.iso \
+  -cdrom ubuntu-22.04.5-live-server-amd64.iso \
   -vnc :5 -daemonize \
   -monitor telnet:127.0.0.1:3010,server,nowait,ipv4 \
   -cpu host
@@ -381,16 +378,17 @@ exit # Exit superuser mod
 
   **NUC's ip address**을 하단의 `<Your ip address>`에 기입합니다.(이때, **괄호는 지우고** 172.29.0.X의 형식으로 작성합니다.)
 
-  **주의!**  
-  만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)
+  ⚠️ **주의!** ⚠️  
+  <b>
+  만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</b>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
   sudo iptables -A FORWARD -o eno1 -j ACCEPT
-  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
   ```
 
-> **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.**
+> ⚠️ **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.** ⚠️
 >
 > - 인터페이스 eno1에서 들어오는 패킷의 포워딩을 허용합니다.
 >
@@ -408,7 +406,7 @@ exit # Exit superuser mod
 >   내부 네트워크(192.168.100.0/24)의 패킷을 호스트의 IP로 변환하여 외부로 전달합니다.
 >
 >   ```text
->   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <Your ip address>
+>   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
 >   ```
 
 아래의 명령어를 입력하여 /etc/sysctl.conf 파일을 엽니다.
@@ -452,29 +450,27 @@ sudo sysctl -p
   설치 단계 (Enter키와 방향키를 사용하여 설치를 진행합니다.)
 
   1. 언어 설정 화면에서 English로 설정합니다.
-  2. **(중요)** "Installer update available" 화면에서는 "Continue without updating"을 선택합니다.
-  3. "Keyboard configuration" 화면에서는 모든 부분을 English(US)로 설정합니다.
-  4. "Choose the type of installation" 화면에서는 "Ubuntu Server" 부분에 (X) 표시가 되어있는지 확인하고 Done을 누릅니다.
-  5. "Network configuration" 화면에 진입하여 아래와 같이 "Edit IPv4"를 눌러줍니다.
+  2. "Keyboard configuration" 화면에서는 모든 부분을 English(US)로 설정합니다.
+  3. "Choose the type of installation" 화면에서는 "Ubuntu Server" 부분에 (X) 표시가 되어있는지 확인하고 Done을 누릅니다.
+  4. "Network configuration" 화면에 진입하여 아래와 같이 "Edit IPv4"를 눌러줍니다.
      ![Ubuntu Network](./img/ubuntu_network.png)
-  6. 아래 내용을 참고하여 설정해줍니다.
+  5. 아래 내용을 참고하여 설정해줍니다.
 
      > IPv4 Method → Manual
      >
      > subnet: 172.29.0.0/24  
-     > Address: < your VM IP >  
+     > Address: < VM IP(Extra IP) >  
      > Gateway: 172.29.0.254  
      > Name Servers: 203.237.32.100
 
-     Search domains에는 아무것도 적지 않습니다!  
-      Please leave the “Search domains” field empty.
+     Search domains에는 아무것도 적지 않습니다!
 
-     그리고 위의 `< your VM IP >` 작성 시에 **괄호는 지우고** 172.29.0.X의 형식으로 작성해야 합니다.  
-      Also, when writing `<your VM IP>`, remove the brackets and use the format 172.29.0.X.
+     그리고 위의 `< VM IP(Extra IP) >` 작성 시에 **괄호는 지우고** 172.29.0.X의 형식으로 작성해야 합니다.
 
-  7. "Proxy configuration" 화면에서는 아무것도 입력하지 않고 넘어갑니다.
-  8. "Ubuntu archive mirror configuration" 화면에서도 Done을 눌러 넘어갑니다.
-  9. "Storage configuration" 화면에서도 내용을 수정하지 않고 Done을 계속 눌러서 넘어갑니다. 마지막에 "Confirm destructive action" 창이 뜨면 Continue를 눌러 넘어갑니다.
+  6. "Proxy configuration" 화면에서는 아무것도 입력하지 않고 넘어갑니다.
+  7. "Ubuntu archive mirror configuration" 화면에서도 Done을 눌러 넘어갑니다.
+  8. **(중요)** "Installer update available" 화면에서는 "Continue without updating"을 선택합니다.
+  9. "Guided storage configuration", "Storage configuration" 화면에서도 내용을 수정하지 않고 Done을 계속 눌러서 넘어갑니다. 마지막에 "Confirm destructive action" 창이 뜨면 Continue를 눌러 넘어갑니다.
   10. "Profile configuration" 화면에서는 아래와 같이 입력합니다.
       - Your name: vm
       - Your servers name: vm<VM IP주소의 마지막 3자리 숫자>  
@@ -490,7 +486,7 @@ sudo sysctl -p
 
 - Installation Completed
 
-  VM 내에서 ubuntu의 설치가 완료되어 `Reboot Now` 버튼이 보이면, Host OS의 터미널에서 아래의 명령어를 입력하여 VM을 종료합니다.
+  VM 내에서 ubuntu의 설치가 완료되어 `Reboot Now` 버튼이 보이면, ⚠️ **Host OS의 터미널을 새로 하나 생성한 뒤에** 아래의 명령어를 입력하여 VM을 종료합니다.
 
   ```bash
   sudo killall -9 kvm
@@ -502,7 +498,7 @@ sudo sysctl -p
   sudo kvm -m 1024 -name tt \
   -smp cpus=2,maxcpus=2 \
   -device virtio-net-pci,netdev=net0 \
-  -netdev tap,id=net0,ifname=vport_vFunction,script=no
+  -netdev tap,id=net0,ifname=vport_vFunction,script=no \
   -boot d vFunction22.img
   ```
 
@@ -521,12 +517,7 @@ sudo sysctl -p
 Docker 리포지토리 추가를 위해 apt를 HTTPS 지원 가능하도록 설정하고, 필요한 패키지를 설치합니다.
 
 ```bash
-sudo apt update
 sudo apt install -y ca-certificates curl gnupg lsb-release
-```
-
-```bash
-sudo apt update
 ```
 
 Docker를 설치합니다.
@@ -598,13 +589,15 @@ ctrl + p, q를 누르면 container를 종료하지 않고 container 밖으로 �
 
 ```bash
 sudo docker start c1
-sudo ovs-docker del-port br0 veno1 c1
 sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]
 # please type gateway IP and docker container IP.
 ```
 
 위의 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP] 작성 시에 `[]`은 빼고, 172.29.0.X의 형식으로 작성해주시기 바랍니다.  
 예를 들어, --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
+
+<b> ⚠️ 아무 문제가 없었다면, 이 부분은 생략합니다. ⚠️  
+만약, `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` 명령어를 실행하는 과정에서 오타나 실수가 있었다면 `sudo ovs-docker del-port br0 veno1 c1` 명령어를 실행하고 다시 `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`를 실행합니다.</b>
 
 Docker container 안으로 진입합니다.
 
@@ -625,7 +618,7 @@ apt install -y iputils-ping
 ping 명령어를 사용하여 Docker container 내부에서 VM으로 통신이 잘 이루어지는지 확인합니다.
 
 ```bash
-ping <VM IP address>
+ping <VM IP(Extra IP)>
 # please type this command in the container.
 ```
 
