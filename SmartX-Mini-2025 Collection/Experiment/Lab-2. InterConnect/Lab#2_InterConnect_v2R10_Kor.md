@@ -921,14 +921,22 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic resource --from
 
 ## 3. Review
 
-### 3-1. Lab Summary
+### 3-1. Lab 요약
+
+이번 실습에서 두 가지 방식으로 컴퓨터 시스템을 상호 연결하는 것을 체험해보았습니다.
+
+여러분은 `2-1`부터 `2-3`까지의 과정을 통해 두 개의 컴퓨터 시스템이 물리적으로 상호 연결되기 위한 준비를 진행하였으며, 최종적으로 `ping`을 통해 두 시스템이 서로 통신할 수 있다는 것을 확인하였습니다. 이러한 과정을 통해 <U>**Physical Interconnect**</U>에 대해 알아보고, 체험해보았습니다.
+
+이후 Docker를 통해 Box에 여러 Container를 배포하였습니다. 간단하게 요약하면, `2-4`부터 `2-6`을 통해 `Apache Flume`이 추출한 SNMP 데이터가 `Apache Kafka`를 거쳐 Consumer에게 전달되었음을 확인할 수 있었습니다. 이를 통해, 우리는 `Apache Kafka`를 매개로 하여 두 Function(Producer ↔ Consumer)이 Data를 주고 받으며 상호작용할 수 있음을 확인할 수 있었으며, <U>**Data Interconnect**</U>를 체험할 수 있었습니다. 
+
+### 3-2. Finale
 
 이번 실습을 통해 다음의 2개 질문에 답할 수 있습니다.
 
 1. 어떻게 이기종 장치(여기서는 NUC과 Pi)를 물리적으로 상호연결할 수 있는가?
 2. 어떻게 서로 다른 Box에 위치한 2개의 Function 간 Data Transfer(여기서는 Kafka Messaging)를 상호연결할 수 있는가?
 
-위의 질문을 통해 Physical Interconnect와 Data Interconnect를 명확하게 구분하실 수 있을 것입니다.
+위의 질문을 생각해보며, Physical Interconnect와 Data Interconnect에 대해 고민해볼 수 있는 시간을 가져보시기 바랍니다.
 
 > 실습에 참여하시느라 고생 많으셨습니다. <br>
 > 참여해주셔서 감사합니다.

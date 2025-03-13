@@ -932,6 +932,14 @@ If everything is configured correctly, you should see the message displayed in t
 
 ### 3-1. Lab Summary
 
+In this lab, we experienced interconnecting computer systems in two different ways.
+
+Through steps `2-1` to `2-3`, you prepared for the physical interconnection of two computer systems and ultimately verified their ability to communicate with each other using `ping`. Through this process, we explored and experienced the concept of <U>**Physical Interconnect**</U>.
+
+Afterward, multiple containers were deployed on the Box using Docker. In summary, from steps `2-4` to `2-6`, we confirmed that the SNMP data extracted by `Apache Flume` was transmitted through `Apache Kafka` and delivered to the Consumer. Through this, we verified that two functions (Producer ↔ Consumer) could interact and exchange data via Apache Kafka, allowing us to experience <U>**Data Interconnect**</U>.
+
+### 3-2. Finale
+
 Through this lab, we have answered the following two key questions:
 
 1. How can heterogeneous devices (e.g., NUC and Pi) be physically interconnected?
