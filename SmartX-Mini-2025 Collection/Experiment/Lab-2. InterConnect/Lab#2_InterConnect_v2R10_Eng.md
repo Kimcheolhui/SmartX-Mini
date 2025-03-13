@@ -531,17 +531,13 @@ Next, open the `/etc/hosts` file using a text editor.
 sudo vim /etc/hosts
 ```
 
-Add the following two lines at the bottom of the file:
-
+Add the following line(Pi IP Address & Hostname) at the bottom of the file:
+<!-- 
+  Pi IP만 적는 것으로 수정합니다.
+  REF: Issue #98
+-->
 ```text
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
-```
-```text
-# Example (When NUC's Hostname is `nuc`)
-
-172.29.0.XX        nuc 
-172.29.0.XX        pi 
+172.29.0.XX        [PI_HOSTNAME] 
 ```
 
 >  ⚠️ **Warning** ⚠️ 
@@ -569,14 +565,17 @@ Add the following two lines at the bottom of the file:
 
 #### 2-3-2. (PI) Hostname preparation for Kafka
 
-Perform the same steps on the Pi that were done on the NUC in section 2-4-1. Open the `/etc/hosts` file and add the following two lines.
+Perform the same steps on the Pi that were done on the NUC in section 2-3-1. Open the `/etc/hosts` file and add the following line(NUC IP Address & Hostname).
 
 ```bash
 sudo vim /etc/hosts
 ```
+<!-- 
+  NUC IP만 적는 것으로 수정합니다.
+  REF: Issue #98
+-->
 ```text
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
+172.29.0.XX        [NUC_HOSTNAME]
 ```
 
 >  ⚠️ **Warning** ⚠️

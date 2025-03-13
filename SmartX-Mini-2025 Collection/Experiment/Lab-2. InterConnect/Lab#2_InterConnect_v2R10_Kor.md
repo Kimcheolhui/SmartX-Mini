@@ -522,17 +522,13 @@ hostname
 sudo vim /etc/hosts
 ```
 
-파일의 맨 아래에 다음의 두 줄을 추가합니다.
-
+파일의 맨 아래에 Pi의 IP 주소와 Hostname을 다음과 같이 추가합니다.
+<!-- 
+  Pi IP만 적는 것으로 수정합니다.
+  REF: Issue #98
+-->
 ```text
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
-```
-```text
-# 예시 (NUC의 Hostname이 `nuc`인 경우.)
-
-172.29.0.XX        nuc 
-172.29.0.XX        pi 
+172.29.0.XX        [PI_HOSTNAME] 
 ```
 
 >  ⚠️ **주의** ⚠️ 
@@ -559,14 +555,17 @@ sudo vim /etc/hosts
 
 #### 2-3-2. (PI) Hostname preparation for Kafka
 
-2-4-1에서 수행하였던 작업을 Pi에서 동일하게 수행합니다. `/etc/hosts` 파일을 열어 다음의 두 줄을 추가합니다.
+2-3-1에서 수행하였던 작업을 Pi에서 동일하게 수행합니다. `/etc/hosts` 파일을 열어 최하단에 NUC의 IP 주소와 Hostname을 다음과 같이 추가합니다.
 
 ```bash
 sudo vim /etc/hosts
 ```
+<!-- 
+  NUC IP만 적는 것으로 수정합니다.
+  REF: Issue #98
+-->
 ```text
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
+172.29.0.XX        [NUC_HOSTNAME]
 ```
 
 >  ⚠️ **주의** ⚠️
