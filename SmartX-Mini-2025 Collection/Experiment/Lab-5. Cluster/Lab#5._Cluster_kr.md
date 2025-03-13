@@ -2,20 +2,24 @@
 
 # 0. Objective
 
-쿠버네티스는 도커에 의해 컨테이너화(containerized)된 애플리케이션에 대한 배포, 스케일링, 그리고 관리를 자동화할 수 있습니다. 이를 컨테이너 오케스트레이터(container orchestrator)라고 합니다.
+쿠버네티스는 컨테이너화된 애플리케이션의 배포, 스케일링, 그리고 관리를 자동화할 수 있는 컨테이너 오케스트레이션(Container Orchestration) 도구입니다.
 
-이번 Lab#5 Cluster에서, 우리는 3개의 NUC machine을 결합해 쿠버네티스 클러스터를 구축하고, 간단한 애플리케이션을 통해 Container Orchestration이란 무엇인지 알아보겠습니다.
+이번 Lab#5 Cluster에서는 3개의 NUC 머신을 사용하여 쿠버네티스 클러스터를 구축하고, 간단한 애플리케이션을 배포하며 컨테이너 오케스트레이션의 개념을 학습합니다.
 
-총 3개의 NUC machine은 아래의 역할로써 쿠버네티스 클러스터를 구성하게 됩니다.
+총 3개의 NUC machine은 아래의 역할로 쿠버네티스 클러스터를 구성하게 됩니다.
 
-- 1개의 Master -> NUC1
-- 2개의 Workers -> NUC2, NUC3
+- 1개의 Master 노드(Control Plane) → NUC1
+- 2개의 Worker 노드 → NUC2, NUC3
 
 ### Master-Worker 구조란?
 
 <img src='img/master-worker.png' alt='master-worker pattern' width="675">
 
-Master-Worker 패턴은 하나의 **Master**가 전체 작업을 여러 개의 작은 단위로 나누어 **여러 Worker**에게 분배하고, 각 Worker가 독립적으로 작업을 수행한 후 결과를 Master에게 반환하는 소프트웨어 아키텍처 패턴입니다. 이 패턴은 병렬 처리를 통해 성능을 극대화하고, Worker를 동적으로 추가하거나 제거할 수 있어 확장성이 뛰어납니다. 또한, 특정 Worker가 작업에 실패하거나 노드(서버, 머신)가 다운되더라도 Master가 이를 감지하고 다른 Worker에게 작업을 재할당할 수 있어 애플리케이션의 안정적인 운영이 가능합니다. 이러한 특성 때문에 쿠버네티스의 클러스터 관리, Hadoop과 Spark의 분산 데이터 처리, Ray의 병렬 컴퓨팅, 멀티스레딩 기반의 애플리케이션 등에서 널리 사용됩니다.
+Master-Worker 패턴은 하나의 Master가 전체 시스템을 관리하고, 여러 Worker가 개별 작업을 수행하는 소프트웨어 아키텍처 패턴입니다. 이 패턴은 병렬 처리를 통해 성능을 극대화하고, Worker 노드를 동적으로 추가하거나 제거할 수 있어 확장성이 뛰어납니다.
+
+쿠버네티스에서 Master-Worker 구조는 클러스터 관리에 적용됩니다. Master(Control Plane)는 클러스터의 상태를 관리하고, 워커 노드에서 애플리케이션이 원활히 실행될 수 있도록 스케줄링 및 조정 역할을 수행합니다. Worker 노드는 실제로 애플리케이션을 실행하는 역할을 하며, Pod(컨테이너)를 배포 및 운영합니다. 특정 Worker가 다운되거나 장애가 발생하더라도, 쿠버네티스가 이를 감지하고 스케줄러(Scheduler)가 다른 Worker 노드에 새로운 Pod을 배포함으로써 서비스가 지속적으로 운영될 수 있도록 합니다.
+
+이러한 특성 때문에 쿠버네티스의 클러스터 관리, Hadoop과 Spark의 분산 데이터 처리, Ray의 병렬 컴퓨팅, 멀티스레딩 기반의 애플리케이션 등에서 널리 사용됩니다.
 
 # 1. Concept
 
