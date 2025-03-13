@@ -1,6 +1,6 @@
 # Lab#1. Box Lab
 
-## 0. Objective
+# 0. Objective
 
 ![Final Goal](./img/final_goal.png)
 
@@ -12,7 +12,7 @@ Let's take a close look at the overall structure.
 
 ![Objective](./img/objective.png)
 
-## 1. Theory
+# 1. Theory
 
 ![VM Container](./img/vm_container.png)
 
@@ -40,7 +40,7 @@ Let's take a close look at the overall structure.
   These switches, powered by CPUs, are known for their flexibility and upgradability, benefiting from virtualization features such as memory overcommit and page sharing.
   VMs (similarly containers) have logical (virtual) NIC with virtual Ethernet ports so that they can be plugged into the virtual interface (port) of virtual switches.
 
-## 2. Practice
+# 2. Practice
 
 > When you hover over the code block, a copy button appears in the upper right corner. You can click this button to copy the content. This feature is provided for convenience. However, during the practice, you should not simply copy and paste everything as it is. Each student may need to modify certain parts of the commands or files. Therefore, carefully review the document and make sure to adjust the necessary parts accordingly.
 > ![copy button](img/copy.png)
@@ -48,20 +48,20 @@ Let's take a close look at the overall structure.
 > Please check allocated IP address of your NUC, VM, and container in the ribbon paper.
 > <br> ex) yourname | student ID | NUC's IP | VM's IP | container's IP
 
-### 2-1. NUC: OS Installation
+## 2-1. NUC: OS Installation
 
 The Host OS to be used in the Lab is as follows. Use the provided installation USB to install the OS.
 OS : Ubuntu Desktop 22.04 LTS(64bit)  
 Download Site : <https://releases.ubuntu.com/22.04/>
 
-#### 2-1-1. Boot configuration
+### 2-1-1. Boot configuration
 
 1. While the NUC is powered off, connect the USB for OS installation and then turn on the NUC.
 2. When the boot process begins, press F10 to enter the boot device selection screen.
 3. From the boot device list, select the USB device (e.g., UEFI: SanDisk …).
 4. Choose “Try or Install Ubuntu” to proceed.
 
-#### 2-1-2. Installation
+### 2-1-2. Installation
 
 1. Select “Install Ubuntu” (Do not choose “Try Ubuntu”). The installation should be done in English.
 2. In the Keyboard layout step, select “English (US)”.
@@ -115,7 +115,7 @@ If an issue related to booting occurs, follow these steps.
   5. Choose Something else and do the following steps
   </details>
 
-### 2-2. NUC: Network Configuration
+## 2-2. NUC: Network Configuration
 
 - When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.  
   <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
@@ -337,7 +337,7 @@ sudo systemctl enable networking
 sudo systemctl restart networking
 ```
 
-### 2-3. NUC: Making VM with KVM
+## 2-3. NUC: Making VM with KVM
 
 - Install required packages to set up and manage KVM
 
@@ -508,7 +508,7 @@ sudo sysctl -p
   -boot d vFunction22.img
   ```
 
-### 2-4. OVS connects with KVM
+## 2-4. OVS connects with KVM
 
 - Check configuration
 
@@ -518,7 +518,7 @@ sudo sysctl -p
 
   ![Ovs Vsctl](./img/ovs-vsctl.png)
 
-### 2-5. Install docker
+## 2-5. Install docker
 
 To add the Docker repository, configure apt to support HTTPS and install the required packages.
 
@@ -563,7 +563,7 @@ sudo systemctl start docker
 sudo systemctl start docker.socket
 ```
 
-### 2-7. Check docker installation
+## 2-7. Check docker installation
 
 Run the following command to check if Docker is running.
 
@@ -577,7 +577,7 @@ If it works correctly, the following output will be displayed.
 
 ![1](./img/1.png)
 
-### 2-8. Make Container
+## 2-8. Make Container
 
 Create a container named c1. This container will be based on the ubuntu:22.04 image and will run /bin/bash upon its initial execution. The --net=none option is used to ensure that the container is not connected to any network.
 
@@ -589,7 +589,7 @@ Pressing ctrl + p, q allows you to exit the container without stopping it.
 
 ※ docker attach [container_name]: Re-enter a container that was detached using ctrl + p, q.
 
-### 2-9. Connect docker container
+## 2-9. Connect docker container
 
 Install OVS-docker utility in host machine **(Not inside of Docker container)**
 
@@ -619,7 +619,7 @@ apt install -y net-tools
 apt install -y iputils-ping
 ```
 
-### 2-10. Check connectivity: VM & Container
+## 2-10. Check connectivity: VM & Container
 
 Check connectivity with ping command from docker to VM.
 
@@ -645,22 +645,22 @@ ping <Docker container IP address>
 
 **Finally, you can check that the container and the VM are connected.**
 
-## 3. Lab Summary
+# 3. Lab Summary
 
 The goal of this lab was to create a virtual switch and establish communication between a VM and a container through the virtual switch.
 You have created a VM and a Docker container within a single NUC, configured network interfaces, and enabled communication between the two components.
 
-### (Recall) Why is Virtualization Technology Necessary?
+## (Recall) Why is Virtualization Technology Necessary?
 
 Virtualization technologies such as VMs and containers are essential for optimizing computing resource utilization and ensuring flexibility in development and operations. By using virtualization, various processes can run in isolated environments. This enables applications to function seamlessly across different environments, including on-premises and cloud platforms.
 
-### Key Process Summary
+## Key Process Summary
 
 1. Configuring the network on the NUC
 2. Setting up a virtual switch
 3. Creating a VM and configuring its network settings
 4. Creating a Docker container and verifying communication with the VM
 
-### Appendix. Keep Docker network configuration
+## Appendix. Keep Docker network configuration
 
 Whenever NUC is rebooted, network configuration of Docker container is initialized by executing commands in `rc.local` file.

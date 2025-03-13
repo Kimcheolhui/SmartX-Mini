@@ -1,6 +1,6 @@
 # Lab#1. Box Lab
 
-## 0. Objective
+# 0. Objective
 
 ![Final Goal](./img/final_goal.png)
 
@@ -13,7 +13,7 @@ Box Lab에서는 \*베어 메탈에 OS를 직접 설치해보고
 
 ![Objective](./img/objective.png)
 
-## 1. Theory
+# 1. Theory
 
 ![VM Container](./img/vm_container.png)
 
@@ -39,7 +39,7 @@ Box Lab에서는 \*베어 메탈에 OS를 직접 설치해보고
 
   소프트웨어 기반 가상 스위치는 한 VM이 다른 VM과 통신할 수 있도록 하며, 물리적 스위치를 통해 인터넷에 연결할 수 있도록 합니다. CPU의 연산 능력을 활용하여 실행되는 소프트웨어 기반 스위치는 더 유연하고 업그레이드가 용이하며, 가상화의 이점을 활용할 수 있습니다 (메모리 오버커밋, 페이지 공유 등). VM(또는 컨테이너)에는 논리적인(가상) 네트워크 인터페이스 카드(NIC)가 있으며, 가상 이더넷 포트를 통해 가상 스위치의 가상 인터페이스(포트)에 연결될 수 있습니다.
 
-## 2. Practice
+# 2. Practice
 
 > 마우스를 코드 블럭 위에 올리게 되면 우측 상단에 복사하기 버튼이 뜹니다. 해당 버튼을 눌러 내용을 복사할 수 있습니다.해당 기능은 편의를 위해 제공됩니다. 그러나 Lab을 진행하는 과정에서 모든 것을 그대로 붙여넣기 해서는 안 됩니다. 수강생 개인마다 명령어의 일부, 또는 파일의 일부 내용을 수정해야 하기 때문에, 문서의 내용을 꼼꼼히 살펴보고 수정해야 하는 부분은 꼭 수정해주시기 바랍니다.  
 > ![copy button](img/copy.png)
@@ -47,20 +47,20 @@ Box Lab에서는 \*베어 메탈에 OS를 직접 설치해보고
 > 사용하는 NUC과 가상 머신(VM), 그리고 container의 IP가 적힌 종이를 참고하여 Lab을 진행해주시길 바랍니다.  
 > <br> ex) yourname | student ID | NUC's IP | VM's IP | container's IP
 
-### 2-1. NUC: OS Installation
+## 2-1. NUC: OS Installation
 
 Lab에서 사용할 Host OS는 다음과 같습니다. 제공받은 설치 USB를 사용하여 OS를 설치하면 됩니다.
 OS : Ubuntu Desktop 22.04 LTS(64bit)  
 Download Site : <https://releases.ubuntu.com/22.04/>
 
-#### 2-1-1. Boot configuration
+### 2-1-1. Boot configuration
 
 1. NUC의 전원이 꺼진 상태에서 OS 설치를 위한 USB를 NUC에 연결한 뒤에, NUC의 전원을 켭니다.
 2. 부팅이 시작되면 F10 키를 눌러서 Boot device를 선택하는 화면에 진입합니다.
 3. Boot device 리스트에서 USB에 해당하는 것을 선택합니다. (ex. UEFI: SanDisk ...)
 4. Try or install ubuntu를 선택하여 실행합니다.
 
-#### 2-1-2. Installation
+### 2-1-2. Installation
 
 1. Install Ubuntu를 선택합니다. (Try Ubuntu X) 언어는 English로 진행해야합니다.
 2. Keyboard layout 설정 단계에서도 "English(US)"로 설정합니다.
@@ -108,7 +108,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
   5. Something else 선택하여 정상 진행
   </details>
 
-### 2-2. NUC: Network Configuration
+## 2-2. NUC: Network Configuration
 
 - 로그인 화면이 보이면, 계정 정보를 입력하여 로그인합니다. 이제부터는 초기 네트워크 설정을 진행할 것입니다.  
   <b>⚠️(중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!)⚠️</b>
@@ -331,7 +331,7 @@ sudo systemctl enable networking
 sudo systemctl restart networking
 ```
 
-### 2-3. NUC: Making VM with KVM
+## 2-3. NUC: Making VM with KVM
 
 - Install required packages to set up and manage KVM
 
@@ -502,7 +502,7 @@ sudo sysctl -p
   -boot d vFunction22.img
   ```
 
-### 2-4. OVS connects with KVM
+## 2-4. OVS connects with KVM
 
 - Check configuration
 
@@ -512,7 +512,7 @@ sudo sysctl -p
 
   ![Ovs Vsctl](./img/ovs-vsctl.png)
 
-### 2-5. Install docker
+## 2-5. Install docker
 
 Docker 리포지토리 추가를 위해 apt를 HTTPS 지원 가능하도록 설정하고, 필요한 패키지를 설치합니다.
 
@@ -557,7 +557,7 @@ sudo systemctl start docker
 sudo systemctl start docker.socket
 ```
 
-### 2-7. Check docker installation
+## 2-7. Check docker installation
 
 아래의 명령어를 실행하여 docker의 실행을 확인해봅니다.
 
@@ -571,7 +571,7 @@ sudo docker run hello-world
 
 ![1](./img/1.png)
 
-### 2-8. Make Container
+## 2-8. Make Container
 
 c1이라는 이름의 container를 생성해봅니다. 이 container는 ubuntu:22.04 이미지를 바탕으로 생성되며, 최초 실행 시, /bin/bash가 실행되도록 합니다. `--net=none` 옵션을 사용하여 container가 네트워크에 연결되지 않도록 합니다.
 
@@ -583,7 +583,7 @@ ctrl + p, q를 누르면 container를 종료하지 않고 container 밖으로 �
 
 ※ docker attach [container_name]: ctrl + p, q를 사용하여 detach 했던 container 안으로 다시 들어갈 수 있습니다.
 
-### 2-9. Connect docker container
+## 2-9. Connect docker container
 
 **도커 외부에서**, 즉 Host machine에서 OVS-docker utility를 하단의 명령어로 설치합니다.
 
@@ -613,7 +613,7 @@ apt install -y net-tools
 apt install -y iputils-ping
 ```
 
-### 2-10. Check connectivity: VM & Container
+## 2-10. Check connectivity: VM & Container
 
 ping 명령어를 사용하여 Docker container 내부에서 VM으로 통신이 잘 이루어지는지 확인합니다.
 
@@ -639,22 +639,22 @@ ping <Docker container IP address>
 
 **최종적으로, container와 VM의 네트워크가 연결되었음을 확인할 수 있습니다.**
 
-## 3. Lab Summary
+# 3. Lab Summary
 
 이 Lab의 목표는 가상 스위치를 생성해보고, VM과 Container 사이의 통신을 가상 스위치를 통해 실행해보는 것이었습니다.  
 여러분은 하나의 NUC 안에 직접 VM과 Docker container를 생성하고, 네트워크 인터페이스 설정을 통해 두 요소 간의 통신이 가능하도록 만들었습니다.
 
-### (Recall) 가상화 기술이 왜 필요한가?
+## (Recall) 가상화 기술이 왜 필요한가?
 
 VM, container와 같은 가상화 기술은 컴퓨팅 자원을 효율적으로 사용하고, 개발 및 운영을 유연하게 하기 위해 필요합니다. 가상화 기술을 사용하여 다양한 프로세스가 격리된 환경에서 작동하도록 만들 수 있습니다. 이러한 점을 바탕으로, 가상화 기술을 사용하면 다양한 환경(온프레미스, 클라우드)에서 프로그램이 원활하게 실행될 수 있는 것입니다.
 
-### 주요 과정 요약
+## 주요 과정 요약
 
 1. NUC의 네트워크 설정
 2. 가상 스위치 설정
 3. VM 생성 및 네트워크 설정
 4. Docker container 생성 및 VM과의 통신 확인
 
-### Appendix. Keep Docker network configuration
+## Appendix. Keep Docker network configuration
 
 Whenever NUC is rebooted, network configuration of Docker container is initialized by executing commands in `rc.local` file.
