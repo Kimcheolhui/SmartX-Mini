@@ -847,15 +847,18 @@ cd ~/SmartX-mini/raspbian-flume
 
 Open the `Dockerfile` and ensure the contents match the following configuration:
 
->  ⚠️ **Warning** ⚠️
+>  ⚠️ <span style="color:red">**Warning**</span> ⚠️
 >
-> Ensure the base image is set to `FROM balenalib/rpi-raspbian:buster`.
+> <span style="color:red"> Ensure the base image is set to `FROM balenalib/rpi-raspbian:buster`, not `stretch`.</span>
 >
 > If you don't modify it, you may encounter the build failure, since `apt update` failed.
 
 ```dockerfile
 FROM balenalib/rpi-raspbian:buster
 LABEL "maintainer"="Seungryong Kim <srkim@nm.gist.ac.kr>"
+
+# (Optional; to speed-up the build procedure) Change apt repository to KAIST mirror server.
+RUN sed -i 's@archive.raspbian.org@ftp.kaist.ac.kr/raspbian@g'
 
 #Update & Install wget, vim
 RUN sudo apt update

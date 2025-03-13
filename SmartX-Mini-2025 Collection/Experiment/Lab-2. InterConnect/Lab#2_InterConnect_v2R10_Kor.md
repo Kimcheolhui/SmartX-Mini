@@ -837,16 +837,19 @@ cd ~/SmartX-mini/raspbian-flume
 
 `Dockerfile`을 열어 내용이 하단과 동일한지 확인해주십시오.
 
->  ⚠️ **주의** ⚠️
+>  ⚠️ <span style="color:red">**주의**</span> ⚠️
 >
 > Repository의 Dockerfile은 `FROM balenalib/rpi-raspbian:stretch`로 지정되어있습니다. <br>
-> 반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정해주시기 바랍니다.
+> <span style="color:red">반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정해주시기 바랍니다.</span>
 >
 > 수정하지 않고 빌드하실 경우, 빌드 과정에서 `apt update`가 정상적으로 진행되지 않아 빌드가 실패합니다.
 
 ```dockerfile
 FROM balenalib/rpi-raspbian:buster
 LABEL "maintainer"="Seungryong Kim <srkim@nm.gist.ac.kr>"
+
+# (Optional; to speed-up the build procedure) Change apt repository to kaist mirror server.
+RUN sed -i 's@archive.raspbian.org@ftp.kaist.ac.kr/raspbian@g'
 
 #Update & Install wget, vim
 RUN sudo apt update
