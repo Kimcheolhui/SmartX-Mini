@@ -350,9 +350,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > d   # 모든 파티션이 삭제될 때까지 반복 입력한다.
 > w   # 변경사항 저장
 > ```
-> 
-
-이제 SD 카드를 분리하여 다시 Pi에 삽입한 뒤, Pi의 전원을 켭니다. ID는 `pi`, Password는 `1234` 입니다.
+>
 
 > 📰 참고: `hypriotos-init.yaml` 파일에 관하여
 >
@@ -364,7 +362,9 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 
 ### 2-2. Raspberry PI network Configuration
 
-#### 2-2-1. (PI) 네트워크 설정 확인인
+#### 2-2-1. (PI) 네트워크 설정 확인
+
+이제 SD 카드를 분리하여 다시 Pi에 삽입한 뒤, Pi의 전원을 켭니다. ID는 `pi`, Password는 `1234` 입니다.
 
 이제부터 키보드와 마우스, 모니터를 Pi에 연결하여 작업합니다.
 

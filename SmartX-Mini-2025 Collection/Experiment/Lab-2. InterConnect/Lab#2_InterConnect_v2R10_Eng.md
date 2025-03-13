@@ -361,8 +361,6 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > ```
 > 
 
-Now, eject the SD card, insert it into the Pi, and power it on. The default login credentials are (ID: `pi`, Password: `1234`).
-
 > 📰 Note: About the `hypriotos-init.yaml` file
 > The `hypriotos-init.yaml` file is used as the `/boot/user-data` file on HypriotOS.  
 > The `/boot/user-data` file provides user-defined configurations to the instance during initialization. It defines user creation, hostname settings, and whether to automatically initialize `/etc/hosts`.  
@@ -374,7 +372,9 @@ Now, eject the SD card, insert it into the Pi, and power it on. The default logi
 
 #### 2-2-1. (PI) Check Network Configuration
 
-Now, connect a keyboard, mouse, and monitor to the **Pi** to proceed with the setup.
+Now, eject the SD card, insert it into the Pi, and power it on. The default login credentials are (ID: `pi`, Password: `1234`).
+
+Next, connect a keyboard, mouse, and monitor to the **Pi** to proceed with the setup.
 
 First, verify that the network interface is configured correctly by entering the following command in the shell:
 
