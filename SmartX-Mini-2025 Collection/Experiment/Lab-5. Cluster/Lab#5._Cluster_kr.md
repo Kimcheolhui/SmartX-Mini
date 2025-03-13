@@ -205,8 +205,6 @@ sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/conf
 
 ### 2-1-6. At NUC1
 
-**(추가) 화면 세팅 어떻게 하는 걸 추천하는 지 추가하기**
-
 NUC1에서 다음의 명령어를 실행하여, NUC2와 NUC3에 원격 접속이 정상적으로 이뤄지는지 확인합니다.
 
 \*컴시이실 실습의 경우 `<nuc username>`은 gist로 통일되어 있습니다.
@@ -352,10 +350,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 <img src='img/kubeadm-init-2.png' alt='kubeadm init'>
 
-```shell
-# 빨간 칸 안에 있는 명령어를 복사하고, 앞에 `sudo`를 붙여 NUC2와 NUC3에 입력합니다.
-# (에러) preflight 에러 발생 시, --ignore-preflight-errors=all 맨 뒤에 붙여서 다시 입력합니다.
-```
+빨간 칸 안에 있는 명령어를 복사하고, 앞에 `sudo`를 붙여 NUC2와 NUC3에 입력합니다.
+
+> (에러) preflight 에러 발생 시, --ignore-preflight-errors=all 맨 뒤에 붙여서 다시 입력합니다.
 
 ### 2-4-4. Check Nodes at NUC1
 
@@ -730,6 +727,7 @@ Rolling Update는 기존 Pod을 점진적으로 새로운 버전으로 교체하
     <img src='img/simple-app/simple-12.png' alt='simple 12'>
 
 4.  새 버전 배포 후 웹사이트 새로고침하여 v2로 변경된 것 확인
+
     <img src='img/simple-app/simple-13.png' alt='simple 13'>
 
 이처럼 쿠버네티스는 쉽고 빠르게 애플리케이션의 버전을 업데이트할 수 있습니다.
@@ -765,6 +763,7 @@ Rolling Update는 기존 Pod을 점진적으로 새로운 버전으로 교체하
 3. 웹사이트 새로고침
 
    이전 버전(v1)으로 정상적으로 복구되었는지 확인
+
    <img src='img/simple-app/simple-15.png' alt='simple 15'>
 
 지금까지, 쿠버네티스에서 Pod, Deployment, Service를 활용한 애플리케이션 배포 및 업데이트를 실습했습니다.
