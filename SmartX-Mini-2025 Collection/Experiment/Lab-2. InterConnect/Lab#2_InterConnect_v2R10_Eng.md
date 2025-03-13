@@ -1,15 +1,15 @@
 # Lab#2. InterConnect Lab
 
-## 0. Objective
+# 0. Objective
 
 The main part of interConnect Lab is to connect one box with another box which connects computer systems in 2 ways. (Physical interconnect, Data interconnect)
 
 - Physical Interconnect: Connection between boxes via the network.
 - Data Interconnect: By using physical Interconnect, connect data between various functions.
 
-## 1. Concept
+# 1. Concept
 
-### 1-1. Raspberry Pi
+## 1-1. Raspberry Pi
 
 ![Raspberry Pi 4 Model B](./img/pi4-labelled.png)
 
@@ -19,7 +19,7 @@ For example, the RTC (Real-Time Clock) is removed by default, requiring the time
 
 In this lab, we will use the [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/). This model is powered via USB Type-C and can connect to a display using Micro-HDMI. Data storage is handled via a Micro SD card, meaning that the OS is installed by downloading it onto the SD card. The Pi supports both WiFi and Gigabit Ethernet for networking, but we will use Ethernet for this lab.
 
-### 1-2. Apache Kafka
+## 1-2. Apache Kafka
 
 ![Why We use Kafka](./img/Apache_Kafka.png)
 
@@ -62,7 +62,7 @@ In this Lab, we will see that data-interconnects can be achieved by confirming t
 > 📰️️ Note  
 > If you want to know more about Apache Kafka, Please refer to [Apache Kafka Docs](https://kafka.apache.org/documentation/#intro_concepts_and_terms).
 
-### 1-3. Net-SNMP
+## 1-3. Net-SNMP
 
 [Net-SNMP](http://www.net-snmp.org/) is a suite of applications that allows for monitoring network devices, computers, and small devices using the SNMP protocol on Linux operating systems.
 
@@ -94,7 +94,7 @@ In this lab, we will install `snmpd` on the Pi and use Apache Flume to collect t
 > 📰️️ Note  
 > For more details on SNMP, refer to [GeeksForGeeks](https://www.geeksforgeeks.org/simple-network-management-protocol-snmp/).
 
-### 1-4. Apache Flume
+## 1-4. Apache Flume
 
 Apache Flume is a distributed, reliable service designed for efficiently collecting, aggregating, and moving large volumes of log data.
 
@@ -114,7 +114,7 @@ In this lab, Flume will be used to gather system status data from `snmpd` via SN
 > As of October 2024, Apache Flume is officially discontinued. Consider migrating to alternatives like Fluentd or Logstash for future distributed log collection, when you are planning to use, or using Apache Flume.  
 > For now, we are using Flume for compatibility and lab purposes.
 
-## 2. Practice
+# 2. Practice
 
 ![overview](img/overview.png)
 
@@ -134,7 +134,7 @@ In this lab, Flume will be used to gather system status data from `snmpd` via SN
 >
 > After every boot, the content of `/etc/resolv.conf` is gone, you should do the above steps again.
 
-### 2-1. Raspberry PI OS Installation
+## 2-1. Raspberry PI OS Installation
 
 > ⚠️ **Warning** ⚠️
 >
@@ -148,7 +148,7 @@ Now we will install HypriotOS on the Raspberry Pi. HypriotOS is a Debian-based o
 
 To install HypriotOS, insert the Micro SD card into a reader, and insert into the NUC.
 
-> ⚠️ **주의** ⚠️
+> ⚠️ **Warning** ⚠️
 >
 > **Please ensure that the Pi is <U>completely powered off</U>** before removing the SD card.
 >
@@ -162,7 +162,7 @@ To install HypriotOS, insert the Micro SD card into a reader, and insert into th
 > 📰️️ Note: `sudo` is used to execute command as a `root`(admin). Only `root` can execute `poweroff`.
 
 
-#### 2-1-1. (NUC) Download Required Package and File
+### 2-1-1. (NUC) Download Required Package and File
 
 [`flash`](https://github.com/hypriot/flash) is a script that flash SD Card. We will use `flash` to install HypriotOS on SD Card. Please install `flash` following the guidance below.
 
@@ -224,7 +224,7 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt install -y git-lfs
 git lfs install
 git clone https://github.com/SmartX-Labs/SmartX-Mini.git
-cd ~/SmartX-Mini/SmartX-Mini-2024\ Collection/Experiment/Lab-2.\ InterConnect/
+cd ~/SmartX-Mini/SmartX-Mini-2025\ Collection/Experiment/Lab-2.\ InterConnect/
 ```
 
 <details>
@@ -247,7 +247,7 @@ wget https://github.com/hypriot/image-builder-rpi/releases/download/v1.12.3/hypr
 ls -alh # Check all files
 ```
 
-#### 2-1-2. (NUC) HypriotOS 설정 수정
+### 2-1-2. (NUC) Edit Configuration of HypriotOS
 
 `network-config` file is used to configure network setting. Now we will open and edit this file to configure.
 
@@ -263,9 +263,9 @@ ls -alh # Check all files
 > 
 > So, warning agian, <U>**Do not change the file name.**</U>
 > 
-> 참조: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html#source-files
+> REF: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html#source-files
 
-> 📰 Info: What is `cloud-init`, and How it initializes the OS
+> 📰 Note: What is `cloud-init`, and How it initializes the OS
 >
 > `cloud-init` is a tool used to initialize cloud instances. It is widely utilized by public cloud providers such as AWS and Google Cloud, as well as for provisioning private cloud infrastructure and installing bare-metal systems.
 >
@@ -306,7 +306,7 @@ We will modify the `ethernet.eth0.addresses` field to assign an IP address to th
 
 These network settings will be automatically applied during the Pi's boot process through `cloud-init`.
 
-#### 2-1-3. (NUC) SD 카드에 HypriotOS 설치
+### 2-1-3. (NUC) Flash SD Card for HypriotOS Install
 
 To install HypriotOS onto the SD card, we first need to identify where the SD card is mounted. We will use the `fdisk` command to locate a partition that matches the SD card's size.
 
@@ -335,7 +335,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > |`-d <path>`, `--device`| Path of Device which where OS be installed. |
 > |`~.img`, `~.img.zip`| Raspberry OS Image File |
 
-> 📰 참고: How to resolve `BLKRRPART failed: Device or resource busy` error
+> 📰 Note: How to resolve `BLKRRPART failed: Device or resource busy` error
 >
 > If this error occurs, the OS is installed successfully, but the `hypriotos-init.yaml` and `network-config` files are not copied to the SD card.
 >
@@ -361,20 +361,20 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > ```
 > 
 
-Now, eject the SD card, insert it into the Pi, and power it on. The default login credentials are (ID: `pi`, Password: `1234`).
-
 > 📰 Note: About the `hypriotos-init.yaml` file
 > The `hypriotos-init.yaml` file is used as the `/boot/user-data` file on HypriotOS.  
 > The `/boot/user-data` file provides user-defined configurations to the instance during initialization. It defines user creation, hostname settings, and whether to automatically initialize `/etc/hosts`.  
 > This file also contains the initial user credentials, so if you forget the ID/PW, refer to this file.
 >
-> 참고: https://cloudinit.readthedocs.io/en/stable/explanation/format.html
+> REF: https://cloudinit.readthedocs.io/en/stable/explanation/format.html
 
-### 2-2. Raspberry PI network Configuration
+## 2-2. Raspberry PI Environment Setup
 
-#### 2-2-1. (PI) Check Network Configuration
+### 2-2-1. (PI) Check Network Configuration
 
-Now, connect a keyboard, mouse, and monitor to the **Pi** to proceed with the setup.
+Now, eject the SD card, insert it into the Pi, and power it on. The default login credentials are (ID: `pi`, Password: `1234`).
+
+Next, connect a keyboard, mouse, and monitor to the **Pi** to proceed with the setup.
 
 First, verify that the network interface is configured correctly by entering the following command in the shell:
 
@@ -388,7 +388,7 @@ Next, check the routing table using the following command:
 netstat -rn
 ```
 
-#### 2-2-2. (PI) 패키지 설치
+### 2-2-2. (PI) Install Package
 
 To proceed with the lab, install the following packages on the Pi:
 
@@ -434,40 +434,10 @@ Once the package installation is complete, <U>**return to the NUC**</U>. Ensure 
 
 </details>
 
-#### 2-2-3. (NUC) Connect to Pi via SSH
+### 2-2-3. (PI) Configuring `crontab` for Time Synchronization
 
-Since `openssh-server` has been installed on the Pi, you can now access the Pi via SSH from external devices. This can be done using the following command. <br>
-(From now on, there's no need to repetitively unplug and plug in the monitor, mouse, and keyboard. You can access the Pi via SSH from the NUC.)
-
-```bash
-ssh pi@[PI_IP] #ID: pi PW: 1234
-```
-
-> 📰 Note: SSH - Fingerprint Error
->
-> ![ssh key error](./img/ssh_duplicated.png)
-> 
-> This error occurs when the SSH key associated with the target IP address differs from the key of the SSH server you are trying to access.
->
-> Each SSH server has a unique SSH key.   
-> When an SSH client connects to a server, the server's key is shared with the client, which then stores the key and IP address in the `~/.ssh/known_hosts` file.  
-> (The image below illustrates this process.)
->
-> ![ssh initial access](./img/ssh_initial_access.png)
-> 
-> When the client try to reconnects to the server, it uses the stored key in `~/.ssh/known_hosts` to verify that the server is the same one previously accessed. This mechanism helps prevent man-in-the-middle attacks. <br>
-> If the SSH key of the server has changed, verification will be failed and `ssh` will produce an error and terminate the connection.
->
-> To resolve this error, remove the previous fingerprint using the following command and then try reconnecting via SSH:
->
-> ```bash
-> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
-> ```
-
-### 2-3. (PI) Configuring `crontab` for Time Synchronization
-
-Since the Raspberry Pi lacks an RTC (Real-Time Clock), it can only maintain system time for approximately 17 minutes after being powered off. <br>
-To synchronize the system time after booting, we will configure crontab to execute the `rdate` command 1 minute after the boot process is complete.
+Since the Raspberry Pi lacks an RTC (Real-Time Clock), it can only maintain system time for about 17 minutes after being powered off. <br>
+To synchronize the system time after booting, we will configure `crontab` to execute the `rdate` command 1 minute after the boot process is complete.
 
 First, modify the `crontab` settings using the following command:
 
@@ -493,13 +463,48 @@ Save the changes and restart the Pi using the following command:
 sudo reboot
 ```
 
+### 2-2-4. (NUC) Check Pi Setup
+
+Since `openssh-server` has been installed on the Pi, you can now access the Pi via SSH from external devices. This can be done using the following command. <br>
+(From now on, there's no need to repetitively unplug and plug in the monitor, mouse, and keyboard. You can access the Pi via SSH from the NUC.)
+
+```bash
+ssh pi@[PI_IP] #ID: pi PW: 1234
+```
+
+> 📰 Note: SSH - Fingerprint Error
+>
+> ![ssh key error](./img/ssh_duplicated.png)
+> 
+> This error occurs when the SSH key associated with the target IP address differs from the key of the SSH server you are trying to access. (e.g. re-install `openssh-server`)
+>
+> Each SSH server has a unique SSH key.   
+> When an SSH client connects to a server, the server's key is shared with the client, which then stores the key and IP address in the `~/.ssh/known_hosts` file.  
+> (The image below illustrates this process.)
+>
+> ![ssh initial access](./img/ssh_initial_access.png)
+> 
+> When the client try to reconnects to the server, it uses the stored key in `~/.ssh/known_hosts` to verify that the server is the same one previously accessed. This mechanism helps prevent man-in-the-middle attacks. <br>
+> If the SSH key of the server has changed, verification will be failed and `ssh` will produce an error and terminate the connection.
+>
+> To resolve this error, remove the previous fingerprint using the following command and then try reconnecting via SSH:
+>
+> ```bash
+> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
+> ```
+
+Next, please check the system time by entering a commend below:
+```bash
+date
+```
+
 If the system time is still incorrect after rebooting, you can manually synchronize it using the command below:
 
 ```bash
 sudo rdate -s time.bora.net
 ```
 
-### 2-4. Hostname Configuration
+## 2-3. Hostname Configuration
 
 Every device connected to a network is identified and communicates using a unique IP address.
 
@@ -513,7 +518,7 @@ In short, the `/etc/hosts` file links hostnames to actual IP addresses. Even if 
 
 Subsequent steps in the lab will also use hostnames rather than IP addresses for interaction.
 
-#### 2-4-1. (NUC) Hostname preparation for Kafka
+### 2-3-1. (NUC) Hostname preparation for Kafka
 
 First, check the hostname of the NUC using the following command:
 ```bash
@@ -526,20 +531,16 @@ Next, open the `/etc/hosts` file using a text editor.
 sudo vim /etc/hosts
 ```
 
-Add the following two lines at the bottom of the file:
-
+Add the following line(Pi IP Address & Hostname) at the bottom of the file:
+<!-- 
+  Pi IP만 적는 것으로 수정합니다.
+  REF: Issue #98
+-->
 ```text
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
-```
-```text
-# Example (When NUC's Hostname is `nuc`)
-
-172.29.0.XX        nuc 
-172.29.0.XX        pi 
+172.29.0.XX        [PI_HOSTNAME] 
 ```
 
->  ⚠️ **주의** ⚠️ 
+>  ⚠️ **Warning** ⚠️ 
 > 
 > For this lab, it is recommended to **set the hostname to an <U>easy-to-remember and simple</U> name**. <br>
 > The NUC's hostname must match the one recorded on the Pi's `/etc/hosts` file, as it will also be required during the Kafka configuration.
@@ -552,7 +553,7 @@ Add the following two lines at the bottom of the file:
 > ```
 > **Permanent change:**
 > ```bash
-> # 영구 수정
+> # Change Permanently
 > sudo hostnamectl set-hostname <new_name>
 > ```
 >
@@ -562,19 +563,22 @@ Add the following two lines at the bottom of the file:
 > For more details, refer to: <https://repost.aws/ko/knowledge-center/linux-static-hostname-rhel7-centos7>
 
 
-#### 2-4-2. (PI) Hostname preparation for Kafka
+### 2-3-2. (PI) Hostname preparation for Kafka
 
-Perform the same steps on the Pi that were done on the NUC in section 2-4-1. Open the `/etc/hosts` file and add the following two lines.
+Perform the same steps on the Pi that were done on the NUC in section 2-3-1. Open the `/etc/hosts` file and add the following line(NUC IP Address & Hostname).
 
 ```bash
 sudo vim /etc/hosts
 ```
+<!-- 
+  NUC IP만 적는 것으로 수정합니다.
+  REF: Issue #98
+-->
 ```text
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
+172.29.0.XX        [NUC_HOSTNAME]
 ```
 
->  ⚠️ **주의** ⚠️
+>  ⚠️ **Warning** ⚠️
 >
 > The /etc/hosts file on the Pi is reset during boot due to cloud-init. <br>
 > If you want to preserve these settings after reboot, follow the guidelines below. 
@@ -590,7 +594,7 @@ sudo vim /etc/hosts
 > 3. Comment out the `update_etc_hosts` module in `/etc/cloud/cloud.cfg`. This module is responsible for regenerating `/etc/hosts`.
 > <!-- 2025.02.27: 이유는 모르겠지만 HypriotOS 내부에서 /boot/user-data를 직접 수정해도 Data가 날아감. -->
 
-#### 2-4-3. (PI, NUC) Verifying Hostname-based Communication
+### 2-3-3. (PI, NUC) Verifying Hostname-based Communication
 
 From the NUC, verify that hostname-based communication is working correctly:
 
@@ -610,7 +614,7 @@ Successful communication should display ICMP packet responses. If you encounter 
 
 ![ping from pi](./img/ping_from_pi.png)
 
-### 2-5. (NUC) Kafka Deployment
+## 2-4. (NUC) Kafka Deployment
 
 Now that the Pi and NUC can communicate via their hostnames, we will deploy Apache Kafka on the NUC using Docker to enable message exchange between the devices. This corresponds to the "Data Interconnect" portion of the lab.
 
@@ -625,7 +629,7 @@ Zookeeper does not require a Broker ID, while each Kafka broker will be assigned
 |         broker2          | Host's IP  |     2     |      9092      |
 |         consumer         | Host's IP  |     -     |       -        |
 
-#### 2-5-1. (NUC) Clone repository from GitHub
+### 2-4-1. (NUC) Clone repository from GitHub
 
 First, we will build the Docker image required to create the containers. <br>
 Clone the repository containing the necessary files using the following command.
@@ -647,7 +651,7 @@ Navigate to this directory using the command below.
 cd ~/SmartX-mini/ubuntu-kafka
 ```
 
-#### 2-5-2. (NUC) Dockerfile 확인
+### 2-4-2. (NUC) Check Dockerfile
 
 Check that the `Dockerfile` in the current directory matches the expected contents.
 
@@ -680,7 +684,7 @@ WORKDIR /kafka
 > …
 > ```
 
-#### 2-5-3. (NUC) Docker Image 빌드
+### 2-4-3. (NUC) Build Docker Image
 
 Once you have verified the `Dockerfile`, proceed to build the Docker image using the following command: 
 
@@ -689,11 +693,11 @@ sudo docker build --tag ubuntu-kafka .
 #You should type '.', so docker can automatically start to find `Dockerfile` in the current directory('.').
 ```
 
->  📰 참고: Basic Docker CLI Commands
+>  📰 Note: Basic Docker CLI Commands
 >
 > The following are common Docker CLI commands that you can use to manage containers:
 > 
-> 자세한 사항은 [Docker Official Document](https://docs.docker.com/engine/reference/commandline/cli/)를 참고해주시기 바랍니다.
+> For more information, Please refer to [Docker Official Document](https://docs.docker.com/engine/reference/commandline/cli/).
 >
 > |Command|Description|
 > |---|---|
@@ -708,7 +712,7 @@ sudo docker build --tag ubuntu-kafka .
 > You can use the first 4 characters of the container ID shown by `docker ps` as `<container id>`, as long as they are unique.
 >
 
-#### 2-5-4. (NUC) Docker Container 배치
+### 2-4-4. (NUC) Deploy Docker Containers
 
 Once the `ubuntu-kafka` image is built, create and run the following Docker containers: `zookeeper`, `broker0`, `broker1`, `broker2`, `consumer`.
 
@@ -727,7 +731,7 @@ sudo docker run -it --net=host --name broker2 ubuntu-kafka
 sudo docker run -it --net=host --name consumer ubuntu-kafka
 ```
 
-#### 2-5-5. (NUC - `zookeeper` Container) Zookeeper 설정
+### 2-4-5. (NUC - `zookeeper` Container) Configure Zookeeper
 
 First, access the `zookeeper` container to configure it. <br>
 Use the following command to check the `zookeeper.properties` file:
@@ -746,7 +750,7 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 >
 > Zookeeper must always be started before Kafka brokers. Ensure this order is maintained when reconfiguring the environment.
 
-#### 2-5-6. (NUC - `brokerN` Container) Broker Configuration
+### 2-4-6. (NUC - `brokerN` Container) Broker Configuration
 
 Next, access each broker container to configure them. Open the configuration file using the following command:
 
@@ -770,7 +774,7 @@ After configuring each broker, start the Kafka brokers using the following comma
 bin/kafka-server-start.sh config/server.properties
 ```
 
-#### 2-5-7. (NUC - `consumer` Container) Consumer Topic Setup
+### 2-4-7. (NUC - `consumer` Container) Consumer Topic Setup
 
 Access the `consumer` container to create a resource topic in Kafka. <br>
 Use the following command to create the topic:
@@ -786,9 +790,9 @@ bin/kafka-topics.sh --list --zookeeper localhost:2181 # list all topic of zookee
 bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic resource # Check existence of topic `resource` of zookeeper in localhost:2181
 ```
 
-### 2-6. (PI) Flume on Raspberry PI
+## 2-5. (PI) Flume on Raspberry PI
 
-#### 2-6-1. (PI) Install Net-SNMP installation
+### 2-5-1. (PI) Install Net-SNMP installation
 
 Return to the Pi and install the `Net-SNMP` package using the following command:
 
@@ -824,7 +828,7 @@ Restart the `snmpd.service` to apply the changes:
 sudo systemctl restart snmpd.service
 ```
 
-#### 2-6-2. (PI) Clone repository from GitHub
+### 2-5-2. (PI) Clone repository from GitHub
 
 Clone the `SmartX-mini` repository on the Pi:
 
@@ -839,19 +843,22 @@ Navigate to the `raspbian-flume` directory where we will deploy Flume:
 cd ~/SmartX-mini/raspbian-flume
 ```
 
-#### 2-6-3. Check Dockerfile
+### 2-5-3. Check Dockerfile
 
 Open the `Dockerfile` and ensure the contents match the following configuration:
 
->  ⚠️ **주의** ⚠️
+>  ⚠️ <span style="color:red">**Warning**</span> ⚠️
 >
-> Ensure the base image is set to `FROM balenalib/rpi-raspbian:buster`.
+> <span style="color:red"> Ensure the base image is set to `FROM balenalib/rpi-raspbian:buster`, not `stretch`.</span>
 >
 > If you don't modify it, you may encounter the build failure, since `apt update` failed.
 
 ```dockerfile
 FROM balenalib/rpi-raspbian:buster
 LABEL "maintainer"="Seungryong Kim <srkim@nm.gist.ac.kr>"
+
+# (Optional; to speed-up the build procedure) Change apt repository to KAIST mirror server.
+RUN sed -i 's@archive.raspbian.org@ftp.kaist.ac.kr/raspbian@g'
 
 #Update & Install wget, vim
 RUN sudo apt update
@@ -870,7 +877,7 @@ ADD flume-conf.properties /flume/conf/
 WORKDIR /flume
 ```
 
-#### 2-6-4. (PI) Build docker image
+### 2-5-4. (PI) Build docker image
 
 Once the configuration is complete, build the Docker image for Flume. Note that this process will take longer than on the NUC:
 
@@ -878,7 +885,7 @@ Once the configuration is complete, build the Docker image for Flume. Note that 
 sudo docker build --tag raspbian-flume .
 ```
 
-#### 2-6-5. Run flume on container
+### 2-5-5. Run flume on container
 
 After successfully building the Docker image, create and run the `flume` container.
 
@@ -906,12 +913,12 @@ Start the Flume agent using the following command:
 bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name agent -Dflume.root.logger=INFO,console
 ```
 
-> 📰️ 참고: If errors occur, verify that the following three values are consistent:
+> 📰️ Note: If errors occur, verify that the following three values are consistent:
 > 1. The NUC hostname in the Pi's `/etc/hosts` file.
 > 2. The broker hostname in `conf/flume-conf.properties` on the Pi.
 > 3. The hostname of NUC (check with the `hostname` command).
 
-### 2-7. (NUC - `consumer` Container) Consume message from brokers
+## 2-6. (NUC - `consumer` Container) Consume message from brokers
 
 Run the following script to check whether the Consumer container can receive messages sent by the Producer.
 ```bash
@@ -921,9 +928,17 @@ If everything is configured correctly, you should see the message displayed in t
 
 ![consumer result](./img/consumer%20result.png)
 
-## 3. Review
+# 3. Review
 
-### 3-1. Lab Summary
+## 3-1. Lab Summary
+
+In this lab, we experienced interconnecting computer systems in two different ways.
+
+Through steps `2-1` to `2-3`, you prepared for the physical interconnection of two computer systems and ultimately verified their ability to communicate with each other using `ping`. Through this process, we explored and experienced the concept of <U>**Physical Interconnect**</U>.
+
+Afterward, multiple containers were deployed on the Box using Docker. In summary, from steps `2-4` to `2-6`, we confirmed that the SNMP data extracted by `Apache Flume` was transmitted through `Apache Kafka` and delivered to the Consumer. Through this, we verified that two functions (Producer ↔ Consumer) could interact and exchange data via Apache Kafka, allowing us to experience <U>**Data Interconnect**</U>.
+
+## 3-2. Finale
 
 Through this lab, we have answered the following two key questions:
 

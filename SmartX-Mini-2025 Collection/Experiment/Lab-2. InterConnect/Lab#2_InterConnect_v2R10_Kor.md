@@ -1,15 +1,15 @@
 # Lab#2. InterConnect Lab
 
-## 0. Objective
+# 0. Objective
 
 이번 InterConnect Lab에서는 2가지 방식을 통해 컴퓨터 시스템을 서로 연결해 볼 것입니다.
 
 - Physical Interconnect: Network를 통해 물리적으로 두 Box를 연결합니다.
 - Data Interconnect: Physical Interconnect를 이용하여, 두 Function 사이의 데이터를 연결합니다.
 
-## 1. Concept
+# 1. Concept
 
-### 1-1. Raspberry Pi
+## 1-1. Raspberry Pi
 
 ![Raspberry Pi 4 Model B](./img/pi4-labelled.png)
 
@@ -19,7 +19,7 @@
 
 이번 실습에서는 [Raspberry Pi 4 Model B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)를 사용합니다. 해당 모델은 USB Type-C를 통해 전원을 공급받으며, Micro-HDMI를 통해 화면과 연결할 수 있습니다. 데이터 저장은 Micro SD를 이용하기 때문에, OS 설치는 SD 카드에 OS를 다운로드하는 방식으로 이루어집니다. 네트워크는 WiFi와 Gigabit Ethernet을 제공하는데, 이번 실습에서는 Ethernet을 통해 네트워크와 연결합니다.
 
-### 1-2. Apache Kafka
+## 1-2. Apache Kafka
 
 ![Why We use Kafka](./img/Apache_Kafka.png)
 
@@ -58,7 +58,7 @@ Topic들은 여러 Partition으로 분할하여 관리됩니다. 만약 하나�
 > 📰️️ 참고  
 > Apache Kafka를 더 자세히 알고 싶다면 [Apache Kafka Docs](https://kafka.apache.org/documentation/#intro_concepts_and_terms)를 참고해주세요.
 
-### 1-3. Net-SNMP
+## 1-3. Net-SNMP
 
 [Net-SNMP](http://www.net-snmp.org/)는 리눅스 운영체제에서 SNMP를 이용하여 네트워크 장비나 컴퓨터, 소형 디바이스 등의 상태를 모니터링할 수 있는 일련의 어플리케이션 모음(Application Suite)입니다.
 
@@ -88,7 +88,7 @@ Net-SNMP는 리눅스 시스템에 SNMP Manager와 SNMP Agent 역할을 수행�
 > 📰️️ 참고  
 > SNMP를 더 자세히 알고 싶다면 [GeeksForGeeks](https://www.geeksforgeeks.org/simple-network-management-protocol-snmp/)를 참고해주세요.
 
-### 1-4. Apache Flume
+## 1-4. Apache Flume
 
 Flume은 대량의 로그 데이터를 효율적으로 수집, 집계 및 전송하는 데에 사용할 수 있는, 분산 로그 데이터 수집 도구입니다. 단순하고 유연한 구조가 특징이며, 여러 유형의 스트리밍 데이터를 공급하는 요소로 활용될 수 있습니다.
 
@@ -108,7 +108,7 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 > (2025년 2월 기준) Apache Flume은 2024년 10월 10일 프로젝트 유지 중단을 선언하였으며, Flume 사용자는 다른 서비스로 마이그레이션하도록 안내하였습니다.   
 > 현재는 호환성 문제 및 실습 목적으로 Flume을 사용하지만, 추후에 분산 로그 수집 서비스를 도입할 경우 Fluentd나 Logstash 등을 사용할 것을 권장드립니다.
 
-## 2. Practice
+# 2. Practice
 
 ![overview](img/overview.png)
 
@@ -128,7 +128,7 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 >
 > After every boot, the content of `/etc/resolv.conf` is gone, you should do the above steps again.
 
-### 2-1. Raspberry PI OS Installation
+## 2-1. Raspberry PI OS Installation
 
 > ⚠️ **주의** ⚠️
 > 
@@ -156,7 +156,7 @@ HypriotOS 설치를 위해 Micro SD 카드를 리더기에 삽입한 뒤, NUC에
 > 📰️️ 참고: `sudo`는 Root 사용자(관리자) 권한으로 명령을 실행합니다. 시스템 종료 동작은 Root 권한을 요구합니다.
 
 
-#### 2-1-1. (NUC) Download Required Package and File
+### 2-1-1. (NUC) Download Required Package and File
 
 [`flash`](https://github.com/hypriot/flash)는 SD카드에 Image를 설치하는 스크립트로, SD카드에 OS를 설치하기 위해 사용됩니다. 다음의 명령어를 입력하여 `flash`를 설치합니다. 설치 이후, Shell에 `flash`를 입력하여 정상 설치 여부를 확인합니다.
 
@@ -218,7 +218,7 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt install -y git-lfs
 git lfs install
 git clone https://github.com/SmartX-Labs/SmartX-Mini.git
-cd ~/SmartX-Mini/SmartX-Mini-2024\ Collection/Experiment/Lab-2.\ InterConnect/
+cd ~/SmartX-Mini/SmartX-Mini-2025\ Collection/Experiment/Lab-2.\ InterConnect/
 ```
 
 <details>
@@ -240,7 +240,7 @@ wget https://github.com/hypriot/image-builder-rpi/releases/download/v1.12.3/hypr
 ls -alh # Check all files
 ```
 
-#### 2-1-2. (NUC) HypriotOS 설정 수정
+### 2-1-2. (NUC) HypriotOS 설정 수정
 
 `network-config`는 Pi에서 사용할 네트워크 설정이 저장되어 있습니다. 이 파일을 열어 설정을 변경하겠습니다. 
 
@@ -297,7 +297,7 @@ sudo vim network-config
 
 위의 네트워크 정보들은 `cloud-init`을 통해 Pi가 부팅될 때마다 자동으로 적용됩니다.
 
-#### 2-1-3. (NUC) SD 카드에 HypriotOS 설치
+### 2-1-3. (NUC) SD 카드에 HypriotOS 설치
 
 HypriotOS를 SD 카드에 설치하기 위해, SD 카드가 마운트된 지점을 알아내야 합니다. 이를 위해 `fdisk`를 이용하여 SD 카드와 비슷한 크기의 Partition을 찾아보도록 하겠습니다.
 
@@ -350,9 +350,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > d   # 모든 파티션이 삭제될 때까지 반복 입력한다.
 > w   # 변경사항 저장
 > ```
-> 
-
-이제 SD 카드를 분리하여 다시 Pi에 삽입한 뒤, Pi의 전원을 켭니다. ID는 `pi`, Password는 `1234` 입니다.
+>
 
 > 📰 참고: `hypriotos-init.yaml` 파일에 관하여
 >
@@ -362,9 +360,11 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 >
 > 참고: https://cloudinit.readthedocs.io/en/stable/explanation/format.html
 
-### 2-2. Raspberry PI network Configuration
+## 2-2. Raspberry PI 초기 환경 설정
 
-#### 2-2-1. (PI) 네트워크 설정 확인인
+### 2-2-1. (PI) 네트워크 설정 확인
+
+이제 SD 카드를 분리하여 다시 Pi에 삽입한 뒤, Pi의 전원을 켭니다. ID는 `pi`, Password는 `1234` 입니다.
 
 이제부터 키보드와 마우스, 모니터를 Pi에 연결하여 작업합니다.
 
@@ -380,7 +380,7 @@ ifconfig
 netstat -rn
 ```
 
-#### 2-2-2. (PI) 패키지 설치
+### 2-2-2. (PI) 패키지 설치
 
 실습을 위해 다음의 패키지를 Pi에 설치합니다.
 
@@ -396,8 +396,7 @@ sudo apt install -y git vim rdate openssh-server
 |`rdate`|시스템 시간을 외부 Time Server와 동기화하는 도구.|
 |`openssh-server`|SSH 서버 역할을 할 수 있도록 하는 패키지. 외부에서 Pi로 SSH를 통해 접근하기 위해 필요하다.|
 
-
-패키지 설치가 모두 완료되었다면, 다시 <U>**NUC으로 돌아갑니다**</U>. 이때, Pi는 NUC에서 SSH를 통해 접근할 예정이므로 <U>**끄지 않습니다**</U>.
+패키지 설치가 완료된 것을 확인한 이후, 다음 과정으로 넘어갑니다.
 
 > 📰 참고: `Certificate verification failed: The certificate is NOT Trusted` 오류
 >
@@ -427,37 +426,7 @@ sudo apt install -y git vim rdate openssh-server
 
 </details>
 
-#### 2-2-3. (NUC) SSH를 통해 Pi와 연결
-
-Pi에 `openssh-server`를 설치하였기 때문에, 외부에서 SSH를 통해 Pi에 접근할 수 있습니다. 이는 다음의 명령어를 통해 수행합니다. <br>
-(즉, 이제부터 모니터, 마우스, 키보드를 일일이 뽑고 꽂을 필요 없이, NUC에서 SSH로 Pi에 접근하면 됩니다.)
-
-```bash
-ssh pi@[PI_IP] #ID: pi PW: 1234
-```
-
-> 📰 참고: Fingerprint 오류
->
-> ![ssh key error](./img/ssh_duplicated.png)
->
-> 해당 오류는 접근할 IP 주소와 이와 연결된 SSH Key의 정보가 접근하려는 SSH Server의 Key와 다른 경우에 발생합니다.
-> 
-> 각 SSH Server는 고유의 SSH Key를 갖고 있습니다. <br>
-> 해당 Key는 SSH Client가 Server에 접근하였을 때 전달받으며, Client는 `~/.ssh/known_hosts`에 이를 IP와 함께 저장합니다. <br>
-> (하단의 이미지가 이 과정에 해당합니다.)<br>
-> ![ssh initial access](./img/ssh_initial_access.png)
-> 
-> Client는 해당 Server에 다시 접근할 때, `~/.ssh/known_hosts`에 저장된 데이터를 이용하여, 접근하려는 Server가 이전에 접근했던 Server와 동일한지 확인합니다. (이는 중간자 공격 보안 위협을 방지하기 위한 정책입니다.) <br>
-> 하지만 접근하려는 Server가 이전에 접근했었던 Server와 다를 경우, `ssh`는 위와 같은 오류를 출력하며 접근을 강제로 끊습니다.
->
-> 위의 오류를 해결하기 위해, 다음의 방법을 통해 이전의 Fingerprint를 삭제합니다. <br>
-> 이후 다시 SSH 연결을 시도합니다.
->
-> ```bash
-> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
-> ```
-
-### 2-3. (PI) 시간 동기화를 위한 `crontab` 설정
+### 2-2-3. (PI) 시간 동기화를 위한 `crontab` 설정
 
 라즈베리 파이는 RTC가 없는 관계로, 전원 종료 후 약 17분 동안만 시스템 시간이 유지됩니다. <br>
 부팅 후 시간을 동기화하기 위해 `crontab`을 이용하여 부팅 완료 후 1분 뒤 `rdate`를 실행하도록 설정하겠습니다.
@@ -486,13 +455,48 @@ sudo crontab -e
 sudo reboot
 ```
 
-만약 시간이 여전히 일치하지 않는 경우, 하단의 명령어를 통해 설정할 수 있습니다.
+### 2-2-4. (NUC) Pi 환경 확인
+
+이전 과정에서 Pi에 `openssh-server`를 설치하였기 때문에, 외부에서 SSH를 통해 Pi에 접근할 수 있습니다. 이는 다음의 명령어를 통해 수행합니다. <br>
+(즉, 이제부터 모니터, 마우스, 키보드를 일일이 뽑고 꽂을 필요 없이, NUC에서 SSH로 Pi에 접근하면 됩니다.)
+
+```bash
+ssh pi@[PI_IP] #ID: pi PW: 1234
+```
+
+> 📰 참고: Fingerprint 오류
+>
+> ![ssh key error](./img/ssh_duplicated.png)
+>
+> 해당 오류는 접근할 IP 주소와 이와 연결된 SSH Key의 정보가 접근하려는 SSH Server의 Key와 다른 경우에 발생합니다. (e.g. `openssh-server` 재설치 이후 접근 시도)
+> 
+> 각 SSH Server는 고유의 SSH Key를 갖고 있습니다. <br>
+> 해당 Key는 SSH Client가 Server에 접근하였을 때 전달받으며, Client는 `~/.ssh/known_hosts`에 이를 IP와 함께 저장합니다. <br>
+> (하단의 이미지가 이 과정에 해당합니다.)<br>
+> ![ssh initial access](./img/ssh_initial_access.png)
+> 
+> Client는 해당 Server에 다시 접근할 때, `~/.ssh/known_hosts`에 저장된 데이터를 이용하여, 접근하려는 Server가 이전에 접근했던 Server와 동일한지 확인합니다. (이는 중간자 공격 보안 위협을 방지하기 위한 정책입니다.) <br>
+> 하지만 접근하려는 Server가 이전에 접근했었던 Server와 다를 경우, `ssh`는 위와 같은 오류를 출력하며 접근을 강제로 끊습니다.
+>
+> 위의 오류를 해결하기 위해, 다음의 방법을 통해 이전의 Fingerprint를 삭제합니다. <br>
+> 이후 다시 SSH 연결을 시도합니다.
+>
+> ```bash
+> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
+> ```
+
+다음으로, 시간 설정을 확인합니다. 다음의 명령어를 입력합니다.
+```bash
+date
+```
+
+만약 시간이 여전히 일치하지 않는 경우, 하단의 명령어를 통해 직접 설정할 수 있습니다.
 
 ```bash
 sudo rdate -s time.bora.net
 ```
 
-### 2-4. Hostname 설정
+## 2-3. Hostname 설정
 
 네트워크와 연결된 모든 장비들은 고유의 IP 주소를 통해 서로를 식별하고 통신합니다.
 
@@ -504,7 +508,7 @@ sudo rdate -s time.bora.net
 
 이후에 이어질 실습 또한 IP 주소 대신 `hostname`을 이용해서 상호작용할 것입니다.
 
-#### 2-4-1. (NUC) Hostname preparation for Kafka
+### 2-3-1. (NUC) Hostname preparation for Kafka
 
 먼저, `hostname` 명령어를 통해 NUC의 hostname을 확인합니다.
 
@@ -518,17 +522,13 @@ hostname
 sudo vim /etc/hosts
 ```
 
-파일의 맨 아래에 다음의 두 줄을 추가합니다.
-
+파일의 맨 아래에 Pi의 IP 주소와 Hostname을 다음과 같이 추가합니다.
+<!-- 
+  Pi IP만 적는 것으로 수정합니다.
+  REF: Issue #98
+-->
 ```text
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
-```
-```text
-# 예시 (NUC의 Hostname이 `nuc`인 경우.)
-
-172.29.0.XX        nuc 
-172.29.0.XX        pi 
+172.29.0.XX        [PI_HOSTNAME] 
 ```
 
 >  ⚠️ **주의** ⚠️ 
@@ -553,16 +553,19 @@ sudo vim /etc/hosts
 > 방법은 별도로 설명하지 않으며, <https://repost.aws/ko/knowledge-center/linux-static-hostname-rhel7-centos7>을 참고해주십시오.
 
 
-#### 2-4-2. (PI) Hostname preparation for Kafka
+### 2-3-2. (PI) Hostname preparation for Kafka
 
-2-4-1에서 수행하였던 작업을 Pi에서 동일하게 수행합니다. `/etc/hosts` 파일을 열어 다음의 두 줄을 추가합니다.
+2-3-1에서 수행하였던 작업을 Pi에서 동일하게 수행합니다. `/etc/hosts` 파일을 열어 최하단에 NUC의 IP 주소와 Hostname을 다음과 같이 추가합니다.
 
 ```bash
 sudo vim /etc/hosts
 ```
+<!-- 
+  NUC IP만 적는 것으로 수정합니다.
+  REF: Issue #98
+-->
 ```text
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
+172.29.0.XX        [NUC_HOSTNAME]
 ```
 
 >  ⚠️ **주의** ⚠️
@@ -582,7 +585,7 @@ sudo vim /etc/hosts
 > 3. `/etc/cloud/cloud.cfg`에서 `cloud_init_modules`의 `- update_etc_hosts`를 주석처리 합니다. 해당 모듈이 `/etc/hosts`의 재생성을 담당합니다.
 > 
 
-#### 2-4-3. (PI, NUC) Hostname 적용 확인
+### 2-3-3. (PI, NUC) Hostname 적용 확인
 
 NUC에서 hostname을 이용하여 통신이 정상적으로 이루어지는지 확인합니다.
 
@@ -602,7 +605,7 @@ Pi에서 정상적인 통신은 하단과 같으며, Non-Reachable 등의 오류
 
 ![ping from pi](./img/ping_from_pi.png)
 
-### 2-5. (NUC) Kafka Deployment
+## 2-4. (NUC) Kafka Deployment
 
 NUC과 Pi가 Hostname을 이용하여 정상적으로 통신할 수 있게 되었으니, 이제부터 Docker를 통해 Apache Kafka를 배치하여 NUC과 Pi가 메세지를 교환할 수 있는 환경을 구성하도록 하겠습니다. (2가지 Interconnect 중 Data Interconnect에 해당합니다.)
 
@@ -616,7 +619,7 @@ NUC과 Pi가 Hostname을 이용하여 정상적으로 통신할 수 있게 되�
 |         broker2          | Host's IP  |     2     |      9092      |
 |         consumer         | Host's IP  |     -     |       -        |
 
-#### 2-5-1. (NUC) Clone repository from GitHub
+### 2-4-1. (NUC) Clone repository from GitHub
 
 먼저, 컨테이너를 생성하기 위한 이미지 파일을 빌드할 것입니다. <br>
 빌드에 필요한 데이터가 포함된 Repository를 Clone해주시기 바랍니다.
@@ -638,7 +641,7 @@ git clone https://github.com/SmartX-Box/SmartX-mini.git
 cd ~/SmartX-mini/ubuntu-kafka
 ```
 
-#### 2-5-2. (NUC) Dockerfile 확인
+### 2-4-2. (NUC) Dockerfile 확인
 
 디렉토리 내 `Dockerfile`이 하단과 동일한지 확인해주십시오.
 
@@ -671,7 +674,7 @@ WORKDIR /kafka
 > …
 > ```
 
-#### 2-5-3. (NUC) Docker Image 빌드
+### 2-4-3. (NUC) Docker Image 빌드
 
 `Dockerfile`이 올바르게 작성되어 있다면, 이를 이용하여 `docker build`를 통해 Docker Image 생성을 진행하겠습니다. <br>
 하단의 명령을 입력하여 Image 생성을 진행해주십시오. 
@@ -700,7 +703,7 @@ sudo docker build --tag ubuntu-kafka .
 > 이때 `<container_id>`는 `docker ps` 기준 (겹치지만 않는다면) ID의 앞 4글자만 입력해도 정상적으로 처리됩니다.
 >
 
-#### 2-5-4. (NUC) Docker Container 배치
+### 2-4-4. (NUC) Docker Container 배치
 
 `ubuntu-kafka` 이미지 생성이 완료된 경우, 다음의 명령어를 통해 Docker Container를 생성하겠습니다. <br>
 컨테이너 각각에게 `zookeeper`, `broker0`, `broker1`, `broker2`, `consumer`라는 이름을 붙이겠습니다. 
@@ -720,7 +723,7 @@ sudo docker run -it --net=host --name broker2 ubuntu-kafka
 sudo docker run -it --net=host --name consumer ubuntu-kafka
 ```
 
-#### 2-5-5. (NUC - `zookeeper` Container) Zookeeper 설정
+### 2-4-5. (NUC - `zookeeper` Container) Zookeeper 설정
 
 먼저 `zookeeper` 컨테이너에 접근하여 설정을 진행하도록 하겠습니다. <br>
 다음의 명령어를 통해 `zookeeper.properties` 파일을 확인하도록 하겠습니다.
@@ -737,7 +740,7 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
 이때, Zookeeper는 항상 Broker보다 먼저 실행되어있어야 합니다. 환경을 다시 구성하실 때 이 점 유의 바랍니다.
 
-#### 2-5-6. (NUC - `brokerN` Container) Broker 설정
+### 2-4-6. (NUC - `brokerN` Container) Broker 설정
 
 다음으로 각 `broker` 컨테이너에 접근하여 설정을 진행하도록 하겠습니다. <br>
 하단의 명령어를 통해 설정 파일을 열어주시고, 하단의 이미지를 참고하여 각 Broker가 하단의 표와 같은 값을 갖도록 설정해주십시오. <br>
@@ -761,7 +764,7 @@ sudo vi config/server.properties
 bin/kafka-server-start.sh config/server.properties
 ```
 
-#### 2-5-7. (NUC - `consumer` Container) Consumer Topic 설정
+### 2-4-7. (NUC - `consumer` Container) Consumer Topic 설정
 
 이제 Consumer 컨테이너에 접근하여 Kafka에 `resource`라는 Topic을 생성할 것입니다. <br>
 하단의 명령어를 통해 Topic을 생성해주십시오.
@@ -777,9 +780,9 @@ bin/kafka-topics.sh --list --zookeeper localhost:2181 # list all topic of zookee
 bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic resource # Check existence of topic `resource` of zookeeper in localhost:2181
 ```
 
-### 2-6. (PI) Flume on Raspberry PI
+## 2-5. (PI) Flume on Raspberry PI
 
-#### 2-6-1. (PI) Install Net-SNMP installation
+### 2-5-1. (PI) Install Net-SNMP installation
 
 이제 Pi로 돌아가 다음의 명령어를 입력해 `Net-SNMP` 패키지를 설치해주십시오.
 
@@ -815,7 +818,7 @@ sudo vi /etc/snmp/snmpd.conf
 sudo systemctl restart snmpd.service
 ```
 
-#### 2-6-2. (PI) Clone repository from GitHub
+### 2-5-2. (PI) Clone repository from GitHub
 
 Pi에서도 `SmartX-mini` Repository를 Clone하겠습니다.
 
@@ -830,20 +833,23 @@ Pi에서는 `flume`을 배치할 것이므로, `raspbian-flume`으로 이동해�
 cd ~/SmartX-mini/raspbian-flume
 ```
 
-#### 2-6-3. (PI) Check Dockerfile
+### 2-5-3. (PI) Check Dockerfile
 
 `Dockerfile`을 열어 내용이 하단과 동일한지 확인해주십시오.
 
->  ⚠️ **주의** ⚠️
+>  ⚠️ <span style="color:red">**주의**</span> ⚠️
 >
 > Repository의 Dockerfile은 `FROM balenalib/rpi-raspbian:stretch`로 지정되어있습니다. <br>
-> 반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정해주시기 바랍니다.
+> <span style="color:red">반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정해주시기 바랍니다.</span>
 >
 > 수정하지 않고 빌드하실 경우, 빌드 과정에서 `apt update`가 정상적으로 진행되지 않아 빌드가 실패합니다.
 
 ```dockerfile
 FROM balenalib/rpi-raspbian:buster
 LABEL "maintainer"="Seungryong Kim <srkim@nm.gist.ac.kr>"
+
+# (Optional; to speed-up the build procedure) Change apt repository to kaist mirror server.
+RUN sed -i 's@archive.raspbian.org@ftp.kaist.ac.kr/raspbian@g'
 
 #Update & Install wget, vim
 RUN sudo apt update
@@ -862,7 +868,7 @@ ADD flume-conf.properties /flume/conf/
 WORKDIR /flume
 ```
 
-#### 2-6-4. (PI) Build docker image
+### 2-5-4. (PI) Build docker image
 
 설정이 완료된 이후, `docker build`를 통해 이미지를 빌드합니다. NUC보다 시간이 더 오래 걸리는 점 참고 바랍니다.
 
@@ -870,7 +876,7 @@ WORKDIR /flume
 sudo docker build --tag raspbian-flume .
 ```
 
-#### 2-6-5. (PI) Run flume on container
+### 2-5-5. (PI) Run flume on container
 
 빌드가 완료된 이후, 컨테이너를 생성한 뒤 `flume`을 실행하도록 하겠습니다.
 
@@ -903,7 +909,7 @@ bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name age
 > 2. Pi의 `conf/flume-conf.properties`에 입력된 Broker의 hostname
 > 3. NUC의 hostname (`hostname`으로 확인되는 값)
 
-### 2-7. (NUC - `consumer` Container) Consume message from brokers
+## 2-6. (NUC - `consumer` Container) Consume message from brokers
 
 다음의 스크립트를 실행하여 Producer에서 전달한 메세지를 Consumer가 수신할 수 있는지 확인해보겠습니다.
 ```bash
@@ -913,16 +919,24 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic resource --from
 
 ![consumer result](./img/consumer%20result.png)
 
-## 3. Review
+# 3. Review
 
-### 3-1. Lab Summary
+## 3-1. Lab 요약
+
+이번 실습에서 두 가지 방식으로 컴퓨터 시스템을 상호 연결하는 것을 체험해보았습니다.
+
+여러분은 `2-1`부터 `2-3`까지의 과정을 통해 두 개의 컴퓨터 시스템이 물리적으로 상호 연결되기 위한 준비를 진행하였으며, 최종적으로 `ping`을 통해 두 시스템이 서로 통신할 수 있다는 것을 확인하였습니다. 이러한 과정을 통해 <U>**Physical Interconnect**</U>에 대해 알아보고, 체험해보았습니다.
+
+이후 Docker를 통해 Box에 여러 Container를 배포하였습니다. 간단하게 요약하면, `2-4`부터 `2-6`을 통해 `Apache Flume`이 추출한 SNMP 데이터가 `Apache Kafka`를 거쳐 Consumer에게 전달되었음을 확인할 수 있었습니다. 이를 통해, 우리는 `Apache Kafka`를 매개로 하여 두 Function(Producer ↔ Consumer)이 Data를 주고 받으며 상호작용할 수 있음을 확인할 수 있었으며, <U>**Data Interconnect**</U>를 체험할 수 있었습니다. 
+
+## 3-2. Finale
 
 이번 실습을 통해 다음의 2개 질문에 답할 수 있습니다.
 
 1. 어떻게 이기종 장치(여기서는 NUC과 Pi)를 물리적으로 상호연결할 수 있는가?
 2. 어떻게 서로 다른 Box에 위치한 2개의 Function 간 Data Transfer(여기서는 Kafka Messaging)를 상호연결할 수 있는가?
 
-위의 질문을 통해 Physical Interconnect와 Data Interconnect를 명확하게 구분하실 수 있을 것입니다.
+위의 질문을 생각해보며, Physical Interconnect와 Data Interconnect에 대해 고민해볼 수 있는 시간을 가져보시기 바랍니다.
 
 > 실습에 참여하시느라 고생 많으셨습니다. <br>
 > 참여해주셔서 감사합니다.
