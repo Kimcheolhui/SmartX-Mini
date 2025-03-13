@@ -148,7 +148,7 @@ Now we will install HypriotOS on the Raspberry Pi. HypriotOS is a Debian-based o
 
 To install HypriotOS, insert the Micro SD card into a reader, and insert into the NUC.
 
-> ⚠️ **주의** ⚠️
+> ⚠️ **Warning** ⚠️
 >
 > **Please ensure that the Pi is <U>completely powered off</U>** before removing the SD card.
 >
@@ -247,7 +247,7 @@ wget https://github.com/hypriot/image-builder-rpi/releases/download/v1.12.3/hypr
 ls -alh # Check all files
 ```
 
-#### 2-1-2. (NUC) HypriotOS 설정 수정
+#### 2-1-2. (NUC) Edit Configuration of HypriotOS
 
 `network-config` file is used to configure network setting. Now we will open and edit this file to configure.
 
@@ -263,9 +263,9 @@ ls -alh # Check all files
 > 
 > So, warning agian, <U>**Do not change the file name.**</U>
 > 
-> 참조: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html#source-files
+> REF: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html#source-files
 
-> 📰 Info: What is `cloud-init`, and How it initializes the OS
+> 📰 Note: What is `cloud-init`, and How it initializes the OS
 >
 > `cloud-init` is a tool used to initialize cloud instances. It is widely utilized by public cloud providers such as AWS and Google Cloud, as well as for provisioning private cloud infrastructure and installing bare-metal systems.
 >
@@ -306,7 +306,7 @@ We will modify the `ethernet.eth0.addresses` field to assign an IP address to th
 
 These network settings will be automatically applied during the Pi's boot process through `cloud-init`.
 
-#### 2-1-3. (NUC) SD 카드에 HypriotOS 설치
+#### 2-1-3. (NUC) Flash SD Card for HypriotOS Install
 
 To install HypriotOS onto the SD card, we first need to identify where the SD card is mounted. We will use the `fdisk` command to locate a partition that matches the SD card's size.
 
@@ -335,7 +335,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > |`-d <path>`, `--device`| Path of Device which where OS be installed. |
 > |`~.img`, `~.img.zip`| Raspberry OS Image File |
 
-> 📰 참고: How to resolve `BLKRRPART failed: Device or resource busy` error
+> 📰 Note: How to resolve `BLKRRPART failed: Device or resource busy` error
 >
 > If this error occurs, the OS is installed successfully, but the `hypriotos-init.yaml` and `network-config` files are not copied to the SD card.
 >
@@ -366,7 +366,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > The `/boot/user-data` file provides user-defined configurations to the instance during initialization. It defines user creation, hostname settings, and whether to automatically initialize `/etc/hosts`.  
 > This file also contains the initial user credentials, so if you forget the ID/PW, refer to this file.
 >
-> 참고: https://cloudinit.readthedocs.io/en/stable/explanation/format.html
+> REF: https://cloudinit.readthedocs.io/en/stable/explanation/format.html
 
 ### 2-2. Raspberry PI network Configuration
 
@@ -388,7 +388,7 @@ Next, check the routing table using the following command:
 netstat -rn
 ```
 
-#### 2-2-2. (PI) 패키지 설치
+#### 2-2-2. (PI) Install Package
 
 To proceed with the lab, install the following packages on the Pi:
 
@@ -539,7 +539,7 @@ Add the following two lines at the bottom of the file:
 172.29.0.XX        pi 
 ```
 
->  ⚠️ **주의** ⚠️ 
+>  ⚠️ **Warning** ⚠️ 
 > 
 > For this lab, it is recommended to **set the hostname to an <U>easy-to-remember and simple</U> name**. <br>
 > The NUC's hostname must match the one recorded on the Pi's `/etc/hosts` file, as it will also be required during the Kafka configuration.
@@ -552,7 +552,7 @@ Add the following two lines at the bottom of the file:
 > ```
 > **Permanent change:**
 > ```bash
-> # 영구 수정
+> # Change Permanently
 > sudo hostnamectl set-hostname <new_name>
 > ```
 >
@@ -574,7 +574,7 @@ sudo vim /etc/hosts
 [PI_IP] [PI_HOSTNAME]
 ```
 
->  ⚠️ **주의** ⚠️
+>  ⚠️ **Warning** ⚠️
 >
 > The /etc/hosts file on the Pi is reset during boot due to cloud-init. <br>
 > If you want to preserve these settings after reboot, follow the guidelines below. 
@@ -647,7 +647,7 @@ Navigate to this directory using the command below.
 cd ~/SmartX-mini/ubuntu-kafka
 ```
 
-#### 2-5-2. (NUC) Dockerfile 확인
+#### 2-5-2. (NUC) Check Dockerfile
 
 Check that the `Dockerfile` in the current directory matches the expected contents.
 
@@ -680,7 +680,7 @@ WORKDIR /kafka
 > …
 > ```
 
-#### 2-5-3. (NUC) Docker Image 빌드
+#### 2-5-3. (NUC) Build Docker Image
 
 Once you have verified the `Dockerfile`, proceed to build the Docker image using the following command: 
 
@@ -689,11 +689,11 @@ sudo docker build --tag ubuntu-kafka .
 #You should type '.', so docker can automatically start to find `Dockerfile` in the current directory('.').
 ```
 
->  📰 참고: Basic Docker CLI Commands
+>  📰 Note: Basic Docker CLI Commands
 >
 > The following are common Docker CLI commands that you can use to manage containers:
 > 
-> 자세한 사항은 [Docker Official Document](https://docs.docker.com/engine/reference/commandline/cli/)를 참고해주시기 바랍니다.
+> For more information, Please refer to [Docker Official Document](https://docs.docker.com/engine/reference/commandline/cli/).
 >
 > |Command|Description|
 > |---|---|
@@ -708,7 +708,7 @@ sudo docker build --tag ubuntu-kafka .
 > You can use the first 4 characters of the container ID shown by `docker ps` as `<container id>`, as long as they are unique.
 >
 
-#### 2-5-4. (NUC) Docker Container 배치
+#### 2-5-4. (NUC) Deploy Docker Containers
 
 Once the `ubuntu-kafka` image is built, create and run the following Docker containers: `zookeeper`, `broker0`, `broker1`, `broker2`, `consumer`.
 
@@ -727,7 +727,7 @@ sudo docker run -it --net=host --name broker2 ubuntu-kafka
 sudo docker run -it --net=host --name consumer ubuntu-kafka
 ```
 
-#### 2-5-5. (NUC - `zookeeper` Container) Zookeeper 설정
+#### 2-5-5. (NUC - `zookeeper` Container) Configure Zookeeper
 
 First, access the `zookeeper` container to configure it. <br>
 Use the following command to check the `zookeeper.properties` file:
@@ -843,7 +843,7 @@ cd ~/SmartX-mini/raspbian-flume
 
 Open the `Dockerfile` and ensure the contents match the following configuration:
 
->  ⚠️ **주의** ⚠️
+>  ⚠️ **Warning** ⚠️
 >
 > Ensure the base image is set to `FROM balenalib/rpi-raspbian:buster`.
 >
@@ -906,7 +906,7 @@ Start the Flume agent using the following command:
 bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name agent -Dflume.root.logger=INFO,console
 ```
 
-> 📰️ 참고: If errors occur, verify that the following three values are consistent:
+> 📰️ Note: If errors occur, verify that the following three values are consistent:
 > 1. The NUC hostname in the Pi's `/etc/hosts` file.
 > 2. The broker hostname in `conf/flume-conf.properties` on the Pi.
 > 3. The hostname of NUC (check with the `hostname` command).
