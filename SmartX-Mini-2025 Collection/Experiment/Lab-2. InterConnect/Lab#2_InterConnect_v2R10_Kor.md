@@ -49,13 +49,14 @@ Topic들은 여러 Partition으로 분할하여 관리됩니다. 만약 하나�
 
 하지만 분산 시스템으로 운영할 경우, Broker 관리, 구성원 간 데이터 동기화나 장애 식별 및 조치, 설정값 및 메타데이터 관리, 리더 선출 등의 다양한 문제가 발생합니다. 이를 전담하여 중앙관리해주는 구성원이 `Apache Zookeeper`입니다. Zookeeper는 Broker와 지속적으로 통신하여 상태를 확인하고, Kafka의 상태정보(Topic 수, Partition 수, Replication 수 등)와 메타데이터(Broker 위치 및 Leader 정보 등)을 관리하면서 Partition의 Leader를 결정하거나, Broker에 장애가 발생하면 이를 감지하여 데이터 복구 및 리더 재선출을 수행하며 장애를 복구합니다. 이러한 기능들을 수행하기에 Kafka를 대규모 분산 시스템으로 사용할 수 있는 것입니다.
 
-> ⚠️ **주의** ⚠️
-> 
-> Apache Kafka 3.5 이후로 Zookeeper는 Deprecated로 지정되었으며, 이를 한층 보완한 KRaft가 제안되었습니다. 현재는 호환성 문제 및 실습 목적으로 Zookeeper를 사용하지만, 추후에 자신의 환경에 Apache Kafka를 배포하여 사용하실 예정이라면 KRaft를 사용하시는 것을 권장합니다. 
-
 이번 실습에서는 Apache Kafka으로 Pi에서 발생한 Event를 NUC의 Consumer로 전달하는 것을 확인함으로써 이기종 간 Data-Interconnect이 이루어질 수 있음을 확인해볼 것입니다.
 
-> 📰️️ 참고  
+> [!warning] Warning: Zookeeper is Deprecated
+> 
+> Apache Kafka 3.5 이후로 Zookeeper는 Deprecated로 지정되었으며, 이를 한층 보완한 KRaft가 제안되었습니다.  
+> 현재는 호환성 문제 및 실습 목적으로 Zookeeper를 사용하지만, 추후에 자신의 환경에 Apache Kafka를 배포하여 사용하실 예정이라면 KRaft를 사용하시는 것을 권장합니다. 
+
+> [!tip]  
 > Apache Kafka를 더 자세히 알고 싶다면 [Apache Kafka Docs](https://kafka.apache.org/documentation/#intro_concepts_and_terms)를 참고해주세요.
 
 ## 1-3. Net-SNMP
@@ -82,10 +83,10 @@ Net-SNMP는 리눅스 시스템에 SNMP Manager와 SNMP Agent 역할을 수행�
 
 본 실습에서는 Pi에 `snmpd`를 설치한 뒤 Apache Flume을 통해 Pi의 네트워크 인터페이스 상태 정보와 시스템의 상태 정보(RAM 여유 공간, CPU 부하, 디스크 여유 공간)를 수집할 것입니다. 이 경우, Pi가 Managed Device, `snmpd`가 SNMP Agent, Flume이 SNMP Manager 역할에 대응된다고 볼 수 있습니다.
 
-> 📰️️ 참고  
+> [!note]
 > 수집될 상태 정보는 실습 과정 중 Flume 배치 때 확인할 `flume-conf.properties` 파일의 `agent.sources.sources1.oidN`에 기록된 OID를 통해 확인 가능합니다.
 
-> 📰️️ 참고  
+> [!tip]
 > SNMP를 더 자세히 알고 싶다면 [GeeksForGeeks](https://www.geeksforgeeks.org/simple-network-management-protocol-snmp/)를 참고해주세요.
 
 ## 1-4. Apache Flume
@@ -103,7 +104,7 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 
 이번 실습에서는 Flume은 `snmpd`로부터 상태 정보를 받아 Kafka로 전달하는 데에 사용됩니다. 실습에서는 Source를 `snmpd`로 설정하여 SNMP를 통해 상태 정보를 수집하며, 이를 Kafka에게 넘겨주게 됩니다. 
 
-> ⚠️ **주의** ⚠️
+> [!warning] Warning: Apache Flume 지원 중단
 >
 > (2025년 2월 기준) Apache Flume은 2024년 10월 10일 프로젝트 유지 중단을 선언하였으며, Flume 사용자는 다른 서비스로 마이그레이션하도록 안내하였습니다.   
 > 현재는 호환성 문제 및 실습 목적으로 Flume을 사용하지만, 추후에 분산 로그 수집 서비스를 도입할 경우 Fluentd나 Logstash 등을 사용할 것을 권장드립니다.
@@ -112,7 +113,7 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 
 ![overview](img/overview.png)
 
-> 📰️️ 참고
+> [!note]
 >
 > 만약 Gateway와 통신이 가능한 상황에서도 Box에서 인터넷 연결 문제가 발생한다면, 하단을 참고하여 `/etc/resolv.conf` 파일에 접근한 뒤 DNS 서버를 다음과 같이 수정해주십시오.
 >
@@ -130,7 +131,7 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 
 ## 2-1. Raspberry PI OS Installation
 
-> ⚠️ **주의** ⚠️
+> [!warning]
 > 
 > VM이 사용하는 IP를 Pi에 부여할 예정이므로, IP 충돌 문제를 방지하기 위해 VM을 종료합니다.
 > 
@@ -142,7 +143,7 @@ Raspberry Pi에 HypriotOS를 설치하겠습니다. HypriotOS는 Raspberry Pi에
 
 HypriotOS 설치를 위해 Micro SD 카드를 리더기에 삽입한 뒤, NUC에 연결해 주십시오.
 
-> ⚠️ **주의** ⚠️
+> [!caution]
 > 
 >  SD 카드 분리 전, **반드시 Pi가 __완전히 종료되었는지__ 확인합니다.**
 > 
@@ -244,17 +245,18 @@ ls -alh # Check all files
 
 `network-config`는 Pi에서 사용할 네트워크 설정이 저장되어 있습니다. 이 파일을 열어 설정을 변경하겠습니다. 
 
->  ⚠️ **주의** ⚠️
+>  [!caution]
 > 
-> `network-config` 파일의 이름을 <U>**절대로**</U> 변경하시면 안됩니다. <br>
+> `network-config` 파일의 이름을 <ins>**절대로**</ins> 변경하시면 안됩니다.
+> 
 > `network-config`는 시스템이 부팅될 때 초기화를 담당하는 `cloud-init`에게 네트워크 설정을 전달하기 위해 사용되는 파일로, 파일 이름을 기준으로 해당 파일 탐색을 시도합니다. <br>
 > `flash`를 통해 HypriotOS를 설치할 경우 `cloud-init`에 의해 관리되도록 구성되며, 부팅 시 네트워크 설정 초기화를 위해 먼저 로컬 파일시스템(`/boot` 등)에 위치한 `network-config` 파일을 탐색하도록 설정되어있습니다. <br>
 > 만약 파일 이름을 변경하실 경우 `cloud-init`이 네트워크 설정을 찾지 못해 default setting이 반영됩니다. <br>
-> 즉, 후술할 네트워크 설정이 반영되지 않을 뿐더러, 재설정을 위해 OS를 재설치하거나 네트워크 설정 파일을 찾아 직접 네트워크 인터페이스 설정을 수정해야 하므로 <U>**절대로 파일의 명칭을 변경하면 안됩니다.**</U>
+> 즉, 후술할 네트워크 설정이 반영되지 않을 뿐더러, 재설정을 위해 OS를 재설치하거나 네트워크 설정 파일을 찾아 직접 네트워크 인터페이스 설정을 수정해야 하므로 <ins>**절대로 파일의 명칭을 변경하면 안됩니다.**</ins>
 > 
 > 참조: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html#source-files
 
-> 📰 참고: `cloud-init`와 초기화 과정
+> [!note] Note: `cloud-init`와 초기화 과정
 >
 > `cloud-init`은 클라우드 인스턴스의 초기화에 사용되는 도구로, AWS나 Google Cloud 등의 퍼블릭 클라우드 제공사를 비롯하여, 사설 클라우드 인프라의 프로비저닝 및 베어 메탈 장비 설치에 쓰입니다.
 >
@@ -316,7 +318,7 @@ sudo fdisk -l
 flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypriotos-rpi-v1.12.3.img.zip
 ```
 
-> 📰 참고: `flash`의 옵션
+> [!tip] Tip: `flash` 옵션
 >
 > 다음은 위의 명령줄에서 사용한 옵션을 설명합니다. 자세한 정보는 `flash --help`를 통해 확인해주시기 바랍니다.
 > |Options|Description|
@@ -326,7 +328,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > |`-d <path>`, `--device`| OS를 설치할 장치를 지정합니다.|
 > |`~.img`, `~.img.zip`| OS의 이미지 파일을 의미합니다. (Raspberry OS Image File)|
 
-> 📰 참고: `BLKRRPART failed: Device or resource busy` 오류 해결 방법
+> [!note] Note: `BLKRRPART failed: Device or resource busy` 오류 해결 방법
 >
 > 해당 오류가 발생하였을 시, OS는 정상적으로 설치되나 `hypriotos-init.yaml`과 `network-config`가 SD카드로 복제되지 않습니다.
 >
@@ -352,7 +354,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > ```
 >
 
-> 📰 참고: `hypriotos-init.yaml` 파일에 관하여
+> [!Note] Note: `hypriotos-init.yaml` 파일에 관하여
 >
 > `hypriotos-init.yaml`은 HypriotOS의 `/boot/user-data` 파일로 사용됩니다. <br>
 > `/boot/user-data` 파일은 사용자 정의 설정을 인스턴스에게 제공할 때 사용되는 파일로, 사용자 생성, Hostname 설정, `/etc/hosts` 자동 초기화 여부 등을 결정합니다. <br>
@@ -398,7 +400,7 @@ sudo apt install -y git vim rdate openssh-server
 
 패키지 설치가 완료된 것을 확인한 이후, 다음 과정으로 넘어갑니다.
 
-> 📰 참고: `Certificate verification failed: The certificate is NOT Trusted` 오류
+> [!note] Note: `Certificate verification failed: The certificate is NOT Trusted` 오류
 >
 > Repository의 인증서 오류로 패키지를 설치할 수 없는 문제로, 해결을 위해서는 주소를 다른 APT Repository의 것으로 변경해야 합니다.
 >
@@ -464,7 +466,7 @@ sudo reboot
 ssh pi@[PI_IP] #ID: pi PW: 1234
 ```
 
-> 📰 참고: Fingerprint 오류
+> [!note] Note: SSH - Fingerprint 오류
 >
 > ![ssh key error](./img/ssh_duplicated.png)
 >
@@ -531,9 +533,10 @@ sudo vim /etc/hosts
 172.29.0.XX        [PI_HOSTNAME] 
 ```
 
->  ⚠️ **주의** ⚠️ 
+>  [!warning] 
 > 
-> Hostname은 실습을 위해 <U>**기억하기 쉽고 간단한 이름**</U>으로 지정하는 것을 권장합니다. <br>
+> Hostname은 실습을 위해 <ins>**기억하기 쉽고 간단한 이름**</ins>으로 지정하는 것을 권장합니다.
+> 
 > NUC의 이름은 Pi의 `/etc/hosts`에 기록할 이름과 동일해야 하며, 추후의 Kafka 설정 시에도 NUC의 Hostname을 써야 하기 때문입니다.
 >
 > NUC의 Hostname 변경은 다음과 같이 진행해주시기 바랍니다. <br>
@@ -568,19 +571,19 @@ sudo vim /etc/hosts
 172.29.0.XX        [NUC_HOSTNAME]
 ```
 
->  ⚠️ **주의** ⚠️
+>  [!warning]
 >
 > Pi의 `/etc/hosts`는 `cloud-init`에 의해 부팅 과정에서 초기화됩니다. <br>
 > 만약 종료 이후에도 `/etc/hosts`를 유지하고 싶을 경우, 후술할 참고 영역을 따릅니다.
 
->  📰 참고: Pi의 `/etc/hosts` 영구 보존
+>  [!tip] Tip: Pi의 `/etc/hosts` 영구 보존
 >
 > `cloud-init`은 부팅 과정에서 사전 정의된 hosts 템플릿 파일을 이용하여 `/etc/hosts`를 재생성합니다. <br>
 > 이 과정에서 이전에 기록되었던 기록은 삭제됩니다.
 >
 > 영구적으로 반영하기 위해, 다음의 3개 방법 중 하나를 사용할 수 있습니다.
-> 1. OS 설치에 사용한 `hypriotos-init.yaml` 파일에서 `manage_etc_hosts`의 값을 `false`로 수정한 뒤 재설치합니다.
 > <!-- 2025.02.27: 이유는 모르겠지만 HypriotOS 내부에서 /boot/user-data를 직접 수정해도 Data가 날아감. -->
+> 1. OS 설치에 사용한 `hypriotos-init.yaml` 파일에서 `manage_etc_hosts`의 값을 `false`로 수정한 뒤 재설치합니다.
 > 2. Pi 내부에서 `/etc/cloud/templates/hosts.debian.tmpl` 파일을 `/etc/hosts`를 수정했던 방법과 동일한 방법으로 수정합니다.
 > 3. `/etc/cloud/cloud.cfg`에서 `cloud_init_modules`의 `- update_etc_hosts`를 주석처리 합니다. 해당 모듈이 `/etc/hosts`의 재생성을 담당합니다.
 > 
@@ -624,7 +627,7 @@ NUC과 Pi가 Hostname을 이용하여 정상적으로 통신할 수 있게 되�
 먼저, 컨테이너를 생성하기 위한 이미지 파일을 빌드할 것입니다. <br>
 빌드에 필요한 데이터가 포함된 Repository를 Clone해주시기 바랍니다.
 
->  ⚠️ **주의** ⚠️
+> [!warning]
 > 
 > 이번에 Clone할 Repository(`SmartX-mini`)는 이전에 Clone하였던 `SmartX-Mini`와 다른 Repository입니다. <br>
 > 오타에 유의 바랍니다.
@@ -659,7 +662,7 @@ RUN sudo mv kafka_2.10-0.8.2.0 /kafka
 WORKDIR /kafka
 ``` 
 
->  📰 참고: APT Repository 수정
+>  [!important] APT Repository 수정
 >
 > 이미지 파일 빌드 과정에서 `apt`를 통한 패키지 다운로드에 많은 시간이 소요됩니다.
 > 
@@ -684,7 +687,7 @@ sudo docker build --tag ubuntu-kafka .
 #You should type '.', so docker can automatically start to find `Dockerfile` in the current directory('.').
 ```
 
->  📰 참고: Docker CLI 명령어 기초
+>  [!tip] Tip: Docker CLI 명령어 기초
 >
 > 다음은 Docker CLI에서 주로 사용하는 명령어입니다. 하단의 명령어를 통해 실행 중인 컨테이너를 확인하거나, 컨테이서 생성/정지/삭제를 수행할 수 있으며 컨테이너 내부로 진입할 수 있습니다.
 > 
@@ -837,12 +840,12 @@ cd ~/SmartX-mini/raspbian-flume
 
 `Dockerfile`을 열어 내용이 하단과 동일한지 확인해주십시오.
 
->  ⚠️ <span style="color:red">**주의**</span> ⚠️
+>  [!caution] Caution: Image 확인 필수
 >
-> Repository의 Dockerfile은 `FROM balenalib/rpi-raspbian:stretch`로 지정되어있습니다. <br>
-> <span style="color:red">반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정해주시기 바랍니다.</span>
+> Clone 직후의 Dockerfile은 `FROM balenalib/rpi-raspbian:stretch`로 지정되어 있습니다. <br>
+> 반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정하시기 바랍니다.
 >
-> 수정하지 않고 빌드하실 경우, 빌드 과정에서 `apt update`가 정상적으로 진행되지 않아 빌드가 실패합니다.
+> 수정하지 않고 빌드하실 경우, 빌드 과정 중 `apt update`가 정상적으로 진행되지 않아 실패하게 됩니다.
 
 ```dockerfile
 FROM balenalib/rpi-raspbian:buster
@@ -904,7 +907,8 @@ agent.sinks.sink1.brokerList = <Your NUC hostname>:9090,<Your NUC hostname>:9091
 bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name agent -Dflume.root.logger=INFO,console
 ```
 
-> 📰️ 참고: 만약 오류가 발생하였을 경우, 다음의 3개 값이 모두 일치하는지 확인해주십시오.
+> [!note]
+> 만약 오류가 발생하였을 경우, 다음의 3개 값이 모두 일치하는지 확인해주십시오.
 > 1. Pi의 `/etc/hosts`에 입력된 NUC의 hostname
 > 2. Pi의 `conf/flume-conf.properties`에 입력된 Broker의 hostname
 > 3. NUC의 hostname (`hostname`으로 확인되는 값)
@@ -925,9 +929,9 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic resource --from
 
 이번 실습에서 두 가지 방식으로 컴퓨터 시스템을 상호 연결하는 것을 체험해보았습니다.
 
-여러분은 `2-1`부터 `2-3`까지의 과정을 통해 두 개의 컴퓨터 시스템이 물리적으로 상호 연결되기 위한 준비를 진행하였으며, 최종적으로 `ping`을 통해 두 시스템이 서로 통신할 수 있다는 것을 확인하였습니다. 이러한 과정을 통해 <U>**Physical Interconnect**</U>에 대해 알아보고, 체험해보았습니다.
+여러분은 `2-1`부터 `2-3`까지의 과정을 통해 두 개의 컴퓨터 시스템이 물리적으로 상호 연결되기 위한 준비를 진행하였으며, 최종적으로 `ping`을 통해 두 시스템이 서로 통신할 수 있다는 것을 확인하였습니다. 이러한 과정을 통해 <ins>**Physical Interconnect**</ins>에 대해 알아보고, 체험해보았습니다.
 
-이후 Docker를 통해 Box에 여러 Container를 배포하였습니다. 간단하게 요약하면, `2-4`부터 `2-6`을 통해 `Apache Flume`이 추출한 SNMP 데이터가 `Apache Kafka`를 거쳐 Consumer에게 전달되었음을 확인할 수 있었습니다. 이를 통해, 우리는 `Apache Kafka`를 매개로 하여 두 Function(Producer ↔ Consumer)이 Data를 주고 받으며 상호작용할 수 있음을 확인할 수 있었으며, <U>**Data Interconnect**</U>를 체험할 수 있었습니다. 
+이후 Docker를 통해 Box에 여러 Container를 배포하였습니다. 간단하게 요약하면, `2-4`부터 `2-6`을 통해 `Apache Flume`이 추출한 SNMP 데이터가 `Apache Kafka`를 거쳐 Consumer에게 전달되었음을 확인할 수 있었습니다. 이를 통해, 우리는 `Apache Kafka`를 매개로 하여 두 Function(Producer ↔ Consumer)이 Data를 주고 받으며 상호작용할 수 있음을 확인할 수 있었으며, <ins>**Data Interconnect**</ins>를 체험할 수 있었습니다. 
 
 ## 3-2. Finale
 
