@@ -17,35 +17,44 @@ Box Lab에서는 \*베어 메탈에 OS를 직접 설치해보고
 
 ![VM Container](./img/vm_container.png)
 
-- KVM Hypervisor => Virtual Machine
+> [!NOTE]
+>
+> - KVM Hypervisor => Virtual Machine
+>
+>   하나의 피지컬 머신 내부에서 여러개의 가상 머신을 생성하여 여러개의 독립적인 가상 머신을 구성할 수 있습니다. 각각의 가상 머신은 모두 독립적이며 개별적인 자원을 할당받습니다. 또한, 가상 머신에서는 피지컬 머신의 OS와 다른 OS를 사용자 마음대로 정해서 사용할 수 있습니다. 단순히 사용하는 측면에서 바라볼 때, 가상 머신과 피지컬 머신은 차이가 거의 없게 느껴질 수 있습니다. 그러나 가상 머신은 그만큼 Container보다 무겁고 생성하는데 오래걸립니다.
+>
+>   이번 Lab에서는 가상 머신을 생성하기 위해 리눅스에 기본적으로 탑재되어있는 KVM Hypervisor를 사용할 것입니다.
+>
+> - Docker Runtime => Container
+>
+>   가상 머신과 비교했을 때 Container가 가지는 가장 큰 다른 특징으로, 독립적인 Guest OS층이 없다는 점을 생각할 수 있습니다. Container는 가상 머신과 달리 피지컬 머신의 OS를 공유합니다. 그리고 가상 머신은 각각의 머신이 독립적이지만 Container는 그렇지 않습니다. 피지컬 머신의 OS(Host OS) 위에서 Docker Engine이 작동하고, Docker Engine 덕분에 각각의 Guest OS 없이도 격리된 환경을 구성할 수 있습니다. 이러한 구조로 인해서 가상 머신보다 훨씬 더 가볍고 빠르게 실행할 수 있으며 환경(Container)의 생성과 삭제도 비교적 간단합니다.
+>
+>   저희는 Container를 생성하기 위해서 가장 널리 쓰이는 Docker Runtime을 사용할 것입니다.
 
-  하나의 피지컬 머신 내부에서 여러개의 가상 머신을 생성하여 여러개의 독립적인 가상 머신을 구성할 수 있습니다. 각각의 가상 머신은 모두 독립적이며 개별적인 자원을 할당받습니다. 또한, 가상 머신에서는 피지컬 머신의 OS와 다른 OS를 사용자 마음대로 정해서 사용할 수 있습니다. 단순히 사용하는 측면에서 바라볼 때, 가상 머신과 피지컬 머신은 차이가 거의 없게 느껴질 수 있습니다. 그러나 가상 머신은 그만큼 Container보다 무겁고 생성하는데 오래걸립니다.
+![Virtual Switch](./img/switch.png)
 
-  이번 Lab에서는 가상 머신을 생성하기 위해 리눅스에 기본적으로 탑재되어있는 KVM Hypervisor를 사용할 것입니다.
-
-- Docker Runtime => Container
-
-  가상 머신과 비교했을 때 Container가 가지는 가장 큰 다른 특징으로, 독립적인 Guest OS층이 없다는 점을 생각할 수 있습니다. Container는 가상 머신과 달리 피지컬 머신의 OS를 공유합니다. 그리고 가상 머신은 각각의 머신이 독립적이지만 Container는 그렇지 않습니다. 피지컬 머신의 OS(Host OS) 위에서 Docker Engine이 작동하고, Docker Engine 덕분에 각각의 Guest OS 없이도 격리된 환경을 구성할 수 있습니다. 이러한 구조로 인해서 가상 머신보다 훨씬 더 가볍고 빠르게 실행할 수 있으며 환경(Container)의 생성과 삭제도 비교적 간단합니다.
-
-  저희는 Container를 생성하기 위해서 가장 널리 쓰이는 Docker Runtime을 사용할 것입니다.
-
-![Virutal Switch](./img/switch.png)
-
-- Open vSwitch => Virtual Switch
-
-  가상 스위치는 OS안에서 실제 물리적인 스위치처럼 동작합니다. 이번 Lab에서 Open vSwitch를 통해 가상 스위치를 구성할 것이고 이 가상 스위치를 통해 가상 머신과 컨테이너를 연결할 것입니다.
-
-  Open vSwitch는 가상 서버를 위해 설계된 오픈 소스 가상 스위치 소프트웨어입니다.
-
-  소프트웨어 기반 가상 스위치는 한 VM이 다른 VM과 통신할 수 있도록 하며, 물리적 스위치를 통해 인터넷에 연결할 수 있도록 합니다. CPU의 연산 능력을 활용하여 실행되는 소프트웨어 기반 스위치는 더 유연하고 업그레이드가 용이하며, 가상화의 이점을 활용할 수 있습니다 (메모리 오버커밋, 페이지 공유 등). VM(또는 컨테이너)에는 논리적인(가상) 네트워크 인터페이스 카드(NIC)가 있으며, 가상 이더넷 포트를 통해 가상 스위치의 가상 인터페이스(포트)에 연결될 수 있습니다.
+> [!NOTE]
+>
+> - Open vSwitch => Virtual Switch
+>
+>   가상 스위치는 OS안에서 실제 물리적인 스위치처럼 동작합니다. 이번 Lab에서 Open vSwitch를 통해 가상 스위치를 구성할 것이고 이 가상 스위치를 통해 가상 머신과 컨테이너를 연결할 것입니다.
+>
+>   Open vSwitch는 가상 서버를 위해 설계된 오픈 소스 가상 스위치 소프트웨어입니다.
+>
+>   소프트웨어 기반 가상 스위치는 한 VM이 다른 VM과 통신할 수 있도록 하며, 물리적 스위치를 통해 인터넷에 연결할 수 있도록 합니다. CPU의 연산 능력을 활용하여 실행되는 소프트웨어 기반 스위치는 더 유연하고 업그레이드가 용이하며, 가상화의 이점을 활용할 수 있습니다 (메모리 오버커밋, 페이지 공유 등). VM(또는 컨테이너)에는 논리적인(가상) 네트워크 인터페이스 카드(NIC)가 있으며, 가상 이더넷 포트를 통해 가상 스위치의 가상 인터페이스(포트)에 연결될 수 있습니다.
 
 # 2. Practice
 
+> [!TIP]
 > 마우스를 코드 블럭 위에 올리게 되면 우측 상단에 복사하기 버튼이 뜹니다. 해당 버튼을 눌러 내용을 복사할 수 있습니다.해당 기능은 편의를 위해 제공됩니다. 그러나 Lab을 진행하는 과정에서 모든 것을 그대로 붙여넣기 해서는 안 됩니다. 수강생 개인마다 명령어의 일부, 또는 파일의 일부 내용을 수정해야 하기 때문에, 문서의 내용을 꼼꼼히 살펴보고 수정해야 하는 부분은 꼭 수정해주시기 바랍니다.  
 > ![copy button](img/copy.png)
 
-> 사용하는 NUC과 가상 머신(VM), 그리고 container의 IP가 적힌 종이를 참고하여 Lab을 진행해주시길 바랍니다.  
-> <br> ex) yourname | student ID | NUC's IP | VM's IP | container's IP
+> [!IMPORTANT]
+> 사용하는 NUC과 가상 머신(VM), 그리고 container의 IP가 적힌 종이를 참고하여 Lab을 진행해주시길 바랍니다.
+>
+> 1. NUC IP: NUC이라고 적힌 부분의 IP를 사용합니다.
+> 2. VM IP: Extra라고 적힌 부분의 IP를 사용합니다.
+> 3. Container IP: 이번 Lab에 한정하여 PI라고 적힌 부분의 IP를 사용합니다.
 
 ## 2-1. NUC: OS Installation
 
@@ -110,8 +119,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
 ## 2-2. NUC: Network Configuration
 
-- 로그인 화면이 보이면, 계정 정보를 입력하여 로그인합니다. 이제부터는 초기 네트워크 설정을 진행할 것입니다.  
-  <b>⚠️(중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!)⚠️</b>
+- 로그인 화면이 보이면, 계정 정보를 입력하여 로그인합니다. 이제부터는 초기 네트워크 설정을 진행할 것입니다.
+  > [!CAUTION]  
+  > <b>⚠️ (중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!) ⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -130,8 +140,8 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 - IPv4 탭으로 전환하고, 각자 할당받은 네트워크 정보를 입력합니다.
 
   - IPv4 Method: Manual
-  - Address: 할당받은 NUC의 IP 주소
-  - Netmask와 Gateway, DNS 정보도 입력합니다.
+  - Address: 할당받은 NUC의 IP 주소 (IP가 적힌 종이를 참고합니다.)
+  - Netmask와 Gateway, DNS 정보도 입력합니다. (조교의 안내를 바탕으로 설정합니다.)
   <p align="center">
     <img src="./img/network_setting3.png" />
   </p><br>
@@ -195,7 +205,8 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    sudo vi /etc/systemd/resolved.conf
    ```
 
-   DNS 왼편에 있는 주석표시 /# 을 제거해주고 DNS 주소를 명시합니다.
+   파일의 내용 중, DNS 왼편에 있는 주석표시 (#) 를 제거해주고 DNS 주소를 명시합니다.  
+   (참고: 실습 환경에 따라 `DNS`의 값이 달라질 수 있습니다.)
 
    > …
    >
@@ -213,16 +224,15 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    `vport_vFunction`을 TAP 인터페이스로 설정하고 VM에 연결합니다.
 
-   **!!!들여쓰기는 Tab 한번입니다!!!**  
-    **Caution! One tab for indentation**
+   > [!CAUTION]  
+   > **!!!들여쓰기는 Tab 한번입니다!!!**  
+   > `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다. (이때 괄호는 제외하고 입력해야 합니다.)
 
-   `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다.(이때 괄호는 제외하고 입력해야 합니다.)
+   > [!CAUTION]
+   > ⚠️ **주의!** ⚠️  
+   > <b>NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</b>
 
-   ⚠️ **주의!** ⚠️  
-   <b>
-   NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</b>
-
-   아래의 내용을 추가합니다.
+   아래의 내용을 추가합니다.(참고: 실습 환경에 따라 `address`, `netmask`, `gateway`, `dns-nameservers`의 값이 달라질 수 있습니다.)
 
    ```text
    auto lo
@@ -247,7 +257,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    파일을 저장하고 vim editor에서 나옵니다.
 
-   > ⚠️ **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.** ⚠️
+   > [!NOTE]
+   > ⚠️ **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.** ⚠️  
+   > (참고: 실습 환경에 따라 `address`, `netmask`, `gateway`, `dns-nameservers`의 값이 달라질 수 있습니다.)
    >
    > - Loopback 인터페이스 설정
    >   Loopback 인터페이스를 자동으로 활성화하고, loopback(자기 자신을 참조하는 가상 네트워크 인터페이스)으로 설정합니다.
@@ -258,7 +270,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    >   ```
    >
    > - Bridge 네트워크 인터페이스 설정
-   >   br0라는 가상 브릿지(Bridge) 네트워크 인터페이스를 생성하고 부팅 시에 자동으로 활성화되도록 합니다. 정적 ip를 사용하도록 명시하고, IP 주소 등의 네트워크 설정 값을 입력합니다.
+   >   br0라는 가상 브릿지(Bridge) 네트워크 인터페이스를 생성하고 부팅 시에 자동으로 활성화되도록 합니다. 정적 IP를 사용하도록 명시하고, IP 주소 등의 네트워크 설정 값을 입력합니다.
    >
    >   ```text
    >   auto br0
@@ -288,9 +300,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
    >     post-down ip link del dev vport_vFunction
    >   ```
 
-⚠️ **주의!** ⚠️  
-<b>
-만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)</b>
+> [!CAUTION]
+> ⚠️ **주의!** ⚠️  
+> <b> 만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해주시기 바랍니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용중인 것을 선택하면 됩니다.)</b>
 
 ```bash
 sudo systemctl restart systemd-resolved.service
@@ -309,9 +321,9 @@ vport_vFunction을 연결한 가상 머신(VM)을 만들겠습니다. 이 TAP(vp
 
 'br0'에 포트 'eno1' 및 'vport_vFunction'을 추가합니다.
 
-⚠️ **주의!** ⚠️  
-<b>
-만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야합니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용 중인 것을 선택합니다.)</b>
+> [!CAUTION]
+> ⚠️ **주의!** ⚠️  
+> <b> 만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야합니다.(`enp88s0` 또는 `enp89s0` 중에서 현재 사용 중인 것을 선택합니다.)</b>
 
 ```bash
 sudo ovs-vsctl add-port br0 eno1   #change this if you are using two-port NUC
@@ -376,11 +388,11 @@ sudo systemctl restart networking
 
   `iptables` 명령어를 사용하여 VM 네트워크에 SNAT를 구성합니다.
 
-  **NUC's ip address**을 하단의 `<Your ip address>`에 기입합니다.(이때, **괄호는 지우고** 172.29.0.X의 형식으로 작성합니다.)
+  **NUC의 IP 주소**를 하단의 `<NUC IP address>`에 기입합니다.(이때, **괄호는 지우고** 172.29.0.X의 형식으로 작성합니다.)
 
-  ⚠️ **주의!** ⚠️  
-  <b>
-  만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</b>
+  > [!CAUTION]
+  > ⚠️ **주의!** ⚠️  
+  > <b>만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</b>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
@@ -388,6 +400,7 @@ sudo systemctl restart networking
   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
   ```
 
+> [!NOTE]
 > ⚠️ **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.** ⚠️
 >
 > - 인터페이스 eno1에서 들어오는 패킷의 포워딩을 허용합니다.
@@ -454,7 +467,7 @@ sudo sysctl -p
   3. "Choose the type of installation" 화면에서는 "Ubuntu Server" 부분에 (X) 표시가 되어있는지 확인하고 Done을 누릅니다.
   4. "Network configuration" 화면에 진입하여 아래와 같이 "Edit IPv4"를 눌러줍니다.
      ![Ubuntu Network](./img/ubuntu_network.png)
-  5. 아래 내용을 참고하여 설정해줍니다.
+  5. 아래 내용을 참고하여 설정해줍니다.(VM IP로 종이에 적힌 Extra IP 주소를 사용합니다.)
 
      > IPv4 Method → Manual
      >
@@ -463,13 +476,13 @@ sudo sysctl -p
      > Gateway: 172.29.0.254  
      > Name Servers: 203.237.32.100
 
-     Search domains에는 아무것도 적지 않습니다!
+     ⚠️ Search domains에는 아무것도 적지 않습니다! ⚠️
 
      그리고 위의 `< VM IP(Extra IP) >` 작성 시에 **괄호는 지우고** 172.29.0.X의 형식으로 작성해야 합니다.
 
   6. "Proxy configuration" 화면에서는 아무것도 입력하지 않고 넘어갑니다.
   7. "Ubuntu archive mirror configuration" 화면에서도 Done을 눌러 넘어갑니다.
-  8. **(중요)** "Installer update available" 화면에서는 "Continue without updating"을 선택합니다.
+  8. ⚠️ **(중요)** "Installer update available" 화면에서는 "Continue without updating"을 선택합니다.
   9. "Guided storage configuration", "Storage configuration" 화면에서도 내용을 수정하지 않고 Done을 계속 눌러서 넘어갑니다. 마지막에 "Confirm destructive action" 창이 뜨면 Continue를 눌러 넘어갑니다.
   10. "Profile configuration" 화면에서는 아래와 같이 입력합니다.
       - Your name: vm
@@ -481,12 +494,15 @@ sudo sysctl -p
   12. "SSH configuration" 화면이 나오면 아무것도 수정하지 않고 Done을 눌러 넘어갑니다.
   13. "Featured server snaps" 화면이 나오면 아무것도 선택하지 않고 Done을 눌러 넘어갑니다.
   14. 설치 진행 상황을 볼 수 있는 화면이 나옵니다.
-  15. 설치가 완료되어 아래와 같이 화면이 나오면 `Reboot Now` 버튼이 보일 것입니다. 그러나, **버튼을 누르지 않고 아래의 내용을 따라주시길 바랍니다**.
+  15. 설치가 완료되어 아래와 같이 화면이 나오면 `Reboot Now` 버튼이 보일 것입니다. 그러나, ⚠️ **버튼을 누르지 않고 아래의 내용을 따라주시길 바랍니다**.
       ![Ubuntu Network](./img/ubuntu-installation-done.png)
 
 - Installation Completed
 
   VM 내에서 ubuntu의 설치가 완료되어 `Reboot Now` 버튼이 보이면, ⚠️ **Host OS의 터미널을 새로 하나 생성한 뒤에** 아래의 명령어를 입력하여 VM을 종료합니다.
+
+  > [!TIP]
+  > 새로운 터미널은 터미널 창의 좌상단에 위치한 `+` 버튼을 누르면 생성할 수 있습니다.
 
   ```bash
   sudo killall -9 kvm
@@ -581,7 +597,9 @@ sudo docker run -it --net=none --name c1 ubuntu:22.04 /bin/bash
 
 ctrl + p, q를 누르면 container를 종료하지 않고 container 밖으로 나올 수 있습니다.
 
-※ docker attach [container_name]: ctrl + p, q를 사용하여 detach 했던 container 안으로 다시 들어갈 수 있습니다.
+> [!TIP]
+> docker attach [container_name]:  
+> 위의 명령어를 입력하면 ctrl + p, q를 사용하여 detach 했던 container 안으로 다시 들어갈 수 있습니다.
 
 ## 2-9. Connect docker container
 
@@ -593,11 +611,13 @@ sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gat
 # please type gateway IP and docker container IP.
 ```
 
-위의 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP] 작성 시에 `[]`은 빼고, 172.29.0.X의 형식으로 작성해주시기 바랍니다.  
-예를 들어, --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
+> [!WARNING]
+> 위의 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP] 작성 시에 `[]`은 빼고, 172.29.0.X의 형식으로 작성해주시기 바랍니다.  
+> 예를 들어, --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
 
-<b> ⚠️ 아무 문제가 없었다면, 이 부분은 생략합니다. ⚠️  
-만약, `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` 명령어를 실행하는 과정에서 오타나 실수가 있었다면 `sudo ovs-docker del-port br0 veno1 c1` 명령어를 실행하고 다시 `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`를 실행합니다.</b>
+> [!NOTE]  
+> <b> ⚠️ 아무 문제가 없었다면, 이 부분(Note block)은 생략합니다. ⚠️  
+> 만약, `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` 명령어를 실행하는 과정에서 오타나 실수가 있었다면 `sudo ovs-docker del-port br0 veno1 c1` 명령어를 실행하고 다시 `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`를 실행합니다.</b>
 
 Docker container 안으로 진입합니다.
 
