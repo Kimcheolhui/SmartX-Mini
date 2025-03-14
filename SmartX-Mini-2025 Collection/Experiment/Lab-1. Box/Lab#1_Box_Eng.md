@@ -127,8 +127,8 @@ If an issue related to booting occurs, follow these steps.
 ## 2-2. NUC: Network Configuration
 
 - When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.
-  > [!CAUTION]  
-  > <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
+> [!CAUTION]  
+> <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -231,13 +231,13 @@ If an issue related to booting occurs, follow these steps.
 
   Configure the network interface `vport_vFunction` as a TAP interface and attach it to your VM.
 
-  > [!CAUTION]  
-  > **Caution! One tab for indentation**  
-  > Type your NUC's IP in `<your nuc ip>` and gateway IP in `<gateway ip>`. (At this time, the parentheses should be excluded when entering.)
+> [!CAUTION]  
+> **Caution! One tab for indentation**  
+> Type your NUC's IP in `<your nuc ip>` and gateway IP in `<gateway ip>`. (At this time, the parentheses should be excluded when entering.)
 
-  > [!CAUTION]  
-  > ⚠️ **Caution!** ⚠️  
-  > <b>If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`). For example, enter `ifconfig -a` in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of `eno1` in the text with either `enp88s0` or `enp89s0`, depending on the active interface.</b>
+> [!CAUTION]  
+> ⚠️ **Caution!** ⚠️  
+> <b>If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`). For example, enter `ifconfig -a` in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of `eno1` in the text with either `enp88s0` or `enp89s0`, depending on the active interface.</b>
 
   Add the contents below. (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
 
@@ -397,9 +397,9 @@ sudo systemctl restart networking
 
   Please type your **NUC's IP address** in `<NUC IP address>`. (Please write it in the format 172.29.0.X, without parentheses.)
 
-  > [!CAUTION]  
-  > ⚠️ **Caution!** ⚠️  
-  > <b>If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`).</b>
+> [!CAUTION]  
+> ⚠️ **Caution!** ⚠️  
+> <b>If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`).</b>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
@@ -508,8 +508,8 @@ sudo sysctl -p
 
   When the installation of Ubuntu inside the VM is complete and the `Reboot Now` button appears, ⚠️ **open a new terminal on the Host OS** and enter the following command to shut down the VM.
 
-  > [!TIP]
-  > You can create a new terminal by clicking the + button located in the top-left corner of the terminal window.
+> [!TIP]
+> You can create a new terminal by clicking the + button located in the top-left corner of the terminal window.
 
   ```bash
   sudo killall -9 kvm
