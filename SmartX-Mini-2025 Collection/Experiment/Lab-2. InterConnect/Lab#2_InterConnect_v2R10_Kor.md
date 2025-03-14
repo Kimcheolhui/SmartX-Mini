@@ -281,9 +281,9 @@ pwd # 현재 Directory가 "SmartX-Mini/SmartX-Mini-2025 Collection/Experiment/La
 sudo vim network-config
 ```
 
-`network-config`에서 `ehternet.eth0`은 Pi의 `eth0` 인터페이스 설정을 의미합니다. 즉, Pi가 사용할 IP 주소, DNS 주소, Gateway 주소를 설정하는 영역입니다.
+`network-config`에서 `ethernet.eth0`은 Pi의 `eth0` 인터페이스 설정을 의미합니다. 즉, Pi가 사용할 IP 주소, DNS 주소, Gateway 주소를 설정하는 영역입니다.
 
-해당 파일에서 `ehternets.eth0.addresses`를 수정하여 Pi에게 부여할 IP 주소를 지정하고, `ethernet.eth0.nameservers.addresses`를 수정하여 DNS 서버를 지정하겠습니다. (`ethernet.eth0.gateway4`는 Gateway의 IPv4 주소로, 별도의 안내가 없다면 수정하지 않습니다.)
+해당 파일에서 `ethernets.eth0.addresses`를 수정하여 Pi에게 부여할 IP 주소를 지정하고, `ethernet.eth0.nameservers.addresses`를 수정하여 DNS 서버를 지정하겠습니다. (`ethernet.eth0.gateway4`는 Gateway의 IPv4 주소로, 별도의 안내가 없다면 수정하지 않습니다.)
 
 ```yaml
 …
