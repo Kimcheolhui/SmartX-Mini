@@ -120,8 +120,9 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 ## 2-2. NUC: Network Configuration
 
 - 로그인 화면이 보이면, 계정 정보를 입력하여 로그인합니다. 이제부터는 초기 네트워크 설정을 진행할 것입니다.
-  > [!CAUTION]  
-  > <b>⚠️ (중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!) ⚠️</b>
+> [!CAUTION]  
+> <b>⚠️ (중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!) ⚠️</b>
+  
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -224,13 +225,13 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    `vport_vFunction`을 TAP 인터페이스로 설정하고 VM에 연결합니다.
 
-   > [!CAUTION]  
-   > **!!!들여쓰기는 Tab 한번입니다!!!**  
-   > `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다. (이때 괄호는 제외하고 입력해야 합니다.)
+> [!CAUTION]  
+> **!!!들여쓰기는 Tab 한번입니다!!!**  
+> `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다. (이때 괄호는 제외하고 입력해야 합니다.)
 
-   > [!CAUTION]
-   > ⚠️ **주의!** ⚠️  
-   > <b>NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</b>
+> [!CAUTION]
+> ⚠️ **주의!** ⚠️  
+> <b>NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</b>
 
    아래의 내용을 추가합니다.(참고: 실습 환경에 따라 `address`, `netmask`, `gateway`, `dns-nameservers`의 값이 달라질 수 있습니다.)
 
@@ -390,9 +391,9 @@ sudo systemctl restart networking
 
   **NUC의 IP 주소**를 하단의 `<NUC IP address>`에 기입합니다.(이때, **괄호는 지우고** 172.29.0.X의 형식으로 작성합니다.)
 
-  > [!CAUTION]
-  > ⚠️ **주의!** ⚠️  
-  > <b>만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</b>
+> [!CAUTION]
+> ⚠️ **주의!** ⚠️  
+> <b>만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</b>
 
   ```bash
   sudo iptables -A FORWARD -i eno1 -j ACCEPT
@@ -501,8 +502,8 @@ sudo sysctl -p
 
   VM 내에서 ubuntu의 설치가 완료되어 `Reboot Now` 버튼이 보이면, ⚠️ **Host OS의 터미널을 새로 하나 생성한 뒤에** 아래의 명령어를 입력하여 VM을 종료합니다.
 
-  > [!TIP]
-  > 새로운 터미널은 터미널 창의 좌상단에 위치한 `+` 버튼을 누르면 생성할 수 있습니다.
+> [!TIP]
+> 새로운 터미널은 터미널 창의 좌상단에 위치한 `+` 버튼을 누르면 생성할 수 있습니다.
 
   ```bash
   sudo killall -9 kvm
