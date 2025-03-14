@@ -51,7 +51,7 @@ Topic들은 여러 Partition으로 분할하여 관리됩니다. 만약 하나�
 
 이번 실습에서는 Apache Kafka으로 Pi에서 발생한 Event를 NUC의 Consumer로 전달하는 것을 확인함으로써 이기종 간 Data-Interconnect이 이루어질 수 있음을 확인해볼 것입니다.
 
-> [!warning] Warning: Zookeeper is Deprecated
+> [!warning]
 > 
 > Apache Kafka 3.5 이후로 Zookeeper는 Deprecated로 지정되었으며, 이를 한층 보완한 KRaft가 제안되었습니다.  
 > 현재는 호환성 문제 및 실습 목적으로 Zookeeper를 사용하지만, 추후에 자신의 환경에 Apache Kafka를 배포하여 사용하실 예정이라면 KRaft를 사용하시는 것을 권장합니다. 
@@ -104,7 +104,7 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 
 이번 실습에서는 Flume은 `snmpd`로부터 상태 정보를 받아 Kafka로 전달하는 데에 사용됩니다. 실습에서는 Source를 `snmpd`로 설정하여 SNMP를 통해 상태 정보를 수집하며, 이를 Kafka에게 넘겨주게 됩니다. 
 
-> [!warning] Warning: Apache Flume 지원 중단
+> [!warning]
 >
 > (2025년 2월 기준) Apache Flume은 2024년 10월 10일 프로젝트 유지 중단을 선언하였으며, Flume 사용자는 다른 서비스로 마이그레이션하도록 안내하였습니다.   
 > 현재는 호환성 문제 및 실습 목적으로 Flume을 사용하지만, 추후에 분산 로그 수집 서비스를 도입할 경우 Fluentd나 Logstash 등을 사용할 것을 권장드립니다.
@@ -256,7 +256,7 @@ ls -alh # Check all files
 > 
 > 참조: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html#source-files
 
-> [!note] Note: `cloud-init`와 초기화 과정
+> [!note]
 >
 > `cloud-init`은 클라우드 인스턴스의 초기화에 사용되는 도구로, AWS나 Google Cloud 등의 퍼블릭 클라우드 제공사를 비롯하여, 사설 클라우드 인프라의 프로비저닝 및 베어 메탈 장비 설치에 쓰입니다.
 >
@@ -318,9 +318,9 @@ sudo fdisk -l
 flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypriotos-rpi-v1.12.3.img.zip
 ```
 
-> [!tip] Tip: `flash` 옵션
+> [!tip]
 >
-> 다음은 위의 명령줄에서 사용한 옵션을 설명합니다. 자세한 정보는 `flash --help`를 통해 확인해주시기 바랍니다.
+> 다음은 위의 명령줄에서 사용한 `flash` 옵션을 설명합니다. 자세한 정보는 `flash --help`를 통해 확인해주시기 바랍니다.
 > |Options|Description|
 > |:---|:---|
 > |`-u <file>`, `--userdata <file>`| 지정한 파일이 `cloud-init`이 사용하는 설정 파일 중 `/boot/user-data`로 사용됩니다.|
@@ -328,9 +328,9 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > |`-d <path>`, `--device`| OS를 설치할 장치를 지정합니다.|
 > |`~.img`, `~.img.zip`| OS의 이미지 파일을 의미합니다. (Raspberry OS Image File)|
 
-> [!note] Note: `BLKRRPART failed: Device or resource busy` 오류 해결 방법
+> [!note]
 >
-> 해당 오류가 발생하였을 시, OS는 정상적으로 설치되나 `hypriotos-init.yaml`과 `network-config`가 SD카드로 복제되지 않습니다.
+> `BLKRRPART failed: Device or resource busy` 오류가 발생하였을 시, OS는 정상적으로 설치되나 `hypriotos-init.yaml`과 `network-config`가 SD카드로 복제되지 않습니다.
 >
 > 다음을 하나씩 적용하면서 오류가 해결되었는지 확인합니다.
 > 1. (`/dev/sda`에 SD 카드가 있는 경우.) `hypriotos-init.yaml`을 `user-data`라는 이름으로 `/dev/sda1`에 복제하고, `network-config`도 동일하게 복제한 뒤 SD 카드를 NUC에서 꺼내어 Pi에 삽입 후 Pi의 전원을 켭니다. 이후 네트워크 설정과 hostname 설정이 제대로 이루어졌는지 확인합니다. 이는 다음과 같이 수행합니다.
@@ -354,7 +354,9 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > ```
 >
 
-> [!Note] Note: `hypriotos-init.yaml` 파일에 관하여
+> [!Note]
+> 
+> `hypriotos-init.yaml` 파일에 관하여
 >
 > `hypriotos-init.yaml`은 HypriotOS의 `/boot/user-data` 파일로 사용됩니다. <br>
 > `/boot/user-data` 파일은 사용자 정의 설정을 인스턴스에게 제공할 때 사용되는 파일로, 사용자 생성, Hostname 설정, `/etc/hosts` 자동 초기화 여부 등을 결정합니다. <br>
@@ -400,7 +402,9 @@ sudo apt install -y git vim rdate openssh-server
 
 패키지 설치가 완료된 것을 확인한 이후, 다음 과정으로 넘어갑니다.
 
-> [!note] Note: `Certificate verification failed: The certificate is NOT Trusted` 오류
+> [!note] 
+> 
+> `Certificate verification failed: The certificate is NOT Trusted` 오류
 >
 > Repository의 인증서 오류로 패키지를 설치할 수 없는 문제로, 해결을 위해서는 주소를 다른 APT Repository의 것으로 변경해야 합니다.
 >
@@ -466,7 +470,9 @@ sudo reboot
 ssh pi@[PI_IP] #ID: pi PW: 1234
 ```
 
-> [!note] Note: SSH - Fingerprint 오류
+> [!note] 
+> 
+> SSH - Fingerprint 오류
 >
 > ![ssh key error](./img/ssh_duplicated.png)
 >
@@ -576,7 +582,9 @@ sudo vim /etc/hosts
 > Pi의 `/etc/hosts`는 `cloud-init`에 의해 부팅 과정에서 초기화됩니다. <br>
 > 만약 종료 이후에도 `/etc/hosts`를 유지하고 싶을 경우, 후술할 참고 영역을 따릅니다.
 
->  [!tip] Tip: Pi의 `/etc/hosts` 영구 보존
+>  [!tip]
+> 
+>  Pi의 `/etc/hosts` 영구 보존
 >
 > `cloud-init`은 부팅 과정에서 사전 정의된 hosts 템플릿 파일을 이용하여 `/etc/hosts`를 재생성합니다. <br>
 > 이 과정에서 이전에 기록되었던 기록은 삭제됩니다.
@@ -662,7 +670,7 @@ RUN sudo mv kafka_2.10-0.8.2.0 /kafka
 WORKDIR /kafka
 ``` 
 
->  [!important] APT Repository 수정
+>  [!important]
 >
 > 이미지 파일 빌드 과정에서 `apt`를 통한 패키지 다운로드에 많은 시간이 소요됩니다.
 > 
@@ -687,7 +695,7 @@ sudo docker build --tag ubuntu-kafka .
 #You should type '.', so docker can automatically start to find `Dockerfile` in the current directory('.').
 ```
 
->  [!tip] Tip: Docker CLI 명령어 기초
+>  [!tip]
 >
 > 다음은 Docker CLI에서 주로 사용하는 명령어입니다. 하단의 명령어를 통해 실행 중인 컨테이너를 확인하거나, 컨테이서 생성/정지/삭제를 수행할 수 있으며 컨테이너 내부로 진입할 수 있습니다.
 > 
@@ -840,7 +848,7 @@ cd ~/SmartX-mini/raspbian-flume
 
 `Dockerfile`을 열어 내용이 하단과 동일한지 확인해주십시오.
 
->  [!caution] Caution: Image 확인 필수
+>  [!caution]
 >
 > Clone 직후의 Dockerfile은 `FROM balenalib/rpi-raspbian:stretch`로 지정되어 있습니다. <br>
 > 반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정하시기 바랍니다.
