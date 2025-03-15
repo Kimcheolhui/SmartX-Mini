@@ -154,7 +154,7 @@ hostname | sudo tee /etc/hostname
 `/etc/hosts` 파일 진입
 
 ```shell
-sudo vi /etc/hosts
+sudo vim /etc/hosts
 ```
 
 다음의 context를 붙여넣고 저장합니다.

@@ -71,7 +71,7 @@ apt-get install vim
 아래 명령어를 입력해 웹 서버 코드를 확인하고, `<NUC IP>`를 여러분의 NUC IP로 수정해주세요.
 
 ```bash
-vi /SmartX-Mini/IoT-labs/webserver.js
+vim /SmartX-Mini/IoT-labs/webserver.js
 ```
 
 <img width="450" alt="image" src="https://user-images.githubusercontent.com/63437430/160828580-7201f53f-e66a-40d3-8682-ca237476b20a.png">
@@ -99,7 +99,7 @@ git clone https://github.com/adafruit/Adafruit_python_DHT.git
 ```bash
 cd Adafruit_python_DHT
 
-sudo vi Adafruit_DHT/platform_detect.py
+sudo vim Adafruit_DHT/platform_detect.py
 ```
 
 **BCM2711**에 대한 case를 `pi_version` 함수에 추가해주고, 3을 return하도록 합니다.
@@ -169,7 +169,7 @@ cd ~/Adafruit_python_DHT/examples
 테스트 코드를 열고, `python`을 `python3`로 수정합니다
 
 ```bash
-sudo vi AdafruitDHT.py
+sudo vim AdafruitDHT.py
 ```
 
 From
@@ -234,7 +234,7 @@ sudo apt-get install mercurial
 센서 데이터 수집 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
 
 ```bash
-vi ~/SmartX-mini/IoT-labs/RPI_capture.py
+vim ~/SmartX-mini/IoT-labs/RPI_capture.py
 ```
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/63437430/160829267-f2198912-a27d-4ee3-9b44-e5af753aff6d.png">
@@ -244,7 +244,7 @@ vi ~/SmartX-mini/IoT-labs/RPI_capture.py
 센서 데이터 전송 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
 
 ```bash
-vi ~/SmartX-mini/IoT-labs/RPI_transfer.py
+vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
 ```
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/63437430/160829383-8053b56c-a4ea-42d1-b4d1-220502b7754a.png">

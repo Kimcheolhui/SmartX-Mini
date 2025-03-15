@@ -225,7 +225,7 @@ bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name age
 #### 1-6-1. `broker_to_influxdb.py` 코드 수정
 
 ```bash
-vi ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
+vim ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
 ```
 
 이 파일에서, `<NUC IP>`를 여러분의 실제 NUC IP로 수정해주세요.
