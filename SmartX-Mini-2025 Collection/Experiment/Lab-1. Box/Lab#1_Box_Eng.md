@@ -20,15 +20,27 @@ Let's take a close look at the overall structure.
 >
 > - Virtual Machine
 >
->   Within a single physical machine, you can create multiple virtual machines, each functioning as an independent system. Each virtual machine operates separately and is allocated its own dedicated resources. Additionally, users can freely choose and install an OS different from the host OS on each virtual machine. From a usage perspective, virtual machines and physical machines may feel nearly identical. However, virtual machines are significantly heavier than containers and take longer to create.
+>   Within a single physical machine, you can create multiple virtual machines, each functioning as an independent system. Each virtual machine operates separately and is allocated its own dedicated resources. Additionally, users can freely choose and install an OS different from the host OS on each virtual machine. From a usage perspective, virtual machines and physical machines may feel nearly identical. However, virtual machines are significantly heavier than containers and take longer to create.  
+>   However, there are cases where using a VM is better compared to a container.
 >
->   In this lab, we will use the KVM Hypervisor, which is natively built into Linux, to create virtual machines.
+> 1. When running an application that only works in a specific OS environment  
+>    If you need to run a program that was developed long ago and only works in a specific OS environment, or if the program was intentionally designed to run exclusively on a particular OS by its developer, using a VM is necessary.
+> 2. In security-sensitive environments  
+>    Unlike containers, VMs do not share the OS between instances, providing a higher level of isolation. In cases where a high level of security is required, such as services handling financial data, VMs may be more suitable than containers.
+>
+> In this lab, we will use the KVM Hypervisor, which is natively built into Linux, to create virtual machines.
 >
 > - Container
 >
->   One of the key differences between containers and virtual machines is that containers do not have an independent Guest OS layer. Unlike virtual machines, containers share the OS of the physical machine (Host OS). While virtual machines are fully independent, containers are not. The Docker Engine runs on top of the Host OS, allowing isolated environments to be created without the need for individual Guest OS instances. Due to this architecture, containers are much lighter and faster than virtual machines, and creating or deleting container environments is relatively simple.
+>   One of the key differences between containers and virtual machines is that containers do not have an independent Guest OS layer. Unlike virtual machines, containers share the OS of the physical machine (Host OS). While virtual machines are fully independent, containers are not. The Docker Engine runs on top of the Host OS, allowing isolated environments to be created without the need for individual Guest OS instances. Due to this architecture, containers are much lighter and faster than virtual machines, and creating or deleting container environments is relatively simple.  
+>   Cases Where Using Containers is Beneficial
 >
->   To build a container, we will use the Docker Runtime.
+> 1. When fast deployment of an application is required  
+>    Using containers allows you to quickly set up and deploy the application environment. Compared to VMs, containers have shorter startup times, making them more advantageous for fast deployment.
+> 2. When Running Lightweight Applications  
+>    For short-term temporary environments to test a specific program or run a lightweight application, using containers is a better choice.
+>
+> To build a container, we will use the Docker Runtime.
 
 ![Virtual Switch](./img/switch.png)
 
