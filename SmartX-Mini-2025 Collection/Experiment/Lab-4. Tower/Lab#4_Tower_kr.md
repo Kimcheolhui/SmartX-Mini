@@ -232,7 +232,7 @@ vim ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
 
 > e.g. `<NUC IP>`를 `203.237.53.100`로 수정
 
-<img width="650" alt="broker_to_influxdb python file" src="https://user-images.githubusercontent.com/82452337/160814546-da543a58-e6b6-49cb-bdb1-19aa2de9c1fb.png">
+<img alt="broker_to_influxdb python file" src="https://user-images.githubusercontent.com/82452337/160814546-da543a58-e6b6-49cb-bdb1-19aa2de9c1fb.png" width="650">
 
 #### 1-6-2. `broker_to_influxdb.py` 실행
 
@@ -252,19 +252,19 @@ python3 ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
 
 > **접근 주소**: http://\<Your NUC IP\>:8888
 
-<img src="./img/chronograf-1.png" alt="chronograf-1" width="450">
+<img src="./img/chronograf-1.png" alt="chronograf-1">
 
 ### 1-7-1. 대시보드 생성하기
 
-<img src="./img/chronograf-2.png" alt="chronograf-2" width="450">
+<img src="./img/chronograf-2.png" alt="chronograf-2">
 
 ### 1-7-2. 데이터 Source 추가하기
 
-<img src="./img/chronograf-3.png" alt="chronograf-3" width="450">
+<img src="./img/chronograf-3.png" alt="chronograf-3">
 
 ### 1-7-3. 쿼리 등록하기
 
-<img src="./img/chronograf-4.png" alt="chronograf-4" width="450">
+<img src="./img/chronograf-4.png" alt="chronograf-4">
 
 ```sql
 SELECT "memory" FROM "Labs"."autogen"."labs" WHERE time > :dashboardTime:
@@ -276,12 +276,13 @@ SELECT "memory" FROM "Labs"."autogen"."labs" WHERE time > :dashboardTime:
 
 Memory의 현재 상태를 모니터링할 수 있습니다.
 
-<img src="./img/chronograf-5.png" alt="chronograf-5" width="450">
+<img src="./img/chronograf-5.png" alt="chronograf-5">
 
 #### CPU 모니터링
 
 CPU의 현재 상태를 모니터링할 수 있습니다.
-<img src="./img/chronograf-6.png" alt="chronograf-6" width="450">
+
+<img src="./img/chronograf-6.png" alt="chronograf-6">
 
 #### CPU 부하 테스트 ( in PI )
 
@@ -289,7 +290,7 @@ CPU의 현재 상태를 모니터링할 수 있습니다.
 
 우선, Chronograf Dashboard의 Fields를 `CPU_Usage`로 변경합니다
 
-<img src="./img/chronograf-6.png" alt="chronograf-6" width="450">
+<img src="./img/chronograf-6.png" alt="chronograf-6">
 
 그 다음, PI에서 다음의 명령어를 입력해보세요
 
