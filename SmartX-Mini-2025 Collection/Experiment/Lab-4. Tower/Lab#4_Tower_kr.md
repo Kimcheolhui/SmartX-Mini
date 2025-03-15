@@ -194,11 +194,11 @@ sudo vim /etc/hosts
 
 만약 기존에 작성했던 정보가 사라져있다면, 아래 2개의 lines을 추가하고 저장해주세요.
 
-> **주의**: [ ]는 본인에게 해당되는 정보로 교체해야함
+> **주의**: < >는 본인에게 해당되는 정보로 교체해야함
 
 ```
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
+<NUC_IP> >NUC_HOSTNAME>
+<PI_IP> <PI_HOSTNAME>
 ```
 
 #### 1-5-2. Flume container 실행
