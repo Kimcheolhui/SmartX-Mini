@@ -154,7 +154,16 @@ sudo docker start zookeeper broker0 broker1 broker2
 아래 명령어를 통해 각 docker container의 터미널에 접속할 수 있습니다. `zookeeper`, `broker0`, `broker1`, `broker2` 순서대로 접속하고, 각 container에 접속할 때마다 아래 Case에 해당하는 작업을 수행합니다.
 
 ```bash
-sudo docker attach <docker container name>
+sudo docker attach zookeeper
+
+# at new terminal
+sudo docker attach broker0
+
+# at new terminal
+sudo docker attach broker1
+
+# at new terminal
+sudo docker attach broker2
 ```
 
 ##### Case 1: **`zookeeper` container인 경우**
