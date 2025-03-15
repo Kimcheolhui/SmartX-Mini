@@ -1,7 +1,10 @@
 #!/bin/bash
 
-python3 RPI_capture.py
+while true; do
 
-sleep 1
+	python3 RPI_capture.py
 
-python3 RPI_transfer.py
+	sleep 1
+
+	python3 RPI_transfer.py
+done
