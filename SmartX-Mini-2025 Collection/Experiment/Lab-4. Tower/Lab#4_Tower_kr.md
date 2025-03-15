@@ -297,7 +297,9 @@ CPU의 현재 상태를 모니터링할 수 있습니다.
 docker run --rm -it busybox sh -c "while true; do :; done"
 ```
 
-새로고침을 누르다보면 Dashboard의 그래프가 위로 움직이는 것을 확인할 수 있습니다. 확인했으면 `Ctrl + C`를 눌러 CPU 부하를 멈춰주세요.
+새로고침을 누르다보면 Dashboard의 그래프가 위로 움직이는 것을 확인할 수 있습니다.
+
+확인했으면 `Ctrl + C`를 눌러 CPU 부하를 멈춰주세요.
 
 ## 2. Lab Summary
 
