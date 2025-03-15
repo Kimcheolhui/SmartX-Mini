@@ -120,9 +120,8 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 ## 2-2. NUC: Network Configuration
 
 - 로그인 화면이 보이면, 계정 정보를 입력하여 로그인합니다. 이제부터는 초기 네트워크 설정을 진행할 것입니다.
-> [!CAUTION]  
-> <b>⚠️ (중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!) ⚠️</b>
-  
+  > [!CAUTION]  
+  > <b>⚠️ (중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!) ⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -152,6 +151,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 1. Update & Upgrade
 
    - Lab에서는 패키지 관리자인 apt를 사용합니다. 앞으로 사용할 패키지들을 설치하기 위해 패키지 목록을 최신으로 업데이트하고, 업데이트 가능한 패키지를 실제로 업데이트합니다.
+   - 명령어를 실행하기 위해 터미널을 엽니다. 터미널은 화면 좌하단에 위치한 앱 리스트 아이콘을 누르고, 리스트에서 터미널 아이콘을 눌러 실행할 수 있습니다.
 
    ```bash
    sudo apt update
@@ -233,73 +233,73 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 > ⚠️ **주의!** ⚠️  
 > <b>NUC에 이더넷 포트가 두 개 있는 경우 `eno1`이라는 인터페이스가 없습니다. `ifconfig` 명령으로 네트워크에 연결된 인터페이스(`enp88s0` 또는 `enp89s0`)를 확인합니다. (예를 들어, 터미널에 `ifconfig -a` 명령어를 입력하고 RX 및 TX 패킷이 0이 아닌 인터페이스를 선택합니다.) 그리고 아래 텍스트의 `eno1`을 모두 `enp88s0` 또는 `enp89s0`으로 변경합니다.</b>
 
-   아래의 내용을 추가합니다.(참고: 실습 환경에 따라 `address`, `netmask`, `gateway`, `dns-nameservers`의 값이 달라질 수 있습니다.)
+아래의 내용을 추가합니다.(참고: 실습 환경에 따라 `address`, `netmask`, `gateway`, `dns-nameservers`의 값이 달라질 수 있습니다.)
 
-   ```text
-   auto lo
-   iface lo inet loopback
+```text
+auto lo
+iface lo inet loopback
 
-   auto br0
-   iface br0 inet static
-       address <your nuc ip>
-       netmask 255.255.255.0
-       gateway <gateway ip>
-       dns-nameservers 203.237.32.100
+auto br0
+iface br0 inet static
+    address <your nuc ip>
+    netmask 255.255.255.0
+    gateway <gateway ip>
+    dns-nameservers 203.237.32.100
 
-   auto eno1
-   iface eno1 inet manual
+auto eno1
+iface eno1 inet manual
 
-   auto vport_vFunction
-   iface vport_vFunction inet manual
-       pre-up ip tuntap add vport_vFunction mode tap
-       up ip link set dev vport_vFunction up
-       post-down ip link del dev vport_vFunction
-   ```
+auto vport_vFunction
+iface vport_vFunction inet manual
+    pre-up ip tuntap add vport_vFunction mode tap
+    up ip link set dev vport_vFunction up
+    post-down ip link del dev vport_vFunction
+```
 
-   파일을 저장하고 vim editor에서 나옵니다.
+파일을 저장하고 vim editor에서 나옵니다.
 
-   > [!NOTE]
-   > ⚠️ **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.** ⚠️  
-   > (참고: 실습 환경에 따라 `address`, `netmask`, `gateway`, `dns-nameservers`의 값이 달라질 수 있습니다.)
-   >
-   > - Loopback 인터페이스 설정
-   >   Loopback 인터페이스를 자동으로 활성화하고, loopback(자기 자신을 참조하는 가상 네트워크 인터페이스)으로 설정합니다.
-   >
-   >   ```text
-   >   auto lo
-   >   iface lo inet loopback
-   >   ```
-   >
-   > - Bridge 네트워크 인터페이스 설정
-   >   br0라는 가상 브릿지(Bridge) 네트워크 인터페이스를 생성하고 부팅 시에 자동으로 활성화되도록 합니다. 정적 IP를 사용하도록 명시하고, IP 주소 등의 네트워크 설정 값을 입력합니다.
-   >
-   >   ```text
-   >   auto br0
-   >   iface br0 inet static
-   >     address <your nuc ip>
-   >     netmask 255.255.255.0
-   >     gateway <gateway ip>
-   >     dns-nameservers 203.237.32.100
-   >   ```
-   >
-   > - 물리적 인터페이스 설정
-   >   eno1(물리적 이더넷 인터페이스)을 부팅 시 자동으로 활성화합니다. eno1에게는 직접 IP 주소를 할당하지 않을 것이고, br0에 속하는 구성원으로 다룰 것입니다.
-   >
-   >   ```text
-   >   auto eno1
-   >   iface eno1 inet manual
-   >   ```
-   >
-   > - TAP 인터페이스 생성
-   >   vport_vFunction이라는 가상 TAP(Tunnel Access Point) 인터페이스를 생성하고 부팅 시 활성화되도록 합니다. 수동으로 네트워크를 설정해야 하는 수동(manual) 모드로 지정합니다.
-   >
-   >   ```text
-   >   auto vport_vFunction
-   >   iface vport_vFunction inet manual
-   >     pre-up ip tuntap add vport_vFunction mode tap
-   >     up ip link set dev vport_vFunction up
-   >     post-down ip link del dev vport_vFunction
-   >   ```
+> [!NOTE]
+> ⚠️ **위의 내용에 대한 설명입니다. 따로 파일에 입력하지 않아도 됩니다.** ⚠️  
+> (참고: 실습 환경에 따라 `address`, `netmask`, `gateway`, `dns-nameservers`의 값이 달라질 수 있습니다.)
+>
+> - Loopback 인터페이스 설정
+>   Loopback 인터페이스를 자동으로 활성화하고, loopback(자기 자신을 참조하는 가상 네트워크 인터페이스)으로 설정합니다.
+>
+>   ```text
+>   auto lo
+>   iface lo inet loopback
+>   ```
+>
+> - Bridge 네트워크 인터페이스 설정
+>   br0라는 가상 브릿지(Bridge) 네트워크 인터페이스를 생성하고 부팅 시에 자동으로 활성화되도록 합니다. 정적 IP를 사용하도록 명시하고, IP 주소 등의 네트워크 설정 값을 입력합니다.
+>
+>   ```text
+>   auto br0
+>   iface br0 inet static
+>     address <your nuc ip>
+>     netmask 255.255.255.0
+>     gateway <gateway ip>
+>     dns-nameservers 203.237.32.100
+>   ```
+>
+> - 물리적 인터페이스 설정
+>   eno1(물리적 이더넷 인터페이스)을 부팅 시 자동으로 활성화합니다. eno1에게는 직접 IP 주소를 할당하지 않을 것이고, br0에 속하는 구성원으로 다룰 것입니다.
+>
+>   ```text
+>   auto eno1
+>   iface eno1 inet manual
+>   ```
+>
+> - TAP 인터페이스 생성
+>   vport_vFunction이라는 가상 TAP(Tunnel Access Point) 인터페이스를 생성하고 부팅 시 활성화되도록 합니다. 수동으로 네트워크를 설정해야 하는 수동(manual) 모드로 지정합니다.
+>
+>   ```text
+>   auto vport_vFunction
+>   iface vport_vFunction inet manual
+>     pre-up ip tuntap add vport_vFunction mode tap
+>     up ip link set dev vport_vFunction up
+>     post-down ip link del dev vport_vFunction
+>   ```
 
 > [!CAUTION]
 > ⚠️ **주의!** ⚠️  
@@ -395,11 +395,11 @@ sudo systemctl restart networking
 > ⚠️ **주의!** ⚠️  
 > <b>만약 NUC에 2개의 ethernet port가 있다면, `eno1` interface가 없습니다. 그러므로 하단의 block에서 `eno1`을 위에서 선택한 interface 중 하나로 변경해야 합니다.(`enp88s0` 또는 `enp89s0` 중에서 사용하고 있는 것을 선택해 적어줍니다.)</b>
 
-  ```bash
-  sudo iptables -A FORWARD -i eno1 -j ACCEPT
-  sudo iptables -A FORWARD -o eno1 -j ACCEPT
-  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
-  ```
+```bash
+sudo iptables -A FORWARD -i eno1 -j ACCEPT
+sudo iptables -A FORWARD -o eno1 -j ACCEPT
+sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
+```
 
 > [!NOTE]
 > ⚠️ **위의 명령어에 대한 설명입니다. 다시 입력하지 않아도 됩니다.** ⚠️
@@ -505,19 +505,19 @@ sudo sysctl -p
 > [!TIP]
 > 새로운 터미널은 터미널 창의 좌상단에 위치한 `+` 버튼을 누르면 생성할 수 있습니다.
 
-  ```bash
-  sudo killall -9 kvm
-  ```
+```bash
+sudo killall -9 kvm
+```
 
-  아래의 명령어를 입력하여 VM을 다시 실행합니다.
+아래의 명령어를 입력하여 VM을 다시 실행합니다.
 
-  ```bash
-  sudo kvm -m 1024 -name tt \
-  -smp cpus=2,maxcpus=2 \
-  -device virtio-net-pci,netdev=net0 \
-  -netdev tap,id=net0,ifname=vport_vFunction,script=no \
-  -boot d vFunction22.img
-  ```
+```bash
+sudo kvm -m 1024 -name tt \
+-smp cpus=2,maxcpus=2 \
+-device virtio-net-pci,netdev=net0 \
+-netdev tap,id=net0,ifname=vport_vFunction,script=no \
+-boot d vFunction22.img
+```
 
 ## 2-4. OVS connects with KVM
 

@@ -127,8 +127,8 @@ If an issue related to booting occurs, follow these steps.
 ## 2-2. NUC: Network Configuration
 
 - When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.
-> [!CAUTION]  
-> <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
+  > [!CAUTION]  
+  > <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -158,6 +158,7 @@ If an issue related to booting occurs, follow these steps.
 1. Update & Upgrade
 
    - In this lab, we will use apt, the package manager. To install the necessary packages, first, update the package list to the latest version and then upgrade any available packages.
+   - To execute a command, open the terminal. You can do this by clicking the app list icon located at the bottom left of the screen and selecting the terminal icon from the list.
 
    ```bash
    sudo apt update
@@ -239,73 +240,73 @@ If an issue related to booting occurs, follow these steps.
 > ⚠️ **Caution!** ⚠️  
 > <b>If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`). For example, enter `ifconfig -a` in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of `eno1` in the text with either `enp88s0` or `enp89s0`, depending on the active interface.</b>
 
-  Add the contents below. (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
+Add the contents below. (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
 
-  ```text
-  auto lo
-  iface lo inet loopback
+```text
+auto lo
+iface lo inet loopback
 
-  auto br0
-  iface br0 inet static
-      address <your nuc ip>
-      netmask 255.255.255.0
-      gateway <gateway ip>
-      dns-nameservers 203.237.32.100
+auto br0
+iface br0 inet static
+    address <your nuc ip>
+    netmask 255.255.255.0
+    gateway <gateway ip>
+    dns-nameservers 203.237.32.100
 
-  auto eno1
-  iface eno1 inet manual
+auto eno1
+iface eno1 inet manual
 
-  auto vport_vFunction
-  iface vport_vFunction inet manual
-      pre-up ip tuntap add vport_vFunction mode tap
-      up ip link set dev vport_vFunction up
-      post-down ip link del dev vport_vFunction
-  ```
+auto vport_vFunction
+iface vport_vFunction inet manual
+    pre-up ip tuntap add vport_vFunction mode tap
+    up ip link set dev vport_vFunction up
+    post-down ip link del dev vport_vFunction
+```
 
-  Save and quit the vim editor.
+Save and quit the vim editor.
 
-  > [!NOTE]
-  > ⚠️ **This section is for explaining the above content. It does not need to be entered into a file again.** ⚠️  
-  > (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
-  >
-  > - Loopback Interface Configuration
-  >   Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
-  >
-  >   ```text
-  >   auto lo
-  >   iface lo inet loopback
-  >   ```
-  >
-  > - Bridge Network Interface Configuration
-  >   Create a virtual bridge network interface named br0 and configure it to activate automatically at boot. Specify the use of a static IP and enter the necessary network settings, including the IP address.
-  >
-  >   ```text
-  >   auto br0
-  >   iface br0 inet static
-  >       address <your nuc ip>
-  >       netmask 255.255.255.0
-  >       gateway <gateway ip>
-  >       dns-nameservers 203.237.32.100
-  >   ```
-  >
-  > - Physical Interface Configuration
-  >   Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Instead of assigning an IP address directly to eno1, it will be treated as a member of br0.
-  >
-  >   ```text
-  >   auto eno1
-  >   iface eno1 inet manual
-  >   ```
-  >
-  > - TAP Interface Configuration
-  >   Create a virtual TAP (Tunnel Access Point) interface named vport_vFunction and configure it to activate at boot. Set it to manual mode, requiring manual network configuration.
-  >
-  >   ```text
-  >   auto vport_vFunction
-  >   iface vport_vFunction inet manual
-  >       pre-up ip tuntap add vport_vFunction mode tap
-  >       up ip link set dev vport_vFunction up
-  >       post-down ip link del dev vport_vFunction
-  >   ```
+> [!NOTE]
+> ⚠️ **This section is for explaining the above content. It does not need to be entered into a file again.** ⚠️  
+> (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
+>
+> - Loopback Interface Configuration
+>   Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
+>
+>   ```text
+>   auto lo
+>   iface lo inet loopback
+>   ```
+>
+> - Bridge Network Interface Configuration
+>   Create a virtual bridge network interface named br0 and configure it to activate automatically at boot. Specify the use of a static IP and enter the necessary network settings, including the IP address.
+>
+>   ```text
+>   auto br0
+>   iface br0 inet static
+>       address <your nuc ip>
+>       netmask 255.255.255.0
+>       gateway <gateway ip>
+>       dns-nameservers 203.237.32.100
+>   ```
+>
+> - Physical Interface Configuration
+>   Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Instead of assigning an IP address directly to eno1, it will be treated as a member of br0.
+>
+>   ```text
+>   auto eno1
+>   iface eno1 inet manual
+>   ```
+>
+> - TAP Interface Configuration
+>   Create a virtual TAP (Tunnel Access Point) interface named vport_vFunction and configure it to activate at boot. Set it to manual mode, requiring manual network configuration.
+>
+>   ```text
+>   auto vport_vFunction
+>   iface vport_vFunction inet manual
+>       pre-up ip tuntap add vport_vFunction mode tap
+>       up ip link set dev vport_vFunction up
+>       post-down ip link del dev vport_vFunction
+>   ```
 
 > [!CAUTION]  
 > ⚠️ **Caution!** ⚠️  
@@ -401,11 +402,11 @@ sudo systemctl restart networking
 > ⚠️ **Caution!** ⚠️  
 > <b>If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`).</b>
 
-  ```bash
-  sudo iptables -A FORWARD -i eno1 -j ACCEPT
-  sudo iptables -A FORWARD -o eno1 -j ACCEPT
-  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
-  ```
+```bash
+sudo iptables -A FORWARD -i eno1 -j ACCEPT
+sudo iptables -A FORWARD -o eno1 -j ACCEPT
+sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
+```
 
 > [!NOTE]
 > ⚠️ **This is an explanation of the above command. It does not need to be entered again.** ⚠️
@@ -511,19 +512,19 @@ sudo sysctl -p
 > [!TIP]
 > You can create a new terminal by clicking the + button located in the top-left corner of the terminal window.
 
-  ```bash
-  sudo killall -9 kvm
-  ```
+```bash
+sudo killall -9 kvm
+```
 
-  Boot VM again (mac should be different from others).
+Boot VM again (mac should be different from others).
 
-  ```bash
-  sudo kvm -m 1024 -name tt \
-  -smp cpus=2,maxcpus=2 \
-  -device virtio-net-pci,netdev=net0 \
-  -netdev tap,id=net0,ifname=vport_vFunction,script=no \
-  -boot d vFunction22.img
-  ```
+```bash
+sudo kvm -m 1024 -name tt \
+-smp cpus=2,maxcpus=2 \
+-device virtio-net-pci,netdev=net0 \
+-netdev tap,id=net0,ifname=vport_vFunction,script=no \
+-boot d vFunction22.img
+```
 
 ## 2-4. OVS connects with KVM
 
