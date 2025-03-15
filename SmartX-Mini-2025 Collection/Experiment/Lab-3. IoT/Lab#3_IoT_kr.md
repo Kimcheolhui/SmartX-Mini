@@ -52,8 +52,6 @@ Node.js는 오픈 소스, 크로스 플랫폼을 지원하는 백엔드 JavaScri
 
 아래의 준비된 도커 컨테이너 이미지를 띄워주세요.
 
-(\*연구실에서 수정 작업을 했기 때문에 저 dns가 꼭 필요한지 확인하지 못했으나, 마지막 확인 작업 때 dns 없이도 잘 돌아가는지 확인하고 삭제할 것)
-
 ```bash
 sudo docker run -it --net host --dns 203.237.32.100 --name webserver cheolhuikim/smartx-box-mini
 ```
