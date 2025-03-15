@@ -4,7 +4,7 @@
 
 ![Final Goal](./img/final_goal.png)
 
-In the Box Lab, you will install the OS directly on \*bare metal, then launch virtual machines and containers within it, and connect them to each other using a virtual switch.
+In the Box Lab, we will install the operating system(OS) directly on \*bare metal, then launch virtual machines and containers within it, and connect them to each other using a virtual switch.
 
 \*Bare metal: a hardware without any installed software
 
@@ -18,23 +18,23 @@ Let's take a close look at the overall structure.
 
 > [!NOTE]
 >
-> - KVM Hypervisor => Virtual Machine
+> - Virtual Machine
 >
 >   Within a single physical machine, you can create multiple virtual machines, each functioning as an independent system. Each virtual machine operates separately and is allocated its own dedicated resources. Additionally, users can freely choose and install an OS different from the host OS on each virtual machine. From a usage perspective, virtual machines and physical machines may feel nearly identical. However, virtual machines are significantly heavier than containers and take longer to create.
 >
 >   In this lab, we will use the KVM Hypervisor, which is natively built into Linux, to create virtual machines.
 >
-> - Docker Runtime => Container
+> - Container
 >
 >   One of the key differences between containers and virtual machines is that containers do not have an independent Guest OS layer. Unlike virtual machines, containers share the OS of the physical machine (Host OS). While virtual machines are fully independent, containers are not. The Docker Engine runs on top of the Host OS, allowing isolated environments to be created without the need for individual Guest OS instances. Due to this architecture, containers are much lighter and faster than virtual machines, and creating or deleting container environments is relatively simple.
 >
 >   To build a container, we will use the Docker Runtime.
 
-![Virutal Switch](./img/switch.png)
+![Virtual Switch](./img/switch.png)
 
 > [!NOTE]
 >
-> - Open vSwitch => Virtual Switch
+> - Virtual Switch
 >
 >   A virtual switch operates within the OS like a physical switch. In this lab, we will configure a virtual switch using Open vSwitch and use it to connect virtual machines and containers.
 >

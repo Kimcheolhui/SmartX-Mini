@@ -4,7 +4,7 @@
 
 ![Final Goal](./img/final_goal.png)
 
-Box Lab에서는 \*베어 메탈에 OS를 직접 설치해보고  
+Box Lab에서는 \*베어 메탈에 운영체제(OS)를 직접 설치해보고  
 이 안에 가상 머신과 컨테이너를 띄운 뒤 가상 스위치로 서로를 연결시켜봅니다.
 
 \*베어 메탈: 하드웨어 상에 어떤 소프트웨어도 설치되어 있지 않은 상태
@@ -19,23 +19,23 @@ Box Lab에서는 \*베어 메탈에 OS를 직접 설치해보고
 
 > [!NOTE]
 >
-> - KVM Hypervisor => Virtual Machine
+> - Virtual Machine
 >
 >   하나의 피지컬 머신 내부에서 여러개의 가상 머신을 생성하여 여러개의 독립적인 가상 머신을 구성할 수 있습니다. 각각의 가상 머신은 모두 독립적이며 개별적인 자원을 할당받습니다. 또한, 가상 머신에서는 피지컬 머신의 OS와 다른 OS를 사용자 마음대로 정해서 사용할 수 있습니다. 단순히 사용하는 측면에서 바라볼 때, 가상 머신과 피지컬 머신은 차이가 거의 없게 느껴질 수 있습니다. 그러나 가상 머신은 그만큼 Container보다 무겁고 생성하는데 오래걸립니다.
 >
 >   이번 Lab에서는 가상 머신을 생성하기 위해 리눅스에 기본적으로 탑재되어있는 KVM Hypervisor를 사용할 것입니다.
 >
-> - Docker Runtime => Container
+> - Container
 >
 >   가상 머신과 비교했을 때 Container가 가지는 가장 큰 다른 특징으로, 독립적인 Guest OS층이 없다는 점을 생각할 수 있습니다. Container는 가상 머신과 달리 피지컬 머신의 OS를 공유합니다. 그리고 가상 머신은 각각의 머신이 독립적이지만 Container는 그렇지 않습니다. 피지컬 머신의 OS(Host OS) 위에서 Docker Engine이 작동하고, Docker Engine 덕분에 각각의 Guest OS 없이도 격리된 환경을 구성할 수 있습니다. 이러한 구조로 인해서 가상 머신보다 훨씬 더 가볍고 빠르게 실행할 수 있으며 환경(Container)의 생성과 삭제도 비교적 간단합니다.
 >
->   저희는 Container를 생성하기 위해서 가장 널리 쓰이는 Docker Runtime을 사용할 것입니다.
+>   이번 Lab에서는 container를 생성하기 위해서 가장 널리 쓰이는 Docker Runtime을 사용할 것입니다.
 
 ![Virtual Switch](./img/switch.png)
 
 > [!NOTE]
 >
-> - Open vSwitch => Virtual Switch
+> - Virtual Switch
 >
 >   가상 스위치는 OS안에서 실제 물리적인 스위치처럼 동작합니다. 이번 Lab에서 Open vSwitch를 통해 가상 스위치를 구성할 것이고 이 가상 스위치를 통해 가상 머신과 컨테이너를 연결할 것입니다.
 >
