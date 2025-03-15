@@ -574,7 +574,7 @@ Deployment는 Pod의 생성 및 관리를 자동화하는 쿠버네티스의 컨
 
    ```shell
    kubectl apply -f simple-app-deployment.yaml
-   kubectl get pods  # 여러 개의 Pod 확인
+   kubectl get pods -o wide # 여러 개의 Pod 확인
    ```
 
    <img src='img/simple-app/simple-4.png' alt='simple 4'>
