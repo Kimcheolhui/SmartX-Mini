@@ -621,21 +621,23 @@ Pressing ctrl + p, q allows you to exit the container without stopping it.
 
 ## 2-9. Connect docker container
 
-Install OVS-docker utility in host machine **(Not inside of Docker container)**
+Execute the following command outside of Docker. **(on the host machine)**  
+This command uses **Open vSwitch(OVS)** to add a specific network interface (veno1) to a Docker container (c1) and connect it to a virtual bridge (br0).
 
 ```bash
 sudo docker start c1
-sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]
+sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>
 # please type gateway IP and docker container IP.
 ```
 
 > [!WARNING]
-> When writing --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP], remove the brackets `[]` and use the format 172.29.0.X.  
+> ⚠️ For this Lab only, use the PI’s IP written on the paper as the docker_container_IP. ⚠️  
+> When writing --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>, remove the brackets `<>` and use the format 172.29.0.X.  
 > For example: --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
 
 > [!NOTE]  
 > <b> ⚠️ If there were no issues, skip this part(Note block). ⚠️  
-> If there was a typo or mistake while executing the `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` command, execute `sudo ovs-docker del-port br0 veno1 c1` and then re-run `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`.</b>
+> If there was a typo or mistake while executing the `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>` command, execute `sudo ovs-docker del-port br0 veno1 c1` and then re-run `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>`.</b>
 
 Enter to docker container
 

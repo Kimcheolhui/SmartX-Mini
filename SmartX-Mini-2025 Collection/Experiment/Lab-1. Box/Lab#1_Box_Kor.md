@@ -614,21 +614,23 @@ ctrl + p, q를 누르면 container를 종료하지 않고 container 밖으로 �
 
 ## 2-9. Connect docker container
 
-**도커 외부에서**, 즉 Host machine에서 OVS-docker utility를 하단의 명령어로 설치합니다.
+**도커 외부에서**, 즉 Host machine에서 하단의 명령어를 실행합니다.  
+이 명령어는 **Open vSwitch(OVS)**를 사용하여 Docker container(c1)에 특정 네트워크 인터페이스(veno1)를 추가하고, 이를 가상 브리지(br0)에 연결합니다.
 
 ```bash
 sudo docker start c1
-sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]
+sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>
 # please type gateway IP and docker container IP.
 ```
 
 > [!WARNING]
-> 위의 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP] 작성 시에 `[]`은 빼고, 172.29.0.X의 형식으로 작성해주시기 바랍니다.  
+> ⚠️ 이번 Lab에 한하여 docker_container_IP는 종이에 적힌 **PI의 IP를 사용**합니다. ⚠️  
+> 위의 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP> 작성 시에 `<>`은 빼고, 172.29.0.X의 형식으로 작성해주시기 바랍니다.  
 > 예를 들어, --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
 
 > [!NOTE]  
 > <b> ⚠️ 아무 문제가 없었다면, 이 부분(Note block)은 생략합니다. ⚠️  
-> 만약, `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` 명령어를 실행하는 과정에서 오타나 실수가 있었다면 `sudo ovs-docker del-port br0 veno1 c1` 명령어를 실행하고 다시 `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`를 실행합니다.</b>
+> 만약, `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>` 명령어를 실행하는 과정에서 오타나 실수가 있었다면 `sudo ovs-docker del-port br0 veno1 c1` 명령어를 실행하고 다시 `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>`를 실행합니다.</b>
 
 Docker container 안으로 진입합니다.
 
