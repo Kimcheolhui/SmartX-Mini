@@ -327,7 +327,7 @@ NUC1에서 다음의 명령어를 실행합니다.
 
 ```shell
 # At NUC1
-rm -r $HOME/.kube
+# rm -r $HOME/.kube
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -765,6 +765,8 @@ Rolling Update는 기존 Pod을 점진적으로 새로운 버전으로 교체하
    이전 버전(v1)으로 정상적으로 복구되었는지 확인
 
    <img src='img/simple-app/simple-15.png' alt='simple 15'>
+
+   **이제 Pod의 개수를 3개로 Scale-down하고, Pod의 개수가 줄어든 것을 확인해주세요!**
 
 지금까지, 쿠버네티스에서 Pod, Deployment, Service를 활용한 애플리케이션 배포 및 업데이트를 실습했습니다.
 
