@@ -210,7 +210,7 @@ If an issue related to booting occurs, follow these steps.
 - DNS configuration
 
   ```bash
-  sudo vi /etc/systemd/resolved.conf
+  sudo vim /etc/systemd/resolved.conf
   ```
 
   Remove the comment symbol (#) to the left of “DNS” in the file and specify the DNS address.  
@@ -227,7 +227,7 @@ If an issue related to booting occurs, follow these steps.
   Open /etc/network/interfaces
 
   ```bash
-  sudo vi /etc/network/interfaces
+  sudo vim /etc/network/interfaces
   ```
 
   Configure the network interface `vport_vFunction` as a TAP interface and attach it to your VM.
@@ -262,8 +262,6 @@ iface vport_vFunction inet manual
     up ip link set dev vport_vFunction up
     post-down ip link del dev vport_vFunction
 ```
-
-Save and quit the vim editor.
 
 > [!NOTE]
 > ⚠️ **This section is for explaining the above content. It does not need to be entered into a file again.** ⚠️  
@@ -433,7 +431,7 @@ sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NU
 Open /etc/sysctl.conf file.
 
 ```bash
-sudo vi /etc/sysctl.conf
+sudo vim /etc/sysctl.conf
 ```
 
 Find the line that contains net.ipv4.ip_forward=1 and remove the ( '#' ) comment.
