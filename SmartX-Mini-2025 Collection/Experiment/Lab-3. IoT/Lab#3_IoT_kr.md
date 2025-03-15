@@ -64,7 +64,7 @@ apt-get update
 apt-get install vim
 ```
 
-### 2-2. 웹 서버 코드 수정하기 (NUC)
+### 2-2. 웹 서버 코드 수정하기 ( in NUC )
 
 아래 명령어를 입력해 웹 서버 코드를 확인하고, `<NUC IP>`를 여러분의 NUC IP로 수정해주세요.
 
@@ -126,7 +126,7 @@ def pi_version():
 
 sudo apt-get update
 
-sudo apt-get install python3-pip
+sudo apt-get install -y python3-pip
 
 sudo python3 -m pip install --upgrade pip setuptools wheel
 
@@ -209,9 +209,9 @@ sudo ./AdafruitDHT.py 11 4
 ```bash
 sudo apt-get update
 
-sudo apt-get install python3-numpy
+sudo apt-get install -y python3-numpy
 
-sudo apt-get install mercurial
+sudo apt-get install -y mercurial
 ```
 
 <details>
