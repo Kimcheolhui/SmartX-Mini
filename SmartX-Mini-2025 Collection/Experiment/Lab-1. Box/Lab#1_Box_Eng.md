@@ -71,9 +71,12 @@ Let's take a close look at the overall structure.
 
 ## 2-1. NUC: OS Installation
 
-The Host OS to be used in the Lab is as follows. Use the provided installation USB to install the OS.
+> [!NOTE]
+> For students who have installed the OS in the Playground Lab, the OS Installation section can be skipped.
+
+The Host OS to be used in the Lab is as follows. Use the provided installation USB to install the OS.  
 OS : Ubuntu Desktop 22.04 LTS(64bit)  
-Download Site : <https://releases.ubuntu.com/22.04/>
+Reference: Download Site - <https://releases.ubuntu.com/22.04/>
 
 ### 2-1-1. Boot configuration
 
@@ -90,7 +93,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 4. In the Updates and other software step, under “What apps would you like to install to start with?”, choose “Minimal installation” and proceed to the next step.
 5. In the Installation type step, select “Erase disk and install Ubuntu”, then click “Install Now”.
 6. When the “Write the changes to disks?” prompt appears, click “Continue” to proceed.
-7. On the Location settings screen, select “South Korea Time.”
+7. On the Location settings screen, select "Seoul".
 8. In the “Who are you?” step, enter the User and Computer information as follows.
 
    - Your name: gist

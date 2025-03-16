@@ -70,9 +70,12 @@ Box Lab에서는 \*베어 메탈에 운영체제(OS)를 직접 설치해보고
 
 ## 2-1. NUC: OS Installation
 
-Lab에서 사용할 Host OS는 다음과 같습니다. 제공받은 설치 USB를 사용하여 OS를 설치하면 됩니다.
+> [!NOTE]
+> 수강생들 중, Playground Lab에서 OS를 설치한 경우에는 OS Installation 부분을 생략합니다.
+
+Lab에서 사용할 Host OS는 다음과 같습니다. 제공받은 설치 USB를 사용하여 OS를 설치하면 됩니다.  
 OS : Ubuntu Desktop 22.04 LTS(64bit)  
-Download Site : <https://releases.ubuntu.com/22.04/>
+참고: Download Site - <https://releases.ubuntu.com/22.04/>
 
 ### 2-1-1. Boot configuration
 
@@ -89,7 +92,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 4. Updates and other software 단계에서 "What apps would you like to install to start with?" 영역에서 "Minimal installation"을 선택하고 다음 단계로 넘어갑니다.
 5. Installation type 단계에서 "Erase disk and install Ubuntu"를 선택하고 "Install now" 버튼을 누릅니다.
 6. Write the changes to disks? 창이 뜨면 Continue를 눌러 계속 진행합니다.
-7. Location 설정 화면에서 "South Korea Time"을 선택합니다.
+7. Location 설정 화면에서 "Seoul"을 선택합니다.
 8. User 정보와 Computer 정보를 입력하는 "Who are you" 단계에 진입했다면 다음과 같이 설정합니다.
 
    - Your name: gist
