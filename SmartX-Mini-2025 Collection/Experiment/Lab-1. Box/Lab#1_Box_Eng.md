@@ -46,6 +46,22 @@ Let's take a close look at the overall structure.
 
 > [!NOTE]
 >
+> - Switch
+>
+>   A switch is a network device that connects and transmits data packets between network devices. Depending on the network layer at which it operates, there are L2, L3 switches, and others.
+>
+>   The key features of a switch are as follows:
+>
+>   1. Packet Forwarding  
+>      An L2 switch forwards packets based on MAC addresses, serving as a fundamental network switch.
+>      An L3 switch has IP routing capabilities, performing some functions of a router.
+>
+>   2. Full-Duplex Communication  
+>      Switches support full-duplex communication, allowing simultaneous transmission and reception of data. This enhances network efficiency and speed.
+>
+>   3. VLAN Support  
+>      Some advanced switches support VLAN (Virtual Local Area Network) functionality, enabling logical network segmentation. With VLANs, separate logical networks can exist within the same physical network environment.
+>
 > - Virtual Switch
 >
 >   A virtual switch operates within the OS like a physical switch. In this lab, we will configure a virtual switch using Open vSwitch and use it to connect virtual machines and containers.
