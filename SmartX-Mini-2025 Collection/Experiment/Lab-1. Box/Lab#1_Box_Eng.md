@@ -244,6 +244,11 @@ If an issue related to booting occurs, follow these steps.
 
   Configure the network interface `vport_vFunction` as a TAP interface and attach it to your VM.
 
+> [!NOTE]
+> A TAP interface enables network communication between a VM and the host. By using a TAP interface, a VM can behave as if it has a physical network interface, and when combined with a network bridge, it allows communication with external networks.
+>
+> By connecting a TAP interface to a bridge network like br0, you can configure a bridge network that allows the VM and the host to operate on the same subnet. This setup enables the VM to function as if it were physically connected to the network.
+
 > [!CAUTION]  
 > **Caution! One tab for indentation**  
 > Type your NUC's IP in `<your nuc ip>` and gateway IP in `<gateway ip>`. (At this time, the parentheses should be excluded when entering.)
@@ -482,13 +487,12 @@ sudo kvm -m 1024 -name tt \
 
 ## 2-4. OVS connects with KVM
 
-- Check configuration
+- Check configuration(In NUC)  
+  To check the status of the configured network interfaces so far, execute the following command in NUC.
 
   ```bash
   sudo ovs-vsctl show
   ```
-
-  ![Ovs Vsctl](./img/ovs-vsctl.png)
 
 ## 2-5. Install docker
 

@@ -237,6 +237,11 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 
    `vport_vFunction`을 TAP 인터페이스로 설정하고 VM에 연결합니다.
 
+> [!NOTE]
+> TAP 인터페이스는 VM과 Host 사이의 네트워크 통신이 가능하도록 합니다. TAP 인터페이스를 이용하면, VM이 마치 물리적 네트워크 인터페이스를 가진 것처럼 동작하게 만들 수 있으며, 네트워크 브리지와 결합하여 외부의 네트워크와 통신할 수 있도록 합니다.
+>
+> TAP 인터페이스를 `br0`과 같은 브리지 네트워크에 연결하여 bridge 네트워크를 구성하면 VM과 Host가 같은 서브넷에서 동작하게 만들 수 있습니다. 그렇게 되면, 해당 VM이 물리적으로 네트워크에 연결된 것처럼 동작하도록 만들 수 있습니다.
+
 > [!CAUTION]  
 > **!!!들여쓰기는 Tab 한번입니다!!!**  
 > `<your nuc ip>`에 현재 nuc의 ip와 `<gateway ip>`에 gateway ip를 입력해주시기 바랍니다. (이때 괄호는 제외하고 입력해야 합니다.)
@@ -475,13 +480,12 @@ sudo kvm -m 1024 -name tt \
 
 ## 2-4. OVS connects with KVM
 
-- Check configuration
+- Check configuration(In NUC)  
+  지금까지 설정한 네트워크 인터페이스의 상태를 확인해보기 위해 NUC에서 아래의 명령어를 실행합니다.
 
   ```bash
   sudo ovs-vsctl show
   ```
-
-  ![Ovs Vsctl](./img/ovs-vsctl.png)
 
 ## 2-5. Install docker
 
