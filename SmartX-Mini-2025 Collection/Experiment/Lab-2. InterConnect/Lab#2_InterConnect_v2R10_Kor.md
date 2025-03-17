@@ -336,7 +336,8 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 >
 > `BLKRRPART failed: Device or resource busy` 오류가 발생하였을 시, OS는 정상적으로 설치되나 `hypriotos-init.yaml`과 `network-config`가 SD카드로 복제되지 않습니다.
 >
-> 위의 오류가 발생하였을 경우, 다음을 따라 오류 해결을 시도합니다.
+> 위의 오류가 발생하였을 경우, 다음을 따라 오류 해결을 시도합니다. <ins>**오류가 없었다면 하단의 해결법을 적용하지 않습니다.**</ins>
+> 
 > 1. (오류 발생 시, `/dev/sda`에 SD 카드가 있는 경우.) `hypriotos-init.yaml`을 `user-data`라는 이름으로 `/dev/sda1`에 복제하고, `network-config`도 동일하게 복제합니다. 이는 다음과 같이 수행합니다.
 >     ```bash
 >     # NUC에서 진행

@@ -344,6 +344,8 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > If this error occurs, the OS is installed successfully, but the `hypriotos-init.yaml` and `network-config` files are not copied to the SD card.
 >
 > Try the following steps one by one to resolve the error:
+> <ins> **If you do not encounter this error, Do not apply those steps.** </ins>
+> 
 > 1. If the SD card is mounted at `/dev/sda`, manually copy `hypriotos-init.yaml` as `user-data` to `/dev/sda1` and also copy `network-config` to the same location. Perform the following commands to do this:
 >     ```bash
 >     # Open terminal in NUC
