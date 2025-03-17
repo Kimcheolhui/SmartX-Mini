@@ -344,25 +344,26 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > If this error occurs, the OS is installed successfully, but the `hypriotos-init.yaml` and `network-config` files are not copied to the SD card.
 >
 > Try the following steps one by one to resolve the error:
-> 1. If the SD card is mounted at `/dev/sda`, manually copy `hypriotos-init.yaml` as `user-data` to `/dev/sda1` and also copy `network-config` to the same location. Then, eject the SD card from the NUC, insert it into the Pi, and power on the Pi. Verify that the network and hostname settings are correctly applied. Perform the following commands to do this:
->   ```bash
-> # Open terminal in NUC
-> sudo mkdir /mnt/sdcard
-> sudo mount /dev/sda1 /mnt/sdcard
-> sudo cp hypriotos-init.yaml /mnt/sdcard/user-data
-> sudo cp network-config /mnt/sdcard/network-config
-> sudo umount /mnt/sdcard
-> sudo eject /dev/sda
-> # remove SD card from NUC
->   ```
-> 2. Run the `flash` command again to reinstall HypriotOS.
-> 3. Delete all partitions on the SD card and try the `flash` again. You can delete the partitions using the following commands:
-> ``` bash
-> sudo umount <sd_card_path>
-> sudo fdisk <sd_card_path>
-> d   # enter this repetitively unless every partitions are removed.
-> w   # save changes
-> ```
+> 1. If the SD card is mounted at `/dev/sda`, manually copy `hypriotos-init.yaml` as `user-data` to `/dev/sda1` and also copy `network-config` to the same location. Perform the following commands to do this:
+>     ```bash
+>     # Open terminal in NUC
+>     sudo mkdir /mnt/sdcard
+>     sudo mount /dev/sda1 /mnt/sdcard
+>     sudo cp hypriotos-init.yaml /mnt/sdcard/user-data
+>     sudo cp network-config /mnt/sdcard/network-config
+>     sudo umount /mnt/sdcard
+>     sudo eject /dev/sda
+>     # remove SD card from NUC
+>     ```
+>     Then, eject the SD card from the NUC, insert it into the Pi, and power on the Pi. Verify that the network and hostname settings are correctly applied, by following `2-2-1`. if configuration is not applied, then move to step 2.
+> 2. Run the `flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypriotos-rpi-v1.12.3.img.zip` command again to reinstall HypriotOS. Sometimes temporary error can be occured.
+> 3. Delete all partitions on the SD card and try the `flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypriotos-rpi-v1.12.3.img.zip` again. You can delete the partitions using the following commands:
+>     ``` bash
+>     sudo umount <sd_card_path>
+>     sudo fdisk <sd_card_path>
+>     d   # enter this repetitively unless every partitions are removed.
+>     w   # save changes
+>     ```
 > 
 
 > [!note]

@@ -336,26 +336,27 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 >
 > `BLKRRPART failed: Device or resource busy` 오류가 발생하였을 시, OS는 정상적으로 설치되나 `hypriotos-init.yaml`과 `network-config`가 SD카드로 복제되지 않습니다.
 >
-> 다음을 하나씩 적용하면서 오류가 해결되었는지 확인합니다.
-> 1. (`/dev/sda`에 SD 카드가 있는 경우.) `hypriotos-init.yaml`을 `user-data`라는 이름으로 `/dev/sda1`에 복제하고, `network-config`도 동일하게 복제한 뒤 SD 카드를 NUC에서 꺼내어 Pi에 삽입 후 Pi의 전원을 켭니다. 이후 네트워크 설정과 hostname 설정이 제대로 이루어졌는지 확인합니다. 이는 다음과 같이 수행합니다.
->   ```bash
-> # NUC에서 진행
-> sudo mkdir /mnt/sdcard
-> sudo mount /dev/sda1 /mnt/sdcard
-> sudo cp hypriotos-init.yaml /mnt/sdcard/user-data
-> sudo cp network-config /mnt/sdcard/network-config
-> sudo umount /mnt/sdcard
-> sudo eject /dev/sda
-> # 이후 NUC에서 SD 카드 분리
->   ```
-> 2. 한번 더 `flash`를 실행하여 재설치합니다.
-> 3. SD 카드의 모든 파티션을 삭제한 뒤 다시 `flash`를 시도합니다. 이는 다음의 명령어를 통해 수행할 수 있습니다.
-> ``` bash
-> sudo umount <sd_card_path>
-> sudo fdisk <sd_card_path>
-> d   # 모든 파티션이 삭제될 때까지 반복 입력한다.
-> w   # 변경사항 저장
-> ```
+> 위의 오류가 발생하였을 경우, 다음을 따라 오류 해결을 시도합니다.
+> 1. (오류 발생 시, `/dev/sda`에 SD 카드가 있는 경우.) `hypriotos-init.yaml`을 `user-data`라는 이름으로 `/dev/sda1`에 복제하고, `network-config`도 동일하게 복제합니다. 이는 다음과 같이 수행합니다.
+>     ```bash
+>     # NUC에서 진행
+>     sudo mkdir /mnt/sdcard
+>     sudo mount /dev/sda1 /mnt/sdcard
+>     sudo cp hypriotos-init.yaml /mnt/sdcard/user-data
+>     sudo cp network-config /mnt/sdcard/network-config
+>     sudo umount /mnt/sdcard
+>     sudo eject /dev/sda
+>     # 이후 NUC에서 SD 카드 분리
+>     ```
+>     SD 카드를 NUC에서 분리한 후, Pi에 삽입한 뒤 Pi를 켭니다. `2-2-1`을 진행하여 네트워크 및 계정 설정이 정상적으로 이루어졌는지 확인합니다. 실패한 경우, Pi의 전원을 끈 뒤 SD 카드를 다시 NUC에 연결하여 해결 방안 2번을 따릅니다.
+> 2. 한번 더 `flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypriotos-rpi-v1.12.3.img.zip`를 실행합니다. 일시적 오류로 `flash`가 실패했을 수도 있습니다. 성공적으로 마무리되었다면 실습을 계속 진행합니다. 실패한 경우, 해결 방안 3을 따릅니다.
+> 3. SD 카드의 모든 파티션을 삭제한 뒤 다시 `flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypriotos-rpi-v1.12.3.img.zip`를 시도합니다. 파티션 삭제는 다음의 명령어를 통해 수행할 수 있습니다.
+>     ``` bash
+>     sudo umount <sd_card_path>
+>     sudo fdisk <sd_card_path>
+>     d   # 모든 파티션이 삭제될 때까지 반복 입력한다.
+>     w   # 변경사항 저장
+>     ```
 >
 
 > [!note]
