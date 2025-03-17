@@ -127,7 +127,7 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 > nameserver 203.237.32.100
 > ```
 >
-> After every boot, the content of `/etc/resolv.conf` is gone, you should do the above steps again.
+> 단, 이 방식을 적용할 경우 매 부팅마다 `/etc/resolv.conf`의 내용이 초기화되므로, 전원을 켤 때마다 다시 설정해야 합니다.
 
 ## 2-1. Raspberry PI OS Installation
 
@@ -258,6 +258,8 @@ ls -alh # Check all files
 
 > [!note]
 >
+> 주제: `cloud-init`이란 무엇이며, 이것이 어떻게 OS를 초기화하는가?
+> 
 > `cloud-init`은 클라우드 인스턴스의 초기화에 사용되는 도구로, AWS나 Google Cloud 등의 퍼블릭 클라우드 제공사를 비롯하여, 사설 클라우드 인프라의 프로비저닝 및 베어 메탈 장비 설치에 쓰입니다.
 >
 > 시스템 부팅 과정에서 `cloud-init`은 크게 2단계(Early-boot, Late-boot)에 걸쳐 초기화를 진행합니다.
@@ -330,6 +332,8 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 
 > [!note]
 >
+> 주제: `BLKRRPART failed: Device or resource busy` 해결 방법
+>
 > `BLKRRPART failed: Device or resource busy` 오류가 발생하였을 시, OS는 정상적으로 설치되나 `hypriotos-init.yaml`과 `network-config`가 SD카드로 복제되지 않습니다.
 >
 > 다음을 하나씩 적용하면서 오류가 해결되었는지 확인합니다.
@@ -354,7 +358,7 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > ```
 >
 
-> [!Note]
+> [!note]
 > 
 > `hypriotos-init.yaml` 파일에 관하여
 >
@@ -404,7 +408,7 @@ sudo apt install -y git vim rdate openssh-server
 
 > [!note] 
 > 
-> `Certificate verification failed: The certificate is NOT Trusted` 오류
+> 주제: `Certificate verification failed: The certificate is NOT Trusted` 오류
 >
 > Repository의 인증서 오류로 패키지를 설치할 수 없는 문제로, 해결을 위해서는 주소를 다른 APT Repository의 것으로 변경해야 합니다.
 >
@@ -472,7 +476,7 @@ ssh pi@[PI_IP] #ID: pi PW: 1234
 
 > [!note] 
 > 
-> SSH - Fingerprint 오류
+> 주제: SSH - Fingerprint 오류
 >
 > ![ssh key error](./img/ssh_duplicated.png)
 >
@@ -590,11 +594,11 @@ sudo vim /etc/hosts
 > 이 과정에서 이전에 기록되었던 기록은 삭제됩니다.
 >
 > 영구적으로 반영하기 위해, 다음의 3개 방법 중 하나를 사용할 수 있습니다.
-> <!-- 2025.02.27: 이유는 모르겠지만 HypriotOS 내부에서 /boot/user-data를 직접 수정해도 Data가 날아감. -->
 > 1. OS 설치에 사용한 `hypriotos-init.yaml` 파일에서 `manage_etc_hosts`의 값을 `false`로 수정한 뒤 재설치합니다.
 > 2. Pi 내부에서 `/etc/cloud/templates/hosts.debian.tmpl` 파일을 `/etc/hosts`를 수정했던 방법과 동일한 방법으로 수정합니다.
 > 3. `/etc/cloud/cloud.cfg`에서 `cloud_init_modules`의 `- update_etc_hosts`를 주석처리 합니다. 해당 모듈이 `/etc/hosts`의 재생성을 담당합니다.
 > 
+<!-- 2025.02.27: 이유는 모르겠지만 HypriotOS 내부에서 /boot/user-data를 직접 수정해도 Data가 날아감. 아마 cloud-init을 제대로 이해하지 못했기 때문이라고 생각한다. 추후에 근본 원인을 찾아낸다면 수정을 부탁한다. -->
 
 ### 2-3-3. (PI, NUC) Hostname 적용 확인
 
@@ -670,8 +674,10 @@ RUN sudo mv kafka_2.10-0.8.2.0 /kafka
 WORKDIR /kafka
 ``` 
 
->  [!important]
+> [!tip]
 >
+> Note: APT Repository 변경 (Optional)
+> 
 > 이미지 파일 빌드 과정에서 `apt`를 통한 패키지 다운로드에 많은 시간이 소요됩니다.
 > 
 > 만약 빌드 속도를 높이고자 하실 경우, 하단을 참고하여 `apt-get update` 이전에 `sed` 명령을 추가하여 APT 레포지토리 경로를 국내 미러 사이트로 수정해주시기 바랍니다.
@@ -749,7 +755,10 @@ sudo vi config/zookeeper.properties
 ```bash
 bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
-이때, Zookeeper는 항상 Broker보다 먼저 실행되어있어야 합니다. 환경을 다시 구성하실 때 이 점 유의 바랍니다.
+
+> [!warning]
+> 
+> Zookeeper는 항상 Broker보다 먼저 실행되어있어야 합니다. 환경을 다시 구성하실 때 이 점 유의 바랍니다.
 
 ### 2-4-6. (NUC - `brokerN` Container) Broker 설정
 
@@ -950,5 +959,6 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic resource --from
 
 위의 질문을 생각해보며, Physical Interconnect와 Data Interconnect에 대해 고민해볼 수 있는 시간을 가져보시기 바랍니다.
 
+> [!important]
 > 실습에 참여하시느라 고생 많으셨습니다. <br>
 > 참여해주셔서 감사합니다.

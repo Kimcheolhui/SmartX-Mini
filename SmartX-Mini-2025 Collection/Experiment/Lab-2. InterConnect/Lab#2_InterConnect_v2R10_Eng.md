@@ -53,13 +53,13 @@ However, operating Kafka as a distributed system introduces various challenges, 
 
 Zookeeper continuously communicates with brokers to monitor their status. It manages Kafka's state information (such as the number of topics, partitions, and replications) and metadata (such as broker locations and leader information). Zookeeper determines the leader for each partition, detects broker failures, and facilitates data recovery and leader re-election when a failure occurs. These functionalities enable Kafka to function as a large-scale distributed system.
 
-> ⚠️ **Warning** ⚠️
+In this Lab, we will see that data-interconnects can be achieved by confirming that Apache Kafka delivers Pi events to NUC's Consumer.
+
+> [!warning]
 > 
 > As of Apache Kafka 3.5, Zookeeper is deprecated and replaced by KRaft, which provides enhanced capabilities. While we use Zookeeper in this lab for compatibility purposes, it is recommended to use KRaft for future deployments.
 
-In this Lab, we will see that data-interconnects can be achieved by confirming that Apache Kafka delivers Pi events to NUC's Consumer.
-
-> 📰️️ Note  
+> [!tip]
 > If you want to know more about Apache Kafka, Please refer to [Apache Kafka Docs](https://kafka.apache.org/documentation/#intro_concepts_and_terms).
 
 ## 1-3. Net-SNMP
@@ -88,10 +88,10 @@ Net-SNMP includes tools that enable both SNMP Manager and SNMP Agent roles on Li
 
 In this lab, we will install `snmpd` on the Pi and use Apache Flume to collect the Pi's network interface status and system information (such as available RAM, CPU load, and available disk space). In this setup, the Pi acts as the Managed Device, `snmpd` acts as the SNMP Agent, and Flume functions as the SNMP Manager.
 
-> 📰️️ Note  
+> [!note]
 > The system information to be collected is defined in the `flume-conf.properties` file under `agent.sources.sources1.oidN` during the Flume deployment.
 
-> 📰️️ Note  
+> [!tip]  
 > For more details on SNMP, refer to [GeeksForGeeks](https://www.geeksforgeeks.org/simple-network-management-protocol-snmp/).
 
 ## 1-4. Apache Flume
@@ -109,7 +109,7 @@ Flume's data flow model consists of three main components:
 
 In this lab, Flume will be used to gather system status data from `snmpd` via SNMP and send it to Kafka.
 
-> ⚠️ **Warning** ⚠️
+> [!warning]
 >
 > As of October 2024, Apache Flume is officially discontinued. Consider migrating to alternatives like Fluentd or Logstash for future distributed log collection, when you are planning to use, or using Apache Flume.  
 > For now, we are using Flume for compatibility and lab purposes.
@@ -118,7 +118,7 @@ In this lab, Flume will be used to gather system status data from `snmpd` via SN
 
 ![overview](img/overview.png)
 
-> 📰️️ Note
+> [!note]
 >
 > If you encounter internet connectivity issues on the box despite a working gateway connection, update the DNS settings in /etc/resolv.conf as follows:
 >
@@ -136,7 +136,7 @@ In this lab, Flume will be used to gather system status data from `snmpd` via SN
 
 ## 2-1. Raspberry PI OS Installation
 
-> ⚠️ **Warning** ⚠️
+> [!warning]
 >
 > To prevent collision, please turn off VM, since VM uses IP address of Pi.
 > 
@@ -148,7 +148,7 @@ Now we will install HypriotOS on the Raspberry Pi. HypriotOS is a Debian-based o
 
 To install HypriotOS, insert the Micro SD card into a reader, and insert into the NUC.
 
-> ⚠️ **Warning** ⚠️
+> [!caution]
 >
 > **Please ensure that the Pi is <U>completely powered off</U>** before removing the SD card.
 >
@@ -251,7 +251,7 @@ ls -alh # Check all files
 
 `network-config` file is used to configure network setting. Now we will open and edit this file to configure.
 
->  ⚠️ **Warning** ⚠️
+>  [!caution]
 > 
 > **<U>Do not change the name</U> of `network-config` file.** <br>
 > `network-config` is the pre-defined file name, which is used by `cloud-init` to configure network setting during booting. (HypriotOS is managed by `cloud-init`) <br>
@@ -265,7 +265,9 @@ ls -alh # Check all files
 > 
 > REF: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html#source-files
 
-> 📰 Note: What is `cloud-init`, and How it initializes the OS
+> [!note]
+> 
+> Topic: What is `cloud-init`, and How it initializes the OS
 >
 > `cloud-init` is a tool used to initialize cloud instances. It is widely utilized by public cloud providers such as AWS and Google Cloud, as well as for provisioning private cloud infrastructure and installing bare-metal systems.
 >
@@ -325,7 +327,7 @@ Once identified, use the following command to install HypriotOS onto the SD card
 flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypriotos-rpi-v1.12.3.img.zip
 ```
 
-> 📰 Note: options for `flash`
+> [!tip]
 >
 > Table below describes options for `flash`. Details are shown by `flash --help`.
 > |Options|Description|
@@ -335,7 +337,9 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > |`-d <path>`, `--device`| Path of Device which where OS be installed. |
 > |`~.img`, `~.img.zip`| Raspberry OS Image File |
 
-> 📰 Note: How to resolve `BLKRRPART failed: Device or resource busy` error
+> [!note]
+> 
+> Topic: How to resolve `BLKRRPART failed: Device or resource busy` error
 >
 > If this error occurs, the OS is installed successfully, but the `hypriotos-init.yaml` and `network-config` files are not copied to the SD card.
 >
@@ -361,7 +365,10 @@ flash -u hypriotos-init.yaml -F network-config -d <Your SD Card Directory> hypri
 > ```
 > 
 
-> 📰 Note: About the `hypriotos-init.yaml` file
+> [!note]
+> 
+> Topic: About the `hypriotos-init.yaml` file
+> 
 > The `hypriotos-init.yaml` file is used as the `/boot/user-data` file on HypriotOS.  
 > The `/boot/user-data` file provides user-defined configurations to the instance during initialization. It defines user creation, hostname settings, and whether to automatically initialize `/etc/hosts`.  
 > This file also contains the initial user credentials, so if you forget the ID/PW, refer to this file.
@@ -406,7 +413,9 @@ sudo apt install -y git vim rdate openssh-server
 
 Once the package installation is complete, <U>**return to the NUC**</U>. Ensure that the <U>**Pi remains powered on**</U>, as you will access it via SSH from the NUC.
 
-> 📰 Note: Resolving Certificate verification failed: The certificate is NOT Trusted error
+> [!note]
+> 
+> Topic: Resolving Certificate verification failed: The certificate is NOT Trusted error
 > 
 > If you encounter certificate verification errors while installing packages due to a repository issue, you need to switch to another APT repository.
 > 
@@ -472,7 +481,9 @@ Since `openssh-server` has been installed on the Pi, you can now access the Pi v
 ssh pi@[PI_IP] #ID: pi PW: 1234
 ```
 
-> 📰 Note: SSH - Fingerprint Error
+> [!note]
+> 
+> Topic: SSH - Fingerprint Error
 >
 > ![ssh key error](./img/ssh_duplicated.png)
 > 
@@ -540,7 +551,7 @@ Add the following line(Pi IP Address & Hostname) at the bottom of the file:
 172.29.0.XX        [PI_HOSTNAME] 
 ```
 
->  ⚠️ **Warning** ⚠️ 
+>  [!warning]
 > 
 > For this lab, it is recommended to **set the hostname to an <U>easy-to-remember and simple</U> name**. <br>
 > The NUC's hostname must match the one recorded on the Pi's `/etc/hosts` file, as it will also be required during the Kafka configuration.
@@ -578,12 +589,14 @@ sudo vim /etc/hosts
 172.29.0.XX        [NUC_HOSTNAME]
 ```
 
->  ⚠️ **Warning** ⚠️
+>  [!warning]
 >
-> The /etc/hosts file on the Pi is reset during boot due to cloud-init. <br>
+> The `/etc/hosts` file on the Pi is reset during boot due to cloud-init. <br>
 > If you want to preserve these settings after reboot, follow the guidelines below. 
 
->  📰 Note: Preserving /etc/hosts on the Pi
+> [!tip]
+> 
+> Topic: How to Preserve `/etc/hosts` on the Pi
 >
 > cloud-init regenerates the /etc/hosts file during boot using a predefined hosts template. <br>
 > Any manual modifications will be overwritten.
@@ -592,7 +605,8 @@ sudo vim /etc/hosts
 > 1. Modify the `manage_etc_hosts` value to `false` in the `hypriotos-init.yaml` file used during OS installation and reinstall the OS.
 > 2. Edit the `/etc/cloud/templates/hosts.debian.tmpl` file on the Pi with the same modifications made to `/etc/hosts`.
 > 3. Comment out the `update_etc_hosts` module in `/etc/cloud/cloud.cfg`. This module is responsible for regenerating `/etc/hosts`.
-> <!-- 2025.02.27: 이유는 모르겠지만 HypriotOS 내부에서 /boot/user-data를 직접 수정해도 Data가 날아감. -->
+>
+<!-- 2025.02.27: 이유는 모르겠지만 HypriotOS 내부에서 /boot/user-data를 직접 수정해도 Data가 날아감. 아마 cloud-init을 제대로 이해하지 못했기 때문이라고 생각한다. 추후에 근본 원인을 찾아낸다면 수정을 부탁한다. -->
 
 ### 2-3-3. (PI, NUC) Verifying Hostname-based Communication
 
@@ -634,7 +648,7 @@ Zookeeper does not require a Broker ID, while each Kafka broker will be assigned
 First, we will build the Docker image required to create the containers. <br>
 Clone the repository containing the necessary files using the following command.
 
->  ⚠️ **Warning** ⚠️
+>  [!warning]
 > 
 > Ensure that you clone the `SmartX-mini` repository, not the previously cloned `SmartX-Mini` repository. <br> 
 > Pay attention to the correct capitalization.
@@ -644,7 +658,7 @@ cd ~
 git clone https://github.com/SmartX-Box/SmartX-mini.git
 ```
 
-We will use the ubuntu-kafka directory to build the image. <br>
+We will use the `ubuntu-kafka` directory to build the image. <br>
 Navigate to this directory using the command below.
 
 ```bash
@@ -669,7 +683,9 @@ RUN sudo mv kafka_2.10-0.8.2.0 /kafka
 WORKDIR /kafka
 ``` 
 
->  📰 Note: Modifying the APT Repository
+> [!tip]
+> 
+> Note: Modifying the APT Repository (Optional)
 >
 > Downloading packages via `apt` during the image build process can be slow.
 > 
@@ -693,7 +709,9 @@ sudo docker build --tag ubuntu-kafka .
 #You should type '.', so docker can automatically start to find `Dockerfile` in the current directory('.').
 ```
 
->  📰 Note: Basic Docker CLI Commands
+> [!tip] 
+> 
+> Note: Basic Docker CLI Commands
 >
 > The following are common Docker CLI commands that you can use to manage containers:
 > 
@@ -746,7 +764,7 @@ Next, start the Zookeeper service using the command below:
 ```bash
 bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
-> ⚠️ Warning ⚠️
+> [!warning]
 >
 > Zookeeper must always be started before Kafka brokers. Ensure this order is maintained when reconfiguring the environment.
 
@@ -847,9 +865,9 @@ cd ~/SmartX-mini/raspbian-flume
 
 Open the `Dockerfile` and ensure the contents match the following configuration:
 
->  ⚠️ <span style="color:red">**Warning**</span> ⚠️
+> [!caution]
 >
-> <span style="color:red"> Ensure the base image is set to `FROM balenalib/rpi-raspbian:buster`, not `stretch`.</span>
+> Ensure the base image is set to `FROM balenalib/rpi-raspbian:buster`, not `stretch`.
 >
 > If you don't modify it, you may encounter the build failure, since `apt update` failed.
 
@@ -913,7 +931,9 @@ Start the Flume agent using the following command:
 bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name agent -Dflume.root.logger=INFO,console
 ```
 
-> 📰️ Note: If errors occur, verify that the following three values are consistent:
+> [!note]
+> 
+> If errors occur, verify that the following three values are consistent:
 > 1. The NUC hostname in the Pi's `/etc/hosts` file.
 > 2. The broker hostname in `conf/flume-conf.properties` on the Pi.
 > 3. The hostname of NUC (check with the `hostname` command).
@@ -947,5 +967,6 @@ Through this lab, we have answered the following two key questions:
 
 By addressing these questions, you should now have a clear understanding of the difference between Physical Interconnect and Data Interconnect.
 
+> [!important]
 > Thank you for your effort and participation in this lab. <br>
 > We appreciate your dedication!
