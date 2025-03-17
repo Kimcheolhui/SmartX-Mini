@@ -869,7 +869,7 @@ FROM balenalib/rpi-raspbian:buster
 LABEL "maintainer"="Seungryong Kim <srkim@nm.gist.ac.kr>"
 
 # (Optional; to speed-up the build procedure) Change apt repository to kaist mirror server.
-RUN sed -i 's@archive.raspbian.org@ftp.kaist.ac.kr/raspbian@g'
+RUN sed -i 's@archive.raspbian.org@ftp.kaist.ac.kr/raspbian@g' /etc/apt/sources.list
 
 #Update & Install wget, vim
 RUN sudo apt update
