@@ -4,7 +4,7 @@
 
 ![Final Goal](./img/final_goal.png)
 
-In the Box Lab, you will install the OS directly on \*bare metal, then launch virtual machines and containers within it, and connect them to each other using a virtual switch.
+In the Box Lab, we will install the operating system(OS) directly on \*bare metal, then launch virtual machines and containers within it, and connect them to each other using a virtual switch.
 
 \*Bare metal: a hardware without any installed software
 
@@ -18,23 +18,51 @@ Let's take a close look at the overall structure.
 
 > [!NOTE]
 >
-> - KVM Hypervisor => Virtual Machine
+> - Virtual Machine
 >
->   Within a single physical machine, you can create multiple virtual machines, each functioning as an independent system. Each virtual machine operates separately and is allocated its own dedicated resources. Additionally, users can freely choose and install an OS different from the host OS on each virtual machine. From a usage perspective, virtual machines and physical machines may feel nearly identical. However, virtual machines are significantly heavier than containers and take longer to create.
+>   Within a single physical machine, you can create multiple virtual machines, each functioning as an independent system. Each virtual machine operates separately and is allocated its own dedicated resources. Additionally, users can freely choose and install an OS different from the host OS on each virtual machine. From a usage perspective, virtual machines and physical machines may feel nearly identical. However, virtual machines are significantly heavier than containers and take longer to create.  
+>   However, there are cases where using a VM is better compared to a container.
 >
->   In this lab, we will use the KVM Hypervisor, which is natively built into Linux, to create virtual machines.
+> 1. When running an application that only works in a specific OS environment  
+>    If you need to run a program that was developed long ago and only works in a specific OS environment, or if the program was intentionally designed to run exclusively on a particular OS by its developer, using a VM is necessary.
+> 2. In security-sensitive environments  
+>    Unlike containers, VMs do not share the OS between instances, providing a higher level of isolation. In cases where a high level of security is required, such as services handling financial data, VMs may be more suitable than containers.
 >
-> - Docker Runtime => Container
+> In this lab, we will use the KVM Hypervisor, which is natively built into Linux, to create virtual machines.
 >
->   One of the key differences between containers and virtual machines is that containers do not have an independent Guest OS layer. Unlike virtual machines, containers share the OS of the physical machine (Host OS). While virtual machines are fully independent, containers are not. The Docker Engine runs on top of the Host OS, allowing isolated environments to be created without the need for individual Guest OS instances. Due to this architecture, containers are much lighter and faster than virtual machines, and creating or deleting container environments is relatively simple.
+> - Container
 >
->   To build a container, we will use the Docker Runtime.
+>   One of the key differences between containers and virtual machines is that containers do not have an independent Guest OS layer. Unlike virtual machines, containers share the OS of the physical machine (Host OS). While virtual machines are fully independent, containers are not. The Docker Engine runs on top of the Host OS, allowing isolated environments to be created without the need for individual Guest OS instances. Due to this architecture, containers are much lighter and faster than virtual machines, and creating or deleting container environments is relatively simple.  
+>   Cases Where Using Containers is Beneficial
+>
+> 1. When fast deployment of an application is required  
+>    Using containers allows you to quickly set up and deploy the application environment. Compared to VMs, containers have shorter startup times, making them more advantageous for fast deployment.
+> 2. When Running Lightweight Applications  
+>    For short-term temporary environments to test a specific program or run a lightweight application, using containers is a better choice.
+>
+> To build a container, we will use the Docker Runtime.
 
-![Virutal Switch](./img/switch.png)
+![Virtual Switch](./img/switch.png)
 
 > [!NOTE]
 >
-> - Open vSwitch => Virtual Switch
+> - Switch
+>
+>   A switch is a network device that connects and transmits data packets between network devices. Depending on the network layer at which it operates, there are L2, L3 switches, and others.
+>
+>   The key features of a switch are as follows:
+>
+>   1. Packet Forwarding  
+>      An L2 switch forwards packets based on MAC addresses, serving as a fundamental network switch.
+>      An L3 switch has IP routing capabilities, performing some functions of a router.
+>
+>   2. Full-Duplex Communication  
+>      Switches support full-duplex communication, allowing simultaneous transmission and reception of data. This enhances network efficiency and speed.
+>
+>   3. VLAN Support  
+>      Some advanced switches support VLAN (Virtual Local Area Network) functionality, enabling logical network segmentation. With VLANs, separate logical networks can exist within the same physical network environment.
+>
+> - Virtual Switch
 >
 >   A virtual switch operates within the OS like a physical switch. In this lab, we will configure a virtual switch using Open vSwitch and use it to connect virtual machines and containers.
 >
@@ -59,9 +87,12 @@ Let's take a close look at the overall structure.
 
 ## 2-1. NUC: OS Installation
 
-The Host OS to be used in the Lab is as follows. Use the provided installation USB to install the OS.
+> [!NOTE]
+> For students who have installed the OS in the Playground Lab, the OS Installation section can be skipped.
+
+The Host OS to be used in the Lab is as follows. Use the provided installation USB to install the OS.  
 OS : Ubuntu Desktop 22.04 LTS(64bit)  
-Download Site : <https://releases.ubuntu.com/22.04/>
+Reference: Download Site - <https://releases.ubuntu.com/22.04/>
 
 ### 2-1-1. Boot configuration
 
@@ -78,7 +109,7 @@ Download Site : <https://releases.ubuntu.com/22.04/>
 4. In the Updates and other software step, under “What apps would you like to install to start with?”, choose “Minimal installation” and proceed to the next step.
 5. In the Installation type step, select “Erase disk and install Ubuntu”, then click “Install Now”.
 6. When the “Write the changes to disks?” prompt appears, click “Continue” to proceed.
-7. On the Location settings screen, select “South Korea Time.”
+7. On the Location settings screen, select "Seoul".
 8. In the “Who are you?” step, enter the User and Computer information as follows.
 
    - Your name: gist
@@ -127,8 +158,8 @@ If an issue related to booting occurs, follow these steps.
 ## 2-2. NUC: Network Configuration
 
 - When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.
-> [!CAUTION]  
-> <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
+  > [!CAUTION]  
+  > <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -158,6 +189,7 @@ If an issue related to booting occurs, follow these steps.
 1. Update & Upgrade
 
    - In this lab, we will use apt, the package manager. To install the necessary packages, first, update the package list to the latest version and then upgrade any available packages.
+   - To execute a command, open the terminal. You can do this by clicking the app list icon located at the bottom left of the screen and selecting the terminal icon from the list.
 
    ```bash
    sudo apt update
@@ -209,7 +241,7 @@ If an issue related to booting occurs, follow these steps.
 - DNS configuration
 
   ```bash
-  sudo vi /etc/systemd/resolved.conf
+  sudo vim /etc/systemd/resolved.conf
   ```
 
   Remove the comment symbol (#) to the left of “DNS” in the file and specify the DNS address.  
@@ -226,10 +258,15 @@ If an issue related to booting occurs, follow these steps.
   Open /etc/network/interfaces
 
   ```bash
-  sudo vi /etc/network/interfaces
+  sudo vim /etc/network/interfaces
   ```
 
   Configure the network interface `vport_vFunction` as a TAP interface and attach it to your VM.
+
+> [!NOTE]
+> A TAP interface enables network communication between a VM and the host. By using a TAP interface, a VM can behave as if it has a physical network interface, and when combined with a network bridge, it allows communication with external networks.
+>
+> By connecting a TAP interface to a bridge network like br0, you can configure a bridge network that allows the VM and the host to operate on the same subnet. This setup enables the VM to function as if it were physically connected to the network.
 
 > [!CAUTION]  
 > **Caution! One tab for indentation**  
@@ -239,73 +276,71 @@ If an issue related to booting occurs, follow these steps.
 > ⚠️ **Caution!** ⚠️  
 > <b>If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`). For example, enter `ifconfig -a` in the terminal and select the interface where RX and TX packets are not zero. Then, replace all occurrences of `eno1` in the text with either `enp88s0` or `enp89s0`, depending on the active interface.</b>
 
-  Add the contents below. (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
+Add the contents below. (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
 
-  ```text
-  auto lo
-  iface lo inet loopback
+```text
+auto lo
+iface lo inet loopback
 
-  auto br0
-  iface br0 inet static
-      address <your nuc ip>
-      netmask 255.255.255.0
-      gateway <gateway ip>
-      dns-nameservers 203.237.32.100
+auto br0
+iface br0 inet static
+    address <your nuc ip>
+    netmask 255.255.255.0
+    gateway <gateway ip>
+    dns-nameservers 203.237.32.100
 
-  auto eno1
-  iface eno1 inet manual
+auto eno1
+iface eno1 inet manual
 
-  auto vport_vFunction
-  iface vport_vFunction inet manual
-      pre-up ip tuntap add vport_vFunction mode tap
-      up ip link set dev vport_vFunction up
-      post-down ip link del dev vport_vFunction
-  ```
+auto vport_vFunction
+iface vport_vFunction inet manual
+    pre-up ip tuntap add vport_vFunction mode tap
+    up ip link set dev vport_vFunction up
+    post-down ip link del dev vport_vFunction
+```
 
-  Save and quit the vim editor.
-
-  > [!NOTE]
-  > ⚠️ **This section is for explaining the above content. It does not need to be entered into a file again.** ⚠️  
-  > (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
-  >
-  > - Loopback Interface Configuration
-  >   Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
-  >
-  >   ```text
-  >   auto lo
-  >   iface lo inet loopback
-  >   ```
-  >
-  > - Bridge Network Interface Configuration
-  >   Create a virtual bridge network interface named br0 and configure it to activate automatically at boot. Specify the use of a static IP and enter the necessary network settings, including the IP address.
-  >
-  >   ```text
-  >   auto br0
-  >   iface br0 inet static
-  >       address <your nuc ip>
-  >       netmask 255.255.255.0
-  >       gateway <gateway ip>
-  >       dns-nameservers 203.237.32.100
-  >   ```
-  >
-  > - Physical Interface Configuration
-  >   Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Instead of assigning an IP address directly to eno1, it will be treated as a member of br0.
-  >
-  >   ```text
-  >   auto eno1
-  >   iface eno1 inet manual
-  >   ```
-  >
-  > - TAP Interface Configuration
-  >   Create a virtual TAP (Tunnel Access Point) interface named vport_vFunction and configure it to activate at boot. Set it to manual mode, requiring manual network configuration.
-  >
-  >   ```text
-  >   auto vport_vFunction
-  >   iface vport_vFunction inet manual
-  >       pre-up ip tuntap add vport_vFunction mode tap
-  >       up ip link set dev vport_vFunction up
-  >       post-down ip link del dev vport_vFunction
-  >   ```
+> [!NOTE]
+> ⚠️ **This section is for explaining the above content. It does not need to be entered into a file again.** ⚠️  
+> (Note: The values of `address`, `netmask`, `gateway`, and `dns-nameservers` may vary depending on the lab environment.)
+>
+> - Loopback Interface Configuration
+>   Automatically activate the loopback interface and configure it as a loopback (a virtual network interface that refers to itself).
+>
+>   ```text
+>   auto lo
+>   iface lo inet loopback
+>   ```
+>
+> - Bridge Network Interface Configuration
+>   Create a virtual bridge network interface named br0 and configure it to activate automatically at boot. Specify the use of a static IP and enter the necessary network settings, including the IP address.
+>
+>   ```text
+>   auto br0
+>   iface br0 inet static
+>       address <your nuc ip>
+>       netmask 255.255.255.0
+>       gateway <gateway ip>
+>       dns-nameservers 203.237.32.100
+>   ```
+>
+> - Physical Interface Configuration
+>   Configure the eno1 (physical Ethernet interface) to activate automatically at boot. Instead of assigning an IP address directly to eno1, it will be treated as a member of br0.
+>
+>   ```text
+>   auto eno1
+>   iface eno1 inet manual
+>   ```
+>
+> - TAP Interface Configuration
+>   Create a virtual TAP (Tunnel Access Point) interface named vport_vFunction and configure it to activate at boot. Set it to manual mode, requiring manual network configuration.
+>
+>   ```text
+>   auto vport_vFunction
+>   iface vport_vFunction inet manual
+>       pre-up ip tuntap add vport_vFunction mode tap
+>       up ip link set dev vport_vFunction up
+>       post-down ip link del dev vport_vFunction
+>   ```
 
 > [!CAUTION]  
 > ⚠️ **Caution!** ⚠️  
@@ -393,62 +428,6 @@ sudo systemctl restart networking
   -cpu host
   ```
 
-  Configure SNAT using `iptables` command for VM networking.
-
-  Please type your **NUC's IP address** in `<NUC IP address>`. (Please write it in the format 172.29.0.X, without parentheses.)
-
-> [!CAUTION]  
-> ⚠️ **Caution!** ⚠️  
-> <b>If the NUC has two Ethernet ports, the `eno1` interface may not be available. Use the ifconfig command to check the network-connected interfaces (`enp88s0` or `enp89s0`).</b>
-
-  ```bash
-  sudo iptables -A FORWARD -i eno1 -j ACCEPT
-  sudo iptables -A FORWARD -o eno1 -j ACCEPT
-  sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC IP address>
-  ```
-
-> [!NOTE]
-> ⚠️ **This is an explanation of the above command. It does not need to be entered again.** ⚠️
->
-> - Allow packet forwarding for incoming traffic on the eno1 interface.
->
->   ```text
->   sudo iptables -A FORWARD -i eno1 -j ACCEPT
->   ```
->
-> - Allow packet forwarding for outgoing traffic on the eno1 interface.
->
->   ```text
->   sudo iptables -A FORWARD -o eno1 -j ACCEPT
->   ```
->
-> - SNAT(Source NAT) Configuration:  
->   Translate packets from the internal network (192.168.100.0/24) to the host’s IP before forwarding them to the external network.
->
->   ```text
->   sudo iptables -t nat -A POSTROUTING -s 192.168.100.0/24 -o eno1 -j SNAT --to <NUC ip address>
->   ```
-
-Open /etc/sysctl.conf file.
-
-```bash
-sudo vi /etc/sysctl.conf
-```
-
-Find the line that contains net.ipv4.ip_forward=1 and remove the ( '#' ) comment.
-
-> #net.ipv4.ip_forward=1
-> →
-> net.ipv4.ip_forward=1
-
-Save and quit the vim editor.
-
-Run the following command to apply the changes made to the file.
-
-```bash
-sudo sysctl -p
-```
-
 - Install Ubuntu VM
 
   Install VNC viewer and see inside of VM.
@@ -511,29 +490,28 @@ sudo sysctl -p
 > [!TIP]
 > You can create a new terminal by clicking the + button located in the top-left corner of the terminal window.
 
-  ```bash
-  sudo killall -9 kvm
-  ```
+```bash
+sudo killall -9 kvm
+```
 
-  Boot VM again (mac should be different from others).
+Boot VM again (mac should be different from others).
 
-  ```bash
-  sudo kvm -m 1024 -name tt \
-  -smp cpus=2,maxcpus=2 \
-  -device virtio-net-pci,netdev=net0 \
-  -netdev tap,id=net0,ifname=vport_vFunction,script=no \
-  -boot d vFunction22.img
-  ```
+```bash
+sudo kvm -m 1024 -name tt \
+-smp cpus=2,maxcpus=2 \
+-device virtio-net-pci,netdev=net0 \
+-netdev tap,id=net0,ifname=vport_vFunction,script=no \
+-boot d vFunction22.img
+```
 
 ## 2-4. OVS connects with KVM
 
-- Check configuration
+- Check configuration(In NUC)  
+  To check the status of the configured network interfaces so far, execute the following command in NUC.
 
   ```bash
   sudo ovs-vsctl show
   ```
-
-  ![Ovs Vsctl](./img/ovs-vsctl.png)
 
 ## 2-5. Install docker
 
@@ -610,21 +588,23 @@ Pressing ctrl + p, q allows you to exit the container without stopping it.
 
 ## 2-9. Connect docker container
 
-Install OVS-docker utility in host machine **(Not inside of Docker container)**
+Execute the following command outside of Docker. **(on the host machine)**  
+This command uses **Open vSwitch(OVS)** to add a specific network interface (veno1) to a Docker container (c1) and connect it to a virtual bridge (br0).
 
 ```bash
 sudo docker start c1
-sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]
+sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>
 # please type gateway IP and docker container IP.
 ```
 
 > [!WARNING]
-> When writing --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP], remove the brackets `[]` and use the format 172.29.0.X.  
+> ⚠️ For this Lab only, use the PI’s IP written on the paper as the docker_container_IP. ⚠️  
+> When writing --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>, remove the brackets `<>` and use the format 172.29.0.X.  
 > For example: --ipaddress=172.29.0.X/24 --gateway=172.29.0.254
 
 > [!NOTE]  
 > <b> ⚠️ If there were no issues, skip this part(Note block). ⚠️  
-> If there was a typo or mistake while executing the `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]` command, execute `sudo ovs-docker del-port br0 veno1 c1` and then re-run `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=[docker_container_IP]/24 --gateway=[gateway_IP]`.</b>
+> If there was a typo or mistake while executing the `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>` command, execute `sudo ovs-docker del-port br0 veno1 c1` and then re-run `sudo ovs-docker add-port br0 veno1 c1 --ipaddress=<docker_container_IP>/24 --gateway=<gateway_IP>`.</b>
 
 Enter to docker container
 
