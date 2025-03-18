@@ -476,7 +476,7 @@ sudo reboot
 NUC으로 돌아와, 다음과 같이 입력해주십시오.
 
 ```bash
-ssh pi@[PI_IP]  # Simple Format: ssh <ID>@<Target IP or Hostname>
+ssh pi@<PI_IP>  # Simple Format: ssh <ID>@<Target IP or Hostname>
 ```
 
 > [!note] 
@@ -499,7 +499,7 @@ ssh pi@[PI_IP]  # Simple Format: ssh <ID>@<Target IP or Hostname>
 > 이후 다시 SSH 연결을 시도합니다.
 >
 > ```bash
-> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
+> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "<PI_IP_ADDRESS>"
 > ```
 
 다음으로, 시간 설정을 확인합니다. 다음의 명령어를 입력합니다.
@@ -545,7 +545,7 @@ sudo vim /etc/hosts
   REF: Issue #98
 -->
 ```text
-172.29.0.XX        [PI_HOSTNAME] 
+172.29.0.XX        <PI_HOSTNAME> 
 ```
 
 >  [!warning] 
@@ -583,7 +583,7 @@ sudo vim /etc/hosts
   REF: Issue #98
 -->
 ```text
-172.29.0.XX        [NUC_HOSTNAME]
+172.29.0.XX        <NUC_HOSTNAME>
 ```
 
 >  [!warning]
@@ -610,15 +610,15 @@ sudo vim /etc/hosts
 NUC에서 hostname을 이용하여 통신이 정상적으로 이루어지는지 확인합니다.
 
 ```bash
-sudo ping [Your NUC hostname]
-sudo ping [Your Raspberry PI hostname]
+sudo ping <Your NUC hostname>
+sudo ping <Your Raspberry PI hostname>
 ```
 
 Pi에서 hostname을 이용하여 통신이 정상적으로 이루어지는지 확인합니다.
 
 ```bash
-sudo ping [Your NUC hostname]
-sudo ping [Your Raspberry PI hostname]
+sudo ping <Your NUC hostname>
+sudo ping <Your Raspberry PI hostname>
 ```
 
 Pi에서 정상적인 통신은 하단과 같으며, Non-Reachable 등의 오류가 발생하였을 경우 네트워크 설정 및 `/etc/hosts`를 다시 확인해보시기 바랍니다. (NUC도 비슷한 화면이 출력되어야 합니다.)

@@ -484,7 +484,7 @@ To verify this, I will access the Pi via SSH from the terminal on the NUC. <br>
 Return to the NUC and enter the following command:
 
 ```bash
-ssh pi@[PI_IP]  # Simple Format: ssh <ID>@<destination IP or Hostname>
+ssh pi@<PI_IP>  # Simple Format: ssh <ID>@<destination IP or Hostname>
 ```
 
 > [!note]
@@ -507,7 +507,7 @@ ssh pi@[PI_IP]  # Simple Format: ssh <ID>@<destination IP or Hostname>
 > To resolve this error, remove the previous fingerprint using the following command and then try reconnecting via SSH:
 >
 > ```bash
-> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "[PI_IP_ADDRESS]"
+> ssh-keygen -f "/home/$(whoami)/.ssh/known_hosts" -R "<PI_IP_ADDRESS>"
 > ```
 
 Next, please check the system time by entering a commend below:
@@ -554,7 +554,7 @@ Add the following line(Pi IP Address & Hostname) at the bottom of the file:
   REF: Issue #98
 -->
 ```text
-172.29.0.XX        [PI_HOSTNAME] 
+172.29.0.XX        <PI_HOSTNAME> 
 ```
 
 >  [!warning]
@@ -592,7 +592,7 @@ sudo vim /etc/hosts
   REF: Issue #98
 -->
 ```text
-172.29.0.XX        [NUC_HOSTNAME]
+172.29.0.XX        <NUC_HOSTNAME>
 ```
 
 >  [!warning]
@@ -619,15 +619,15 @@ sudo vim /etc/hosts
 From the NUC, verify that hostname-based communication is working correctly:
 
 ```bash
-sudo ping [Your NUC hostname]
-sudo ping [Your Raspberry PI hostname]
+sudo ping <Your NUC hostname>
+sudo ping <Your Raspberry PI hostname>
 ```
 
 From the Pi, perform the same verification:
 
 ```bash
-sudo ping [Your NUC hostname]
-sudo ping [Your Raspberry PI hostname]
+sudo ping <Your NUC hostname>
+sudo ping <Your Raspberry PI hostname>
 ```
 
 Successful communication should display ICMP packet responses. If you encounter errors like "Non-Reachable," check the network configuration and `/etc/hosts` entries on both devices. Similar output should be visible on both the Pi and the NUC.
