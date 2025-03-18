@@ -927,7 +927,7 @@ bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name age
 ```
 
 > [!note]
-> 만약 오류가 발생하였을 경우, 다음의 3개 값이 모두 일치하는지 확인해주십시오.
+> 만약 연결 오류가 발생하였을 경우, 다음의 3개 값이 모두 일치하는지 확인해주십시오.
 > 1. Pi의 `/etc/hosts`에 입력된 NUC의 hostname
 > 2. Pi의 `conf/flume-conf.properties`에 입력된 Broker의 hostname
 > 3. NUC의 hostname (`hostname`으로 확인되는 값)
@@ -941,6 +941,23 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic resource --from
 만약 정상적으로 수신되는 경우, `consumer`에서 하단의 화면을 확인할 수 있습니다.
 
 ![consumer result](./img/consumer%20result.png)
+
+> [!note]
+>
+> `snmpd` 설정이 제대로 이루어졌고, `producer`에서 눈에 띄는 오류가 없음에도 `consumer`에서 데이터를 확인할 수 없다면, `raspbian-flume` 이미지를 삭제한 후 다시 빌드하시기 바랍니다. 원인 불명의 문제로 빌드 과정에서 오류가 발생하였으나, 성공으로 처리된 사례가 있습니다.
+>
+> 재빌드 과정은 다음과 같이 진행됩니다.
+> ```bash
+> sudo docker ps -A # 전체 Container 목록 조회. 
+>
+> # 출력된 목록에서 `raspbian-flume` 이미지로 생성된 Container가 있다면, 하단의 2개 명령으로 정지 후 삭제합니다.
+> sudo docker stop <flume-container> # Container 정지
+> sudo docker rm <flume-container>   # Container 삭제
+> 
+> sudo docker rmi raspbian-flume     # Image 삭제
+> cd ~/SmartX-mini/raspbian-flume    # raspbian-flume 디렉토리 이동
+> sudo docker build --tag raspbian-flume .   # 이미지 빌드 수행
+> ```
 
 # 3. Review
 

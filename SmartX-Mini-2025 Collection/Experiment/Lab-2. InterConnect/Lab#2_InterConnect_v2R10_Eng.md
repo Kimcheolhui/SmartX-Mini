@@ -951,6 +951,24 @@ If everything is configured correctly, you should see the message displayed in t
 
 ![consumer result](./img/consumer%20result.png)
 
+> [!note]
+> 
+> If `snmpd` is well-configured, and no error is shown on `producer`, but you can see any logs on `consumer`, Please remove and re-build the image `raspbian-flume`. Sometimes docker reports build process completed without error, yet unknown error has occurred on build process.
+>
+> 재빌드 과정은 다음과 같이 진행됩니다.
+> ```bash
+> sudo docker ps -A # list every created containers. 
+>
+> # If there are some containers built using `raspbian-flume` image, then stop and remove them.
+> sudo docker stop <flume-container> # stop container
+> sudo docker rm <flume-container>   # remove container
+> 
+> sudo docker rmi raspbian-flume     # remove image
+> cd ~/SmartX-mini/raspbian-flume    # move to `raspbian-flume` dir.
+> sudo docker build --tag raspbian-flume .   # build `raspbian-flume` image
+> ```
+
+
 # 3. Review
 
 ## 3-1. Lab Summary
