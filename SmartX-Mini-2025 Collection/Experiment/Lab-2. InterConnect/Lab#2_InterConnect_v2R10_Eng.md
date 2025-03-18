@@ -477,11 +477,14 @@ sudo reboot
 
 ### 2-2-4. (NUC) Check Pi Setup
 
-Since `openssh-server` has been installed on the Pi, you can now access the Pi via SSH from external devices. This can be done using the following command. <br>
+Since `openssh-server` has been installed on the Pi, you can now access the Pi via SSH from external devices. <br>
 (From now on, there's no need to repetitively unplug and plug in the monitor, mouse, and keyboard. You can access the Pi via SSH from the NUC.)
 
+To verify this, I will access the Pi via SSH from the terminal on the NUC. <br>
+Return to the NUC and enter the following command:
+
 ```bash
-ssh pi@[PI_IP] #ID: pi PW: 1234
+ssh pi@[PI_IP]  # Simple Format: ssh <ID>@<destination IP or Hostname>
 ```
 
 > [!note]

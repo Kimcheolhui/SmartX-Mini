@@ -469,11 +469,14 @@ sudo reboot
 
 ### 2-2-4. (NUC) Pi 환경 확인
 
-이전 과정에서 Pi에 `openssh-server`를 설치하였기 때문에, 외부에서 SSH를 통해 Pi에 접근할 수 있습니다. 이는 다음의 명령어를 통해 수행합니다. <br>
+이전 과정에서 Pi에 `openssh-server`를 설치하였기 때문에, 외부에서 SSH를 통해 Pi에 접근할 수 있습니다. <br>
 (즉, 이제부터 모니터, 마우스, 키보드를 일일이 뽑고 꽂을 필요 없이, NUC에서 SSH로 Pi에 접근하면 됩니다.)
 
+이를 확인하기 위해, NUC의 터미널에서 SSH를 통해 Pi에 접근하겠습니다. <br>
+NUC으로 돌아와, 다음과 같이 입력해주십시오.
+
 ```bash
-ssh pi@[PI_IP] #ID: pi PW: 1234
+ssh pi@[PI_IP]  # Simple Format: ssh <ID>@<Target IP or Hostname>
 ```
 
 > [!note] 
