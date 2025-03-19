@@ -140,8 +140,8 @@ sudo vim /etc/hosts
 Add 2 lines in the file(/etc/hosts).
 
 ```
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
+<NUC_IP> <NUC_HOSTNAME>
+<PI_IP> <PI_HOSTNAME>
 ```
 
 - Start flume container (excute below command in PI terminal.)

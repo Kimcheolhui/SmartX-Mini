@@ -89,7 +89,9 @@ sudo docker run -p 8888:8888 --name chronograf chronograf --influxdb-url http://
 
 #### 1-3-1. python-pip 설치
 
-> **Tip!** 새로운 터미널 열기 `Ctrl+Shift+t`
+> [!tip]
+>
+> **새로운 터미널 열기 `Ctrl+Shift+t`**
 
 ```bash
 sudo apt-get install -y libcurl4 openssl curl python3-pip
@@ -154,7 +156,16 @@ sudo docker start zookeeper broker0 broker1 broker2
 아래 명령어를 통해 각 docker container의 터미널에 접속할 수 있습니다. `zookeeper`, `broker0`, `broker1`, `broker2` 순서대로 접속하고, 각 container에 접속할 때마다 아래 Case에 해당하는 작업을 수행합니다.
 
 ```bash
-sudo docker attach <docker container name>
+sudo docker attach zookeeper
+
+# at new terminal
+sudo docker attach broker0
+
+# at new terminal
+sudo docker attach broker1
+
+# at new terminal
+sudo docker attach broker2
 ```
 
 ##### Case 1: **`zookeeper` container인 경우**
@@ -185,11 +196,13 @@ sudo vim /etc/hosts
 
 만약 기존에 작성했던 정보가 사라져있다면, 아래 2개의 lines을 추가하고 저장해주세요.
 
-> **주의**: [ ]는 본인에게 해당되는 정보로 교체해야함
+> [!warning]
+>
+> `<>`는 본인에게 해당되는 정보로 교체해야함
 
 ```
-[NUC_IP] [NUC_HOSTNAME]
-[PI_IP] [PI_HOSTNAME]
+<NUC_IP> >NUC_HOSTNAME>
+<PI_IP> <PI_HOSTNAME>
 ```
 
 #### 1-5-2. Flume container 실행
@@ -216,14 +229,14 @@ bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name age
 #### 1-6-1. `broker_to_influxdb.py` 코드 수정
 
 ```bash
-vi ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
+vim ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
 ```
 
 이 파일에서, `<NUC IP>`를 여러분의 실제 NUC IP로 수정해주세요.
 
 > e.g. `<NUC IP>`를 `203.237.53.100`로 수정
 
-<img width="650" alt="broker_to_influxdb python file" src="https://user-images.githubusercontent.com/82452337/160814546-da543a58-e6b6-49cb-bdb1-19aa2de9c1fb.png">
+<img alt="broker_to_influxdb python file" src="https://user-images.githubusercontent.com/82452337/160814546-da543a58-e6b6-49cb-bdb1-19aa2de9c1fb.png" width="650">
 
 #### 1-6-2. `broker_to_influxdb.py` 실행
 
@@ -243,19 +256,19 @@ python3 ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
 
 > **접근 주소**: http://\<Your NUC IP\>:8888
 
-<img src="./img/chronograf-1.png" alt="chronograf-1" width="450">
+<img src="./img/chronograf-1.png" alt="chronograf-1">
 
 ### 1-7-1. 대시보드 생성하기
 
-<img src="./img/chronograf-2.png" alt="chronograf-2" width="450">
+<img src="./img/chronograf-2.png" alt="chronograf-2">
 
 ### 1-7-2. 데이터 Source 추가하기
 
-<img src="./img/chronograf-3.png" alt="chronograf-3" width="450">
+<img src="./img/chronograf-3.png" alt="chronograf-3">
 
 ### 1-7-3. 쿼리 등록하기
 
-<img src="./img/chronograf-4.png" alt="chronograf-4" width="450">
+<img src="./img/chronograf-4.png" alt="chronograf-4">
 
 ```sql
 SELECT "memory" FROM "Labs"."autogen"."labs" WHERE time > :dashboardTime:
@@ -267,12 +280,13 @@ SELECT "memory" FROM "Labs"."autogen"."labs" WHERE time > :dashboardTime:
 
 Memory의 현재 상태를 모니터링할 수 있습니다.
 
-<img src="./img/chronograf-5.png" alt="chronograf-5" width="450">
+<img src="./img/chronograf-5.png" alt="chronograf-5">
 
 #### CPU 모니터링
 
 CPU의 현재 상태를 모니터링할 수 있습니다.
-<img src="./img/chronograf-6.png" alt="chronograf-6" width="450">
+
+<img src="./img/chronograf-6.png" alt="chronograf-6">
 
 #### CPU 부하 테스트 ( in PI )
 
@@ -280,7 +294,7 @@ CPU의 현재 상태를 모니터링할 수 있습니다.
 
 우선, Chronograf Dashboard의 Fields를 `CPU_Usage`로 변경합니다
 
-<img src="./img/chronograf-6.png" alt="chronograf-6" width="450">
+<img src="./img/chronograf-6.png" alt="chronograf-6">
 
 그 다음, PI에서 다음의 명령어를 입력해보세요
 
@@ -288,7 +302,9 @@ CPU의 현재 상태를 모니터링할 수 있습니다.
 docker run --rm -it busybox sh -c "while true; do :; done"
 ```
 
-새로고침을 누르다보면 Dashboard의 그래프가 위로 움직이는 것을 확인할 수 있습니다. 확인했으면 `Ctrl + C`를 눌러 CPU 부하를 멈춰주세요.
+새로고침을 누르다보면 Dashboard의 그래프가 위로 움직이는 것을 확인할 수 있습니다.
+
+확인했으면 `Ctrl + C`를 눌러 CPU 부하를 멈춰주세요.
 
 ## 2. Lab Summary
 

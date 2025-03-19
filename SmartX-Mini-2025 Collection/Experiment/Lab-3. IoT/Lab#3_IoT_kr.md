@@ -36,6 +36,8 @@ Node.js는 오픈 소스, 크로스 플랫폼을 지원하는 백엔드 JavaScri
 - 노란색 핀(GPIO4): 일반적인 GPIO 핀으로, 다양한 입력 및 출력 역할을 수행할 수 있습니다.
 - 검은색 핀(GND): 전자의 흐름이 돌아오는 길(기준점) 역할을 합니다. 센서나 LED를 연결할 때 전원(여기서는 3.3V)과 함께 항상 필요한 핀입니다.
 
+> [!important]
+>
 > **이제 위 사진의 빨간색 상자 내부처럼 라즈베리파이에 온습도 센서를 연결해줍니다. 실물 사진은 아래를 참고해주세요!**
 
 <img src="img/pi-sensor.png" alt="pi with sensor" width="450">
@@ -52,8 +54,6 @@ Node.js는 오픈 소스, 크로스 플랫폼을 지원하는 백엔드 JavaScri
 
 아래의 준비된 도커 컨테이너 이미지를 띄워주세요.
 
-(\*연구실에서 수정 작업을 했기 때문에 저 dns가 꼭 필요한지 확인하지 못했으나, 마지막 확인 작업 때 dns 없이도 잘 돌아가는지 확인하고 삭제할 것)
-
 ```bash
 sudo docker run -it --net host --dns 203.237.32.100 --name webserver cheolhuikim/smartx-box-mini
 ```
@@ -66,12 +66,12 @@ apt-get update
 apt-get install vim
 ```
 
-### 2-2. 웹 서버 코드 수정하기 (NUC)
+### 2-2. 웹 서버 코드 수정하기 ( in NUC )
 
 아래 명령어를 입력해 웹 서버 코드를 확인하고, `<NUC IP>`를 여러분의 NUC IP로 수정해주세요.
 
 ```bash
-vi /SmartX-Mini/IoT-labs/webserver.js
+vim /SmartX-Mini/IoT-labs/webserver.js
 ```
 
 <img width="450" alt="image" src="https://user-images.githubusercontent.com/63437430/160828580-7201f53f-e66a-40d3-8682-ca237476b20a.png">
@@ -92,14 +92,15 @@ git clone https://github.com/adafruit/Adafruit_python_DHT.git
 
 라즈베리파이 버전 4를 3으로 인식할 수 있도록 Adafruit_DHT의 패키지 Installer를 수정해줘야합니다.
 
-> **Why?** 라즈베리파이 4의 SoC(System on Chip)는 BCM2711이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 BCM2711을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
+> [!note] Why?
+> 라즈베리파이 4의 SoC(System on Chip)는 BCM2711이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 BCM2711을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
 
 우선, 파일을 열어줍니다
 
 ```bash
 cd Adafruit_python_DHT
 
-sudo vi Adafruit_DHT/platform_detect.py
+sudo vim Adafruit_DHT/platform_detect.py
 ```
 
 **BCM2711**에 대한 case를 `pi_version` 함수에 추가해주고, 3을 return하도록 합니다.
@@ -128,7 +129,7 @@ def pi_version():
 
 sudo apt-get update
 
-sudo apt-get install python3-pip
+sudo apt-get install -y python3-pip
 
 sudo python3 -m pip install --upgrade pip setuptools wheel
 
@@ -169,7 +170,7 @@ cd ~/Adafruit_python_DHT/examples
 테스트 코드를 열고, `python`을 `python3`로 수정합니다
 
 ```bash
-sudo vi AdafruitDHT.py
+sudo vim AdafruitDHT.py
 ```
 
 From
@@ -211,9 +212,9 @@ sudo ./AdafruitDHT.py 11 4
 ```bash
 sudo apt-get update
 
-sudo apt-get install python3-numpy
+sudo apt-get install -y python3-numpy
 
-sudo apt-get install mercurial
+sudo apt-get install -y mercurial
 ```
 
 <details>
@@ -234,7 +235,7 @@ sudo apt-get install mercurial
 센서 데이터 수집 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
 
 ```bash
-vi ~/SmartX-mini/IoT-labs/RPI_capture.py
+vim ~/SmartX-mini/IoT-labs/RPI_capture.py
 ```
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/63437430/160829267-f2198912-a27d-4ee3-9b44-e5af753aff6d.png">
@@ -244,7 +245,7 @@ vi ~/SmartX-mini/IoT-labs/RPI_capture.py
 센서 데이터 전송 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
 
 ```bash
-vi ~/SmartX-mini/IoT-labs/RPI_transfer.py
+vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
 ```
 
 <img width="500" alt="image" src="https://user-images.githubusercontent.com/63437430/160829383-8053b56c-a4ea-42d1-b4d1-220502b7754a.png">

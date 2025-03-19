@@ -154,7 +154,7 @@ hostname | sudo tee /etc/hostname
 `/etc/hosts` 파일 진입
 
 ```shell
-sudo vi /etc/hosts
+sudo vim /etc/hosts
 ```
 
 다음의 context를 붙여넣고 저장합니다.
@@ -169,7 +169,9 @@ sudo vi /etc/hosts
 
 각 노드에서 다른 노드로 연결이 잘 이루어지는지 ping을 사용해 확인합니다.
 
-> **`ping`이란?** ping은 네트워크에서 특정 호스트가 정상적으로 연결되어 있는지 확인하는 명령어입니다. 대상 호스트로 ICMP Echo Request 패킷을 전송하고, 해당 호스트가 ICMP Echo Reply를 반환하면 연결이 정상적으로 이루어졌음을 의미합니다. 이를 통해 네트워크 연결 상태, 응답 시간(RTT), 패킷 손실 여부 등을 확인할 수 있습니다.
+> [!note]
+>
+> `ping`은 네트워크에서 특정 호스트가 정상적으로 연결되어 있는지 확인하는 명령어입니다. 대상 호스트로 ICMP Echo Request 패킷을 전송하고, 해당 호스트가 ICMP Echo Reply를 반환하면 연결이 정상적으로 이루어졌음을 의미합니다. 이를 통해 네트워크 연결 상태, 응답 시간(RTT), 패킷 손실 여부 등을 확인할 수 있습니다.
 
 ```shell
 # At NUC 1
@@ -272,7 +274,8 @@ sudo swapoff -a
 
 ### 2-3-2. Install Kubernetes
 
-> **주의)** 각각의 실행이 정상적으로 이뤄지는지 확인하면서 진행할 것
+> [!warning]
+> 각각의 실행이 정상적으로 이뤄지는지 확인하면서 진행할 것
 
 ```shell
 # At All NUCs
@@ -300,6 +303,7 @@ sudo apt install -y kubeadm=1.28.1-1.1 kubelet=1.28.1-1.1 kubectl=1.28.1-1.1
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
+> [!warning]
 > ⚠️ **만약 preflight 오류가 발생했다면 다음의 작업을 진행해주세요**
 >
 > <img src='img/preflight-error.png' alt='preflight error' width='900'>
@@ -327,7 +331,7 @@ NUC1에서 다음의 명령어를 실행합니다.
 
 ```shell
 # At NUC1
-rm -r $HOME/.kube
+# rm -r $HOME/.kube
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -352,7 +356,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 빨간 칸 안에 있는 명령어를 복사하고, 앞에 `sudo`를 붙여 NUC2와 NUC3에 입력합니다.
 
-> (에러) preflight 에러 발생 시, --ignore-preflight-errors=all 맨 뒤에 붙여서 다시 입력합니다.
+> [!warning]
+>
+> **preflight 에러 발생 시**, --ignore-preflight-errors=all 맨 뒤에 붙여서 다시 입력합니다.
 
 ### 2-4-4. Check Nodes at NUC1
 
@@ -394,6 +400,8 @@ Flannel CNI 설치 후 약간의 시간이 지나고 위 명령어를 입력하�
 kubectl get po -n kube-system -o wide
 ```
 
+> [!note]
+>
 > **명령어 보충 설명**
 >
 > `kubectl get po -n kube-system -o wide`
@@ -574,7 +582,7 @@ Deployment는 Pod의 생성 및 관리를 자동화하는 쿠버네티스의 컨
 
    ```shell
    kubectl apply -f simple-app-deployment.yaml
-   kubectl get pods  # 여러 개의 Pod 확인
+   kubectl get pods -o wide # 여러 개의 Pod 확인
    ```
 
    <img src='img/simple-app/simple-4.png' alt='simple 4'>
@@ -765,6 +773,8 @@ Rolling Update는 기존 Pod을 점진적으로 새로운 버전으로 교체하
    이전 버전(v1)으로 정상적으로 복구되었는지 확인
 
    <img src='img/simple-app/simple-15.png' alt='simple 15'>
+
+   **이제 Pod의 개수를 3개로 Scale-down하고, Pod의 개수가 줄어든 것을 확인해주세요!**
 
 지금까지, 쿠버네티스에서 Pod, Deployment, Service를 활용한 애플리케이션 배포 및 업데이트를 실습했습니다.
 

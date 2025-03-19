@@ -55,6 +55,8 @@ kubectl proxy
 
 &nbsp;
 
+> [!note]
+>
 > **`kubectl proxy`?**
 >
 > **kubectl proxy**는 로컬 머신에서 **Kubernetes API 서버**로 안전하게 요청을 전달하는 **프록시** 역할을 합니다.
@@ -63,11 +65,11 @@ kubectl proxy
 >
 > kubectl proxy를 실행하면 로컬 브라우저에서 대시보드에 안전하게 접속할 수 있도록 **API 서버와의 인증을 자동 처리**하며, **추가적인 네트워크 설정 없이 내부 서비스에 접근**할 수 있습니다.
 
-&nbsp;
-
 kubectl proxy 명령어 입력 후 proxy가 실행되면, 새로운 터미널에서 작업을 이어갑니다. 새로운 터미널을 열어주세요!
 
-> **Tip!** 새로운 터미널 열기 단축키 `Ctrl + Shift + T`
+> [!tip]
+>
+> **새로운 터미널 열기 단축키 `Ctrl + Shift + T`**
 
 ## 2-2. 대시보드 접근을 위한 토큰 발급
 
@@ -128,6 +130,8 @@ kubectl -n kubernetes-dashboard create token admin-user
 
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 
+> [!warning]
+>
 > ⚠️ **오류 발생 시, `kubectl proxy` 명령어가 제대로 실행됐는지 확인해주세요!**
 
 &nbsp;
@@ -144,6 +148,8 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 
 &nbsp;
 
+> [!warning]
+>
 > ⚠️ **오류 발생 시** 아래 공식 문서 참고
 >
 > https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
@@ -158,7 +164,7 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 
 또한 새로운 Pod가 생성된 것을 알 수 있는데요, 현재 대시보드를 통해 보고있는 Pod들은 `Deployment`에 의해 배포되었기 때문에 `replica` 수 유지를 위해 새로운 Pod가 생성된 것입니다.
 
-> **Review**: 쿠버네티스의 `Self-healing` 기능
+### 2-4-1. Review: 쿠버네티스의 `Self-healing` 기능
 
 <img src='img/4-pod-delete-result-dashboard.png' alt='pod delete dashboard'>
 
