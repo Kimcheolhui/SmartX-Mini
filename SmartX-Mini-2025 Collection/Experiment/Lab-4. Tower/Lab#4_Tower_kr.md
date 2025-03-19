@@ -89,7 +89,9 @@ sudo docker run -p 8888:8888 --name chronograf chronograf --influxdb-url http://
 
 #### 1-3-1. python-pip 설치
 
-> **Tip!** 새로운 터미널 열기 `Ctrl+Shift+t`
+> [!tip]
+>
+> **새로운 터미널 열기 `Ctrl+Shift+t`**
 
 ```bash
 sudo apt-get install -y libcurl4 openssl curl python3-pip
@@ -194,7 +196,9 @@ sudo vim /etc/hosts
 
 만약 기존에 작성했던 정보가 사라져있다면, 아래 2개의 lines을 추가하고 저장해주세요.
 
-> **주의**: < >는 본인에게 해당되는 정보로 교체해야함
+> [!warning]
+>
+> `<>`는 본인에게 해당되는 정보로 교체해야함
 
 ```
 <NUC_IP> >NUC_HOSTNAME>

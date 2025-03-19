@@ -36,6 +36,8 @@ Node.js는 오픈 소스, 크로스 플랫폼을 지원하는 백엔드 JavaScri
 - 노란색 핀(GPIO4): 일반적인 GPIO 핀으로, 다양한 입력 및 출력 역할을 수행할 수 있습니다.
 - 검은색 핀(GND): 전자의 흐름이 돌아오는 길(기준점) 역할을 합니다. 센서나 LED를 연결할 때 전원(여기서는 3.3V)과 함께 항상 필요한 핀입니다.
 
+> [!important]
+>
 > **이제 위 사진의 빨간색 상자 내부처럼 라즈베리파이에 온습도 센서를 연결해줍니다. 실물 사진은 아래를 참고해주세요!**
 
 <img src="img/pi-sensor.png" alt="pi with sensor" width="450">
@@ -90,7 +92,8 @@ git clone https://github.com/adafruit/Adafruit_python_DHT.git
 
 라즈베리파이 버전 4를 3으로 인식할 수 있도록 Adafruit_DHT의 패키지 Installer를 수정해줘야합니다.
 
-> **Why?** 라즈베리파이 4의 SoC(System on Chip)는 BCM2711이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 BCM2711을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
+> [!note] Why?
+> 라즈베리파이 4의 SoC(System on Chip)는 BCM2711이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 BCM2711을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
 
 우선, 파일을 열어줍니다
 
