@@ -1,0 +1,5 @@
+- The issue occurs because the bridge-nf-call-iptables kernel module is missing or no loaded. Kebernetes requires this module to enable iptables rules for bridges traffic, and if it's missing, kubeadm initialization fails.
+- This can happend due to:
+  1. The br_netfilter module is not loaded.
+  2. The `/proc/sys/net/bridge/bridge-nf-call-iptables` file does not exit because the kernel module is missing.
+  3. The host system does not have necessary kernel configurations.
