@@ -958,7 +958,7 @@ If everything is configured correctly, you should see the message displayed in t
 > 
 > If `snmpd` is well-configured, and no error is shown on `producer`, but you can see any logs on `consumer`, Please remove and re-build the image `raspbian-flume`. Sometimes docker reports build process completed without error, yet unknown error has occurred on build process.
 >
-> 재빌드 과정은 다음과 같이 진행됩니다.
+> To remove and rebuild the image, enter commands below:
 > ```bash
 > sudo docker ps -A # list every created containers. 
 >
