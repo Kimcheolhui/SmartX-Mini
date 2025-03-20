@@ -68,13 +68,18 @@ apt-get install vim
 
 ### 2-2. 웹 서버 코드 수정하기 ( in NUC )
 
-아래 명령어를 입력해 웹 서버 코드를 확인하고, `<NUC IP>`를 여러분의 NUC IP로 수정해주세요.
+아래 명령어를 이력해 웹서버 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
+
+이 웹서버는 요청의 path에 따라
+
+1. 값을 전달 받아 정보를 업데이트 하거나
+2. 저장된 정보를 json 형식으로 반환해주는 역할을 합니다.
 
 ```bash
 vim /SmartX-Mini/IoT-labs/webserver.js
 ```
 
-<img width="450" alt="image" src="https://user-images.githubusercontent.com/63437430/160828580-7201f53f-e66a-40d3-8682-ca237476b20a.png">
+<img src="img/webserver.png" alt="webserver code">
 
 ### 2-3. 온습도 센서 테스트 ( in PI )
 
@@ -126,7 +131,6 @@ def pi_version():
 패키지 Installer를 수정했으므로, 이제 필요한 패키지들을 설치해줍니다. 약간 시간이 걸릴 수 있습니다.
 
 ```bash
-
 sudo apt-get update
 
 sudo apt-get install -y python3-pip
@@ -201,7 +205,7 @@ sudo ./AdafruitDHT.py 11 4
 2. 아무런 문제를 발견하지 못했다면, 패키지 설치가 제대로 됐는지 확인해주세요. 패키지를 다시 설치해보는 것도 방법이 될 수 있습니다.
 3. 센서 자체의 문제일 수 있습니다. 만약 여전히 문제가 해결되지 않았다면, 조교를 호출해주세요.
 
-<img width="450" alt="image" src="https://user-images.githubusercontent.com/63437430/160829118-04bae048-2cf3-4c3f-8cd9-4b9295b019d0.png">
+<img alt="image" src="https://user-images.githubusercontent.com/63437430/160829118-04bae048-2cf3-4c3f-8cd9-4b9295b019d0.png">
 
 ### 2-4. 센서 데이터 수집과 전송 ( in PI )
 
@@ -232,23 +236,25 @@ sudo apt-get install -y mercurial
 
 #### 2-4-2. 센서 데이터 수집 코드
 
-센서 데이터 수집 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
+아래 명령어를 이력해 센서 데이터 전송 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
+
+**이 코드는 라즈베리파이에서 실행되며, 센서로부터 데이터를 읽어와 파일에 저장하는 역할을 합니다.**
 
 ```bash
 vim ~/SmartX-mini/IoT-labs/RPI_capture.py
 ```
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/63437430/160829267-f2198912-a27d-4ee3-9b44-e5af753aff6d.png">
+<img src="img/rpi_capture.png" alt="rpi capture code">
 
 #### 2-4-3. 센서 데이터 전송 코드
 
-센서 데이터 전송 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
+저장된 센서 데이터를 전송하는 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
 
 ```bash
 vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
 ```
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/63437430/160829383-8053b56c-a4ea-42d1-b4d1-220502b7754a.png">
+<img src="img/rpi_transfer.png" alt="rpi transfer code">
 
 ### 2-5. IoT Web Service 실행하기
 
@@ -266,11 +272,12 @@ nodejs webserver.js
 
 #### 2-5-2. 센서 데이터를 수집하고 전송하기 ( in PI )
 
-다음의 명령어를 실행해주세요. `process.sh`는 아까 수정했던 `RPI_capture.py`와 `RPI_transfer.py` 파일을 순차적으로 실행합니다.
+다음의 명령어를 실행해주세요. `process.sh`는 방금 전 살펴본 `RPI_capture.py`와 `RPI_transfer.py` 파일을 반복적으로 실행합니다.
 
 ```bash
 cd ~/SmartX-mini/IoT-labs
 
+# 실행 권한 부여
 chmod +x process.sh
 
 sudo ./process.sh
