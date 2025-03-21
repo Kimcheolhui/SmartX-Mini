@@ -220,7 +220,7 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt install -y git-lfs
 git lfs install
 git clone https://github.com/SmartX-Labs/SmartX-Mini.git
-cd ~/SmartX-Mini/SmartX-Mini-2025\ Collection/Experiment/Lab-2.\ InterConnect/
+cd ~/SmartX-Mini/SmartX-Mini-2025/Experiment/Lab-2.\ InterConnect/
 ```
 
 <details>
@@ -282,7 +282,7 @@ ls -alh # Check all files
 > 참고2: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html
 
 ```bash
-pwd # 현재 Directory가 "SmartX-Mini/SmartX-Mini-2025 Collection/Experiment/Lab-2. InterConnect/"인지 확인
+pwd # 현재 Directory가 "SmartX-Mini/SmartX-Mini-2025/Experiment/Lab-2. InterConnect/"인지 확인
 sudo vim network-config
 ```
 
