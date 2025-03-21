@@ -133,9 +133,10 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 
 > [!warning]
 > 
-> VM이 사용하는 IP를 Pi에 부여할 예정이므로, IP 충돌 문제를 방지하기 위해 VM을 종료합니다.
+> 만약 Container와 VM이 동작 중인 경우, IP 충돌 문제를 방지하기 위해 Container와 VM을 종료하여 주십시오.
 > 
 > ```bash
+> sudo docker stop <container_name>
 > sudo killall -9 qemu-system-x86_64  # if can not kill it, use sudo killall -9 kvm
 > ```
 

@@ -138,9 +138,10 @@ In this lab, Flume will be used to gather system status data from `snmpd` via SN
 
 > [!warning]
 >
-> To prevent collision, please turn off VM, since VM uses IP address of Pi.
+> To prevent IP confilct, if VM and Docker Container are running, please turn off both.
 > 
 > ```bash
+> sudo docker stop <container_name>
 > sudo killall -9 qemu-system-x86_64  # if can not kill it, use sudo killall -9 kvm
 > ```
 
