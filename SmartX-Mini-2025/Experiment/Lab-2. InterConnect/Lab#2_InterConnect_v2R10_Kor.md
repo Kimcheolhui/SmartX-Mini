@@ -742,7 +742,7 @@ sudo docker run -it --net=host --name consumer ubuntu-kafka
 다음의 명령어를 통해 `zookeeper.properties` 파일을 확인하도록 하겠습니다.
 
 ```bash
-sudo vi config/zookeeper.properties
+sudo vim config/zookeeper.properties
 ```
 
 해당 파일에서 Client Port가 `2181`으로 설정되어있는지 확인해주시고, 아니라면 `2181`로 수정해주십시오.
@@ -763,7 +763,7 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 이때, Broker ID와 Listening Port는 Broker 간에 중복되어서는 안된다는 점 참고 바랍니다.
 
 ```bash
-sudo vi config/server.properties
+sudo vim config/server.properties
 ```
 
 | Function(container) Name | IP Address | Broker ID | Listening Port |
@@ -825,7 +825,7 @@ sudo apt install -y snmp snmpd snmp-mibs-downloader openjdk-8-jdk
 이제 설정파일을 수정하겠습니다. 편집기로 파일을 열어 `#rocommunity public localhost`를 찾고, `#`을 제거해주십시오.
 
 ```bash
-sudo vi /etc/snmp/snmpd.conf
+sudo vim /etc/snmp/snmpd.conf
 ```
 
 설정파일이 반영되도록 `snmpd.service`를 다음의 명령어를 통해 재시작하겠습니다.
@@ -902,7 +902,7 @@ sudo docker run -it --net=host --name flume raspbian-flume
 먼저, `flume`의 설정 파일을 수정하도록 하겠습니다. 다음의 명령어를 통해 설정 파일에 접근합니다.
 
 ```bash
-sudo vi conf/flume-conf.properties
+sudo vim conf/flume-conf.properties
 ```
 
 파일 내에서 `brokerList`를 찾아 `nuc`을 Pi의 `/etc/hosts`에 기록한 NUC Hostname으로 수정해주십시오.

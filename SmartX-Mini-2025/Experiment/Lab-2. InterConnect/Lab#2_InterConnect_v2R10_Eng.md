@@ -751,7 +751,7 @@ First, access the `zookeeper` container to configure it. <br>
 Use the following command to check the `zookeeper.properties` file:
 
 ```bash
-sudo vi config/zookeeper.properties
+sudo vim config/zookeeper.properties
 ```
 
 Ensure that the Client Port is set to `2181`. If not, modify the file to reflect this value:
@@ -769,7 +769,7 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 Next, access each broker container to configure them. Open the configuration file using the following command:
 
 ```bash
-sudo vi config/server.properties
+sudo vim config/server.properties
 ```
 
 Refer to the table below and ensure each broker is set with unique values for Broker ID and Listening Port:
@@ -833,7 +833,7 @@ sudo apt install -y snmp snmpd snmp-mibs-downloader openjdk-8-jdk
 Next, open the SNMP daemon configuration file, find `#rocommunity public localhost`, and remove `#`.
 
 ```bash
-sudo vi /etc/snmp/snmpd.conf
+sudo vim /etc/snmp/snmpd.conf
 ```
 
 Restart the `snmpd.service` to apply the changes:
@@ -910,7 +910,7 @@ sudo docker run -it --net=host --name flume raspbian-flume
 First, open the `flume` configuration file:
 
 ```bash
-sudo vi conf/flume-conf.properties
+sudo vim conf/flume-conf.properties
 ```
 
 Locate the `brokerList` entry and update the hostname to the value you used for the NUC in the Pi's `/etc/hosts` file.
