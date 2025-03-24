@@ -133,9 +133,10 @@ Flume의 Data Flow Model은 하단의 그림과 같으며, 크게 3가지 요소
 
 > [!warning]
 > 
-> VM이 사용하는 IP를 Pi에 부여할 예정이므로, IP 충돌 문제를 방지하기 위해 VM을 종료합니다.
+> 만약 Container와 VM이 동작 중인 경우, IP 충돌 문제를 방지하기 위해 Container와 VM을 종료하여 주십시오.
 > 
 > ```bash
+> sudo docker stop <container_name>
 > sudo killall -9 qemu-system-x86_64  # if can not kill it, use sudo killall -9 kvm
 > ```
 
@@ -219,7 +220,7 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt install -y git-lfs
 git lfs install
 git clone https://github.com/SmartX-Labs/SmartX-Mini.git
-cd ~/SmartX-Mini/SmartX-Mini-2025\ Collection/Experiment/Lab-2.\ InterConnect/
+cd ~/SmartX-Mini/SmartX-Mini-2025/Experiment/Lab-2.\ InterConnect/
 ```
 
 <details>
@@ -281,7 +282,7 @@ ls -alh # Check all files
 > 참고2: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html
 
 ```bash
-pwd # 현재 Directory가 "SmartX-Mini/SmartX-Mini-2025 Collection/Experiment/Lab-2. InterConnect/"인지 확인
+pwd # 현재 Directory가 "SmartX-Mini/SmartX-Mini-2025/Experiment/Lab-2. InterConnect/"인지 확인
 sudo vim network-config
 ```
 
@@ -639,35 +640,22 @@ NUC과 Pi가 Hostname을 이용하여 정상적으로 통신할 수 있게 되�
 |         broker2          | Host's IP  |     2     |      9092      |
 |         consumer         | Host's IP  |     -     |       -        |
 
-### 2-4-1. (NUC) Clone repository from GitHub
+### 2-4-1. (NUC) Dockerfile 확인
 
-먼저, 컨테이너를 생성하기 위한 이미지 파일을 빌드할 것입니다. <br>
-빌드에 필요한 데이터가 포함된 Repository를 Clone해주시기 바랍니다.
-
-> [!warning]
-> 
-> 이번에 Clone할 Repository(`SmartX-mini`)는 이전에 Clone하였던 `SmartX-Mini`와 다른 Repository입니다. <br>
-> 오타에 유의 바랍니다.
-
-```bash
-cd ~
-git clone https://github.com/SmartX-Box/SmartX-mini.git
-```
-
-이번에는 `ubuntu-kafka`를 사용하여 이미지 파일을 빌드하겠습니다. <br>
+먼저, `ubuntu-kafka`를 사용하여 이미지 파일을 빌드하겠습니다. <br>
 하단의 명령어를 통해 지정한 디렉토리로 이동해주십시오.
 
 ```bash
-cd ~/SmartX-mini/ubuntu-kafka
+cd ~/SmartX-Mini/SmartX-Box/ubuntu-kafka
 ```
-
-### 2-4-2. (NUC) Dockerfile 확인
 
 디렉토리 내 `Dockerfile`이 하단과 동일한지 확인해주십시오.
 
 ```dockerfile
 FROM ubuntu:14.04
 LABEL "maintainer"="Seungryong Kim <srkim@nm.gist.ac.kr>"
+
+RUN sed -i 's@archive.ubuntu.com@mirror.kakao.com@g' /etc/apt/sources.list
 
 #Update & Install wget
 RUN sudo apt-get update
@@ -685,7 +673,10 @@ WORKDIR /kafka
 > 
 > 이미지 파일 빌드 과정에서 `apt`를 통한 패키지 다운로드에 많은 시간이 소요됩니다.
 > 
-> 만약 빌드 속도를 높이고자 하실 경우, 하단을 참고하여 `apt-get update` 이전에 `sed` 명령을 추가하여 APT 레포지토리 경로를 국내 미러 사이트로 수정해주시기 바랍니다.
+> 지역적으로 가까울수록 다운로드 속도는 일반적으로 높지만, 기본 레포지토리는 보통 해외에 있고 느립니다. 따라서 속도 향상을 위해 지역적으로 가까운 위치의 미러 서버를 사용합니다.
+>
+> 해당 설정은 Dockerfile 명령 중 하단의 `sed`를 통해 이루어집니다. 지금은 카카오의 미러 서버를 가리키도록 수정하지만, 다른 서버를 사용하고자 할 경우 `mirror.kakao.com`의 주소를 다른 값(Lanet, KAIST 미러 서버 등)으로 수정하면 됩니다.
+> 
 > ```dockerfile
 > …
 > 
@@ -696,7 +687,7 @@ WORKDIR /kafka
 > …
 > ```
 
-### 2-4-3. (NUC) Docker Image 빌드
+### 2-4-2. (NUC) Docker Image 빌드
 
 `Dockerfile`이 올바르게 작성되어 있다면, 이를 이용하여 `docker build`를 통해 Docker Image 생성을 진행하겠습니다. <br>
 하단의 명령을 입력하여 Image 생성을 진행해주십시오. 
@@ -725,7 +716,7 @@ sudo docker build --tag ubuntu-kafka .
 > 이때 `<container_id>`는 `docker ps` 기준 (겹치지만 않는다면) ID의 앞 4글자만 입력해도 정상적으로 처리됩니다.
 >
 
-### 2-4-4. (NUC) Docker Container 배치
+### 2-4-3. (NUC) Docker Container 배치
 
 `ubuntu-kafka` 이미지 생성이 완료된 경우, 다음의 명령어를 통해 Docker Container를 생성하겠습니다. <br>
 컨테이너 각각에게 `zookeeper`, `broker0`, `broker1`, `broker2`, `consumer`라는 이름을 붙이겠습니다. 
@@ -745,13 +736,13 @@ sudo docker run -it --net=host --name broker2 ubuntu-kafka
 sudo docker run -it --net=host --name consumer ubuntu-kafka
 ```
 
-### 2-4-5. (NUC - `zookeeper` Container) Zookeeper 설정
+### 2-4-4. (NUC - `zookeeper` Container) Zookeeper 설정
 
 먼저 `zookeeper` 컨테이너에 접근하여 설정을 진행하도록 하겠습니다. <br>
 다음의 명령어를 통해 `zookeeper.properties` 파일을 확인하도록 하겠습니다.
 
 ```bash
-sudo vi config/zookeeper.properties
+sudo vim config/zookeeper.properties
 ```
 
 해당 파일에서 Client Port가 `2181`으로 설정되어있는지 확인해주시고, 아니라면 `2181`로 수정해주십시오.
@@ -763,16 +754,16 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 
 > [!warning]
 > 
-> Zookeeper는 항상 Broker보다 먼저 실행되어있어야 합니다. 환경을 다시 구성하실 때 이 점 유의 바랍니다.
+> Zookeeper는 항상 Broker보다 먼저 실행되어야 합니다. 환경을 다시 구성하실 때 이 점 유의 바랍니다.
 
-### 2-4-6. (NUC - `brokerN` Container) Broker 설정
+### 2-4-5. (NUC - `brokerN` Container) Broker 설정
 
 다음으로 각 `broker` 컨테이너에 접근하여 설정을 진행하도록 하겠습니다. <br>
 하단의 명령어를 통해 설정 파일을 열어주시고, 하단의 이미지를 참고하여 각 Broker가 하단의 표와 같은 값을 갖도록 설정해주십시오. <br>
 이때, Broker ID와 Listening Port는 Broker 간에 중복되어서는 안된다는 점 참고 바랍니다.
 
 ```bash
-sudo vi config/server.properties
+sudo vim config/server.properties
 ```
 
 | Function(container) Name | IP Address | Broker ID | Listening Port |
@@ -789,7 +780,7 @@ sudo vi config/server.properties
 bin/kafka-server-start.sh config/server.properties
 ```
 
-### 2-4-7. (NUC - `consumer` Container) Consumer Topic 설정
+### 2-4-6. (NUC - `consumer` Container) Consumer Topic 설정
 
 이제 Consumer 컨테이너에 접근하여 Kafka에 `resource`라는 Topic을 생성할 것입니다. <br>
 하단의 명령어를 통해 Topic을 생성해주십시오.
@@ -834,7 +825,7 @@ sudo apt install -y snmp snmpd snmp-mibs-downloader openjdk-8-jdk
 이제 설정파일을 수정하겠습니다. 편집기로 파일을 열어 `#rocommunity public localhost`를 찾고, `#`을 제거해주십시오.
 
 ```bash
-sudo vi /etc/snmp/snmpd.conf
+sudo vim /etc/snmp/snmpd.conf
 ```
 
 설정파일이 반영되도록 `snmpd.service`를 다음의 명령어를 통해 재시작하겠습니다.
@@ -845,17 +836,17 @@ sudo systemctl restart snmpd.service
 
 ### 2-5-2. (PI) Clone repository from GitHub
 
-Pi에서도 `SmartX-mini` Repository를 Clone하겠습니다.
+Pi에서도 `SmartX-Mini` Repository를 Clone하겠습니다.
 
 ```bash
 cd ~
-git clone https://github.com/SmartXBox/SmartX-mini.git
+git clone https://github.com/SmartX-Labs/SmartX-Mini.git
 ```
 
 Pi에서는 `flume`을 배치할 것이므로, `raspbian-flume`으로 이동해주십시오.
 
 ```bash
-cd ~/SmartX-mini/raspbian-flume
+cd ~/SmartX-Mini/SmartX-Box/raspbian-flume
 ```
 
 ### 2-5-3. (PI) Check Dockerfile
@@ -864,10 +855,9 @@ cd ~/SmartX-mini/raspbian-flume
 
 >  [!caution]
 >
-> Clone 직후의 Dockerfile은 `FROM balenalib/rpi-raspbian:stretch`로 지정되어 있습니다. <br>
-> 반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정하시기 바랍니다.
+> 만약 Image가 `FROM balenalib/rpi-raspbian:stretch`로 지정된 경우, 반드시 이를 `FROM balenalib/rpi-raspbian:buster`로 수정하시기 바랍니다.
 >
-> 수정하지 않고 빌드하실 경우, 빌드 과정 중 `apt update`가 정상적으로 진행되지 않아 실패하게 됩니다.
+> `stretch` 이미지에 포함된 APT 레포지토리 서버 중 일부가 운영을 중단하였기 때문에 404 Error와 함께 Build 과정이 실패하게 됩니다.
 
 ```dockerfile
 FROM balenalib/rpi-raspbian:buster
@@ -912,7 +902,7 @@ sudo docker run -it --net=host --name flume raspbian-flume
 먼저, `flume`의 설정 파일을 수정하도록 하겠습니다. 다음의 명령어를 통해 설정 파일에 접근합니다.
 
 ```bash
-sudo vi conf/flume-conf.properties
+sudo vim conf/flume-conf.properties
 ```
 
 파일 내에서 `brokerList`를 찾아 `nuc`을 Pi의 `/etc/hosts`에 기록한 NUC Hostname으로 수정해주십시오.

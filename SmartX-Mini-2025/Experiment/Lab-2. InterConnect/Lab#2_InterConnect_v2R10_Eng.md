@@ -138,9 +138,10 @@ In this lab, Flume will be used to gather system status data from `snmpd` via SN
 
 > [!warning]
 >
-> To prevent collision, please turn off VM, since VM uses IP address of Pi.
+> To prevent IP confilct, if VM and Docker Container are running, please turn off both.
 > 
 > ```bash
+> sudo docker stop <container_name>
 > sudo killall -9 qemu-system-x86_64  # if can not kill it, use sudo killall -9 kvm
 > ```
 
@@ -224,7 +225,7 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt install -y git-lfs
 git lfs install
 git clone https://github.com/SmartX-Labs/SmartX-Mini.git
-cd ~/SmartX-Mini/SmartX-Mini-2025\ Collection/Experiment/Lab-2.\ InterConnect/
+cd ~/SmartX-Mini/SmartX-Mini-2025/Experiment/Lab-2.\ InterConnect/
 ```
 
 <details>
@@ -288,7 +289,7 @@ ls -alh # Check all files
 > REF2: https://cloudinit.readthedocs.io/en/stable/reference/datasources/nocloud.html
 
 ```bash
-pwd # check working directory is "SmartX-Mini/SmartX-Mini-2025 Collection/Experiment/Lab-2. InterConnect/"
+pwd # check working directory is "SmartX-Mini/SmartX-Mini-2025/Experiment/Lab-2. InterConnect/"
 sudo vim network-config
 ```
 
@@ -649,35 +650,23 @@ Zookeeper does not require a Broker ID, while each Kafka broker will be assigned
 |         broker2          | Host's IP  |     2     |      9092      |
 |         consumer         | Host's IP  |     -     |       -        |
 
-### 2-4-1. (NUC) Clone repository from GitHub
+### 2-4-1. (NUC) Check Dockerfile
 
 First, we will build the Docker image required to create the containers. <br>
-Clone the repository containing the necessary files using the following command.
-
->  [!warning]
-> 
-> Ensure that you clone the `SmartX-mini` repository, not the previously cloned `SmartX-Mini` repository. <br> 
-> Pay attention to the correct capitalization.
-
-```bash
-cd ~
-git clone https://github.com/SmartX-Box/SmartX-mini.git
-```
-
 We will use the `ubuntu-kafka` directory to build the image. <br>
 Navigate to this directory using the command below.
 
 ```bash
-cd ~/SmartX-mini/ubuntu-kafka
+cd ~/SmartX-Mini/SmartX-Box/ubuntu-kafka
 ```
-
-### 2-4-2. (NUC) Check Dockerfile
 
 Check that the `Dockerfile` in the current directory matches the expected contents.
 
 ```dockerfile
 FROM ubuntu:14.04
 LABEL "maintainer"="Seungryong Kim <srkim@nm.gist.ac.kr>"
+
+RUN sed -i 's@archive.ubuntu.com@mirror.kakao.com@g' /etc/apt/sources.list
 
 #Update & Install wget
 RUN sudo apt-get update
@@ -695,7 +684,8 @@ WORKDIR /kafka
 >
 > Downloading packages via `apt` during the image build process can be slow.
 > 
-> To speed up the build, consider updating the APT repository to a mirror server by adding the following `sed` command before `apt-get update` in the Dockerfile:
+> To speed up the build, consider updating the APT repository to a mirror server by changing the following `sed` command.
+> 
 > ```dockerfile
 > …
 > 
@@ -706,7 +696,7 @@ WORKDIR /kafka
 > …
 > ```
 
-### 2-4-3. (NUC) Build Docker Image
+### 2-4-2. (NUC) Build Docker Image
 
 Once you have verified the `Dockerfile`, proceed to build the Docker image using the following command: 
 
@@ -736,7 +726,7 @@ sudo docker build --tag ubuntu-kafka .
 > You can use the first 4 characters of the container ID shown by `docker ps` as `<container id>`, as long as they are unique.
 >
 
-### 2-4-4. (NUC) Deploy Docker Containers
+### 2-4-3. (NUC) Deploy Docker Containers
 
 Once the `ubuntu-kafka` image is built, create and run the following Docker containers: `zookeeper`, `broker0`, `broker1`, `broker2`, `consumer`.
 
@@ -755,13 +745,13 @@ sudo docker run -it --net=host --name broker2 ubuntu-kafka
 sudo docker run -it --net=host --name consumer ubuntu-kafka
 ```
 
-### 2-4-5. (NUC - `zookeeper` Container) Configure Zookeeper
+### 2-4-4. (NUC - `zookeeper` Container) Configure Zookeeper
 
 First, access the `zookeeper` container to configure it. <br>
 Use the following command to check the `zookeeper.properties` file:
 
 ```bash
-sudo vi config/zookeeper.properties
+sudo vim config/zookeeper.properties
 ```
 
 Ensure that the Client Port is set to `2181`. If not, modify the file to reflect this value:
@@ -774,12 +764,12 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 >
 > Zookeeper must always be started before Kafka brokers. Ensure this order is maintained when reconfiguring the environment.
 
-### 2-4-6. (NUC - `brokerN` Container) Broker Configuration
+### 2-4-5. (NUC - `brokerN` Container) Broker Configuration
 
 Next, access each broker container to configure them. Open the configuration file using the following command:
 
 ```bash
-sudo vi config/server.properties
+sudo vim config/server.properties
 ```
 
 Refer to the table below and ensure each broker is set with unique values for Broker ID and Listening Port:
@@ -798,7 +788,7 @@ After configuring each broker, start the Kafka brokers using the following comma
 bin/kafka-server-start.sh config/server.properties
 ```
 
-### 2-4-7. (NUC - `consumer` Container) Consumer Topic Setup
+### 2-4-6. (NUC - `consumer` Container) Consumer Topic Setup
 
 Access the `consumer` container to create a resource topic in Kafka. <br>
 Use the following command to create the topic:
@@ -843,7 +833,7 @@ sudo apt install -y snmp snmpd snmp-mibs-downloader openjdk-8-jdk
 Next, open the SNMP daemon configuration file, find `#rocommunity public localhost`, and remove `#`.
 
 ```bash
-sudo vi /etc/snmp/snmpd.conf
+sudo vim /etc/snmp/snmpd.conf
 ```
 
 Restart the `snmpd.service` to apply the changes:
@@ -858,13 +848,13 @@ Clone the `SmartX-mini` repository on the Pi:
 
 ```bash
 cd ~
-git clone https://github.com/SmartXBox/SmartX-mini.git
+git clone https://github.com/SmartX-Labs/SmartX-Mini.git
 ```
 
 Navigate to the `raspbian-flume` directory where we will deploy Flume:
 
 ```bash
-cd ~/SmartX-mini/raspbian-flume
+cd ~/SmartX-Mini/SmartX-Box/raspbian-flume
 ```
 
 ### 2-5-3. Check Dockerfile
@@ -875,7 +865,7 @@ Open the `Dockerfile` and ensure the contents match the following configuration:
 >
 > Ensure the base image is set to `FROM balenalib/rpi-raspbian:buster`, not `stretch`.
 >
-> If you don't modify it, you may encounter the build failure, since `apt update` failed.
+> If base image is `stretch`, you may encounter the build failure.
 
 ```dockerfile
 FROM balenalib/rpi-raspbian:buster
@@ -920,7 +910,7 @@ sudo docker run -it --net=host --name flume raspbian-flume
 First, open the `flume` configuration file:
 
 ```bash
-sudo vi conf/flume-conf.properties
+sudo vim conf/flume-conf.properties
 ```
 
 Locate the `brokerList` entry and update the hostname to the value you used for the NUC in the Pi's `/etc/hosts` file.
