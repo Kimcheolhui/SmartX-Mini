@@ -1,12 +1,12 @@
 # Lab#3. IoT Lab
 
-## 0. Objective
+# 0. Objective
 
 <img width="916" alt="image" src="https://user-images.githubusercontent.com/63437430/161034315-b201ae9e-463e-44d3-a02f-4796a90f6ee4.png">
 
 **이번 Lab의 목표는 IoT 센서를 활용하여 데이터를 수집하고, 이를 서버에 전달하는 IoT-Cloud Hub를 구축하는 것입니다.**
 
-### 0-1. Lab Goal
+## 0-1. Lab Goal
 
 - 라즈베리파이를 이용한 IoT 센서 데이터 수집
 - 센서 데이터를 클라우드 서버로 전송
@@ -14,19 +14,19 @@
 
 이번 Lab에서는 라즈베리파이(Raspberry Pi) 를 사용하여 센서 데이터를 수집하고, 이를 NUC 서버에서 처리하여 시각화하는 과정을 실습합니다.
 
-### 0-2. IoT-Cloud 시스템이 왜 필요한가?
+## 0-2. IoT-Cloud 시스템이 왜 필요한가?
 
 IoT 기기에서 수집되는 데이터는 개별적으로는 의미가 크지 않지만, 이를 클라우드에서 통합 및 분석하면 강력한 정보나 인사이트를 얻을 수 있습니다. 이러한 데이터는 실시간 모니터링, 자동화, 원격 제어 등의 다양한 분야에서 활용됩니다. Tower Lab에서 진행한 모니터링 시스템 구축과 그 필요성이 비슷하며, 이 Lab에서는 IoT를 활용한 모니터링 시스템이라고 볼 수 있습니다.
 
-### 0-3. Node.js
+## 0-3. Node.js
 
 Node.js는 오픈 소스, 크로스 플랫폼을 지원하는 백엔드 JavaScript 런타임 환경으로, V8 엔진에서 실행되며 웹 브라우저 외부에서도 JavaScript 코드를 실행할 수 있습니다. Node.js를 사용하면 개발자가 JavaScript로 명령줄 도구(Command Line Tool)를 작성하거나, 서버 측 스크립트(Server-Side Scripting)를 실행하여 웹 페이지가 사용자에게 전송되기 전에 동적으로 콘텐츠를 생성할 수 있습니다. 결과적으로, Node.js는 "JavaScript everywhere" 패러다임을 실현하여, 서버와 클라이언트에서 각각 다른 언어를 사용할 필요 없이 단일 프로그래밍 언어(JavaScript)로 웹 애플리케이션을 개발할 수 있도록 해줍니다. 이번 Lab에서는 IoT 센서 데이터를 저장하고 간단한 시각화를 위해 Node.js를 사용합니다.
 
-### 0-4. Adafruit_python_DHT
+## 0-4. Adafruit_python_DHT
 
 온습도 센서를 손쉽게 사용하기 위해 Adafruit_python_DHT를 사용합니다. Adafruit_python_DHT는 Adafruit에서 제공하는 Python 라이브러리로, DHT11, DHT22, AM2302 등의 온습도 센서를 Raspberry Pi 및 BeagleBone과 같은 SBC(Single Board Computer)에서 쉽게 사용할 수 있도록 지원합니다. 이 라이브러리는 센서 데이터를 읽고 처리하는 기능을 제공하며, 간단한 Python 코드로 온도 및 습도를 측정할 수 있습니다.
 
-## 1. Preparation
+# 1. Preparation
 
 <img src="img/pi-gpio.png" alt="pi gpio" width="450">
 
@@ -46,11 +46,11 @@ Node.js는 오픈 소스, 크로스 플랫폼을 지원하는 백엔드 JavaScri
 
 ---
 
-## 2. Practice
+# 2. Practice
 
-### 2-1. Node.js 웹 서버를 위한 Docker Container 실행 ( in NUC )
+## 2-1. Node.js 웹 서버를 위한 Docker Container 실행 ( in NUC )
 
-#### 2-1-1. Docker Container 실행
+### 2-1-1. Docker Container 실행
 
 아래의 준비된 도커 컨테이너 이미지를 띄워주세요.
 
@@ -66,21 +66,26 @@ apt-get update
 apt-get install vim
 ```
 
-### 2-2. 웹 서버 코드 수정하기 ( in NUC )
+## 2-2. 웹 서버 코드 수정하기 ( in NUC )
 
-아래 명령어를 입력해 웹 서버 코드를 확인하고, `<NUC IP>`를 여러분의 NUC IP로 수정해주세요.
+아래 명령어를 이력해 웹서버 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
+
+이 웹서버는 요청의 path에 따라
+
+1. 값을 전달 받아 정보를 업데이트 하거나
+2. 저장된 정보를 json 형식으로 반환해주는 역할을 합니다.
 
 ```bash
 vim /SmartX-Mini/IoT-labs/webserver.js
 ```
 
-<img width="450" alt="image" src="https://user-images.githubusercontent.com/63437430/160828580-7201f53f-e66a-40d3-8682-ca237476b20a.png">
+<img src="img/webserver.png" alt="webserver code" >
 
-### 2-3. 온습도 센서 테스트 ( in PI )
+## 2-3. 온습도 센서 테스트 ( in PI )
 
 이제 라즈베리파이에 연결된 온습도 센서가 제대로 동작하는지 확인하겠습니다.
 
-#### 2-3-1. Install package
+### 2-3-1. Install package
 
 아래 명령어를 입력해 필요한 파일들을 다운로드 해주세요
 
@@ -126,7 +131,6 @@ def pi_version():
 패키지 Installer를 수정했으므로, 이제 필요한 패키지들을 설치해줍니다. 약간 시간이 걸릴 수 있습니다.
 
 ```bash
-
 sudo apt-get update
 
 sudo apt-get install -y python3-pip
@@ -141,7 +145,7 @@ sudo pip3 install .
 <details>
 <summary>Package Versions (Expand)</summary>
 
-##### PI
+#### PI
 
 |     Package     |   Version   |
 | :-------------: | :---------: |
@@ -149,7 +153,7 @@ sudo pip3 install .
 | build-essential |    12.6     |
 |   python3-dev   |   3.7.3-1   |
 
-##### Python
+#### Python
 
 |  Package   |   Version   |
 | :--------: | :---------: |
@@ -159,7 +163,7 @@ sudo pip3 install .
 </details>
 <br>
 
-#### 2-3-2. 온습도 센서 테스트 ( in PI )
+### 2-3-2. 온습도 센서 테스트 ( in PI )
 
 예제 폴더로 이동합니다.
 
@@ -201,13 +205,13 @@ sudo ./AdafruitDHT.py 11 4
 2. 아무런 문제를 발견하지 못했다면, 패키지 설치가 제대로 됐는지 확인해주세요. 패키지를 다시 설치해보는 것도 방법이 될 수 있습니다.
 3. 센서 자체의 문제일 수 있습니다. 만약 여전히 문제가 해결되지 않았다면, 조교를 호출해주세요.
 
-<img width="450" alt="image" src="https://user-images.githubusercontent.com/63437430/160829118-04bae048-2cf3-4c3f-8cd9-4b9295b019d0.png">
+<img alt="image" src="https://user-images.githubusercontent.com/63437430/160829118-04bae048-2cf3-4c3f-8cd9-4b9295b019d0.png">
 
-### 2-4. 센서 데이터 수집과 전송 ( in PI )
+## 2-4. 센서 데이터 수집과 전송 ( in PI )
 
 이번에는 라즈베리파이에서 수집한 센서 데이터를 NUC으로 전달하기 위해, 관련 코드를 수정하겠습니다.
 
-#### 2-4-1. 필요한 패키지 설치
+### 2-4-1. 필요한 패키지 설치
 
 ```bash
 sudo apt-get update
@@ -220,7 +224,7 @@ sudo apt-get install -y mercurial
 <details>
 <summary>Package Versions (Expand)</summary>
 
-##### PI
+#### PI
 
 |    Package    |     Version     |
 | :-----------: | :-------------: |
@@ -230,31 +234,33 @@ sudo apt-get install -y mercurial
 </details>
 <br>
 
-#### 2-4-2. 센서 데이터 수집 코드
+### 2-4-2. 센서 데이터 수집 코드
 
-센서 데이터 수집 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
+아래 명령어를 이력해 센서 데이터 전송 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
+
+**이 코드는 라즈베리파이에서 실행되며, 센서로부터 데이터를 읽어와 파일에 저장하는 역할을 합니다.**
 
 ```bash
 vim ~/SmartX-mini/IoT-labs/RPI_capture.py
 ```
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/63437430/160829267-f2198912-a27d-4ee3-9b44-e5af753aff6d.png">
+<img src="img/rpi_capture.png" alt="rpi capture code">
 
-#### 2-4-3. 센서 데이터 전송 코드
+### 2-4-3. 센서 데이터 전송 코드
 
-센서 데이터 전송 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
+저장된 센서 데이터를 전송하는 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
 
 ```bash
 vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
 ```
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/63437430/160829383-8053b56c-a4ea-42d1-b4d1-220502b7754a.png">
+<img src="img/rpi_transfer.png" alt="rpi transfer code">
 
-### 2-5. IoT Web Service 실행하기
+## 2-5. IoT Web Service 실행하기
 
 이제 지금까지 작업한 내용을 바탕으로 간단한 IoT Web Service를 실행하도록 하겠습니다.
 
-#### 2-5-1. Web Server 실행하기 ( in NUC )
+### 2-5-1. Web Server 실행하기 ( in NUC )
 
 NUC에서 실행했던 도커 컨테이너 내부에서 다음의 명령어를 실행해주세요. 다음의 명령어는 `webserver.js`라는 웹서버 코드를 실행합니다.
 
@@ -264,19 +270,20 @@ cd /SmartX-Mini/IoT-labs
 nodejs webserver.js
 ```
 
-#### 2-5-2. 센서 데이터를 수집하고 전송하기 ( in PI )
+### 2-5-2. 센서 데이터를 수집하고 전송하기 ( in PI )
 
-다음의 명령어를 실행해주세요. `process.sh`는 아까 수정했던 `RPI_capture.py`와 `RPI_transfer.py` 파일을 순차적으로 실행합니다.
+다음의 명령어를 실행해주세요. `process.sh`는 방금 전 살펴본 `RPI_capture.py`와 `RPI_transfer.py` 파일을 반복적으로 실행합니다.
 
 ```bash
 cd ~/SmartX-mini/IoT-labs
 
+# 실행 권한 부여
 chmod +x process.sh
 
 sudo ./process.sh
 ```
 
-#### 2-5-3. IoT Web Service 접속하기 ( in NUC )
+### 2-5-3. IoT Web Service 접속하기 ( in NUC )
 
 NUC에서 웹브라우저를 열고 `http://<NUC IP>`에 접속해주세요.
 
@@ -286,16 +293,16 @@ NUC에서 웹브라우저를 열고 `http://<NUC IP>`에 접속해주세요.
 
 ---
 
-## 3. Lab Summary
+# 3. Lab Summary
 
 이 Lab의 목표는 IoT 센서를 활용하여 데이터를 수집하고, 이를 서버에 전달하는 IoT-Cloud Hub를 구축하는 것입니다.
 여러분은 라즈베리파이를 활용하여 IoT 센서 데이터를 수집하고, 이를 NUC에 위치한 웹서버로 전송하여 시각화하는 IoT-Cloud 시스템을 구축하는 실습을 진행했습니다.
 
-### (Recall) IoT-Cloud 시스템이 왜 필요한가?
+## (Recall) IoT-Cloud 시스템이 왜 필요한가?
 
 IoT 기기에서 수집된 데이터는 개별적으로는 의미가 크지 않지만, 이를 클라우드에서 통합 및 분석하면 실시간 모니터링, 자동화, 원격 제어 등 다양한 분야에서 강력한 활용이 가능합니다. 이번 Lab에서는 IoT 데이터를 처리하고 웹에서 시각화하여, Tower Lab에서 다뤘던 모니터링 시스템과 유사한 IoT 기반 데이터 모니터링의 개념을 실습했습니다.
 
-### 주요 과정 요약
+## 주요 과정 요약
 
 1. 라즈베리파이 GPIO 핀을 활용하여 온습도 센서 연결 및 테스트
 2. 온습도 센서 데이터를 NUC 서버로 전송

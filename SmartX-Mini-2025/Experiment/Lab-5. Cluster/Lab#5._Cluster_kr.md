@@ -774,7 +774,7 @@ Rolling Update는 기존 Pod을 점진적으로 새로운 버전으로 교체하
 
    <img src='img/simple-app/simple-15.png' alt='simple 15'>
 
-   **이제 Pod의 개수를 3개로 Scale-down하고, Pod의 개수가 줄어든 것을 확인해주세요!**
+   **이제 Pod의 개수를 3개로 Scale-in하고, Pod의 개수가 줄어든 것을 확인해주세요!**
 
 지금까지, 쿠버네티스에서 Pod, Deployment, Service를 활용한 애플리케이션 배포 및 업데이트를 실습했습니다.
 
