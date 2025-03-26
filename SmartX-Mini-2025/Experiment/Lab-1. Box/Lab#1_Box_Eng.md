@@ -521,21 +521,36 @@ To add the Docker repository, configure apt to support HTTPS and install the req
 sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
 
+Add Docker’s official GPG key.
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+Add the Docker repository to the apt source list.
+
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
 Install Docker
 
 ```bash
-sudo apt install docker.io -y
-```
-
-Create /etc/docker directory
-
-```bash
-sudo mkdir -p /etc/docker
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 ```
 
 Set up the Docker daemon
 
 ```bash
+sudo mkdir -p /etc/docker
+
 cat <<EOF | sudo tee /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"],

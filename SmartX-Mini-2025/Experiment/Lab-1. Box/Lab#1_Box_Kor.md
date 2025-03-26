@@ -512,21 +512,36 @@ Docker 리포지토리 추가를 위해 apt를 HTTPS 지원 가능하도록 설�
 sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
 
+Docker 공식 GPG Key를 추가합니다.
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+apt source list에 Docker 저장소를 추가합니다.
+
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
 Docker를 설치합니다.
 
 ```bash
-sudo apt install docker.io -y
-```
-
-/etc/docker 디렉터리를 생성합니다.
-
-```bash
-sudo mkdir -p /etc/docker
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 ```
 
 Docker daemon을 설정합니다.
 
 ```bash
+sudo mkdir -p /etc/docker
+
 cat <<EOF | sudo tee /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -556,8 +571,6 @@ sudo systemctl start docker.socket
 ```bash
 sudo docker run hello-world
 ```
-
-만약 잘 작동하지 않는다면 몇 번 더 시도해봅니다. 그럼에도 불구하고 작동하지 않는다면 `docker-ce`, `docker-ce-cli`, `containerd.io`를 설치한 뒤에 다시 시도해봅니다.
 
 잘 작동한다면 아래와 같은 내용이 출력됩니다.
 
