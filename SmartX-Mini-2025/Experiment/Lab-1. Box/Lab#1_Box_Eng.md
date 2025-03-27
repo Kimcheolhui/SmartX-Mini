@@ -583,8 +583,6 @@ Run the following command to check if Docker is running.
 sudo docker run hello-world
 ```
 
-If it doesn’t work, please try several times. Nevertheless, if you are not successful, try running from the installing `docker-ce`, `docker-ce-cli`, `containerd.io`
-
 If it works correctly, the following output will be displayed.
 
 ![1](./img/1.png)
