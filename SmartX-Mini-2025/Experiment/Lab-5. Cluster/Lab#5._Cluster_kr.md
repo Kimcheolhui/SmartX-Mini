@@ -316,11 +316,11 @@ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 >
 > ```shell
 > # br_netfilter kernel module load하기
-> sudo modeprobe br_netfilter
+> sudo modprobe br_netfilter
 > # 아래 명령어로 br_netfilter가 잘 loaded된 것을 확인했으면
 > lsmod | grep br_netfilter
 > # kubeadm을 다시 한 번 실행
-> kubeadm init --pod-network-cidr=10.244.0.0/16
+> sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 > ```
 
 kubeadm 명령어가 정상적으로 실행됐다면, 아래 사진과 같이 쿠버네티스 클러스터에 Join할 수 있는 토큰을 포함한 명령어가 생성됩니다. 해당 명령어를 별도의 텍스트 파일로 저장하거나, 사라지지 않도록 해주시기 바랍니다.
