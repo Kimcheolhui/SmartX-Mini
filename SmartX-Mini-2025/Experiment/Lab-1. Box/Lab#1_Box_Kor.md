@@ -76,7 +76,9 @@ Box Lab에서는 \*베어 메탈에 운영체제(OS)를 직접 설치해보고
 > ![copy button](img/copy.png)
 
 > [!IMPORTANT]
-> 사용하는 NUC과 가상 머신(VM), 그리고 container의 IP가 적힌 종이를 참고하여 Lab을 진행해주시길 바랍니다.
+> 사용하는 NUC과 가상 머신(VM), 그리고 container의 IP가 적힌 종이를 참고하여 Lab을 진행해주시길 바랍니다.  
+> **NUC**은 `Next Unit of Computing`의 약자로, Intel에서 개발한 초소형 컴퓨터입니다. 우리는 NUC을 이용하여 lab을 진행합니다.  
+> 앞으로 NUC이라는 용어는 여러분이 사용하는 컴퓨터를 지칭하는 의미로 사용될 것입니다.
 >
 > 1. NUC IP: NUC이라고 적힌 부분의 IP를 사용합니다.
 > 2. VM IP: Extra라고 적힌 부분의 IP를 사용합니다.

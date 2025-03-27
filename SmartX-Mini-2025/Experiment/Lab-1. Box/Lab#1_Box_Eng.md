@@ -79,7 +79,9 @@ Let's take a close look at the overall structure.
 > ![copy button](img/copy.png)
 
 > [!IMPORTANT]
-> Please check allocated IP address of your NUC, VM, and container in the ribbon paper.
+> Please check allocated IP address of your NUC, VM, and container in the ribbon paper.  
+> **NUC** stands for `Next Unit of Computing`, a compact computer developed by Intel. We will be using NUCs for our lab sessions.  
+> From now on, the term “NUC” will be used to refer to the computer you are using.
 >
 > 1. NUC IP: We use the IP assigned to the part labeled “NUC”
 > 2. VM IP: We use the IP assigned to the part labeled “Extra”
