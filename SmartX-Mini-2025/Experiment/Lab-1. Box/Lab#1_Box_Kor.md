@@ -76,7 +76,9 @@ Box Lab에서는 \*베어 메탈에 운영체제(OS)를 직접 설치해보고
 > ![copy button](img/copy.png)
 
 > [!IMPORTANT]
-> 사용하는 NUC과 가상 머신(VM), 그리고 container의 IP가 적힌 종이를 참고하여 Lab을 진행해주시길 바랍니다.
+> 사용하는 NUC과 가상 머신(VM), 그리고 container의 IP가 적힌 종이를 참고하여 Lab을 진행해주시길 바랍니다.  
+> **NUC**은 `Next Unit of Computing`의 약자로, Intel에서 개발한 초소형 컴퓨터입니다. 우리는 NUC을 이용하여 lab을 진행합니다.  
+> 앞으로 NUC이라는 용어는 여러분이 사용하는 컴퓨터를 지칭하는 의미로 사용될 것입니다.
 >
 > 1. NUC IP: NUC이라고 적힌 부분의 IP를 사용합니다.
 > 2. VM IP: Extra라고 적힌 부분의 IP를 사용합니다.
@@ -512,21 +514,36 @@ Docker 리포지토리 추가를 위해 apt를 HTTPS 지원 가능하도록 설�
 sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
 
+Docker 공식 GPG Key를 추가합니다.
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+apt source list에 Docker 저장소를 추가합니다.
+
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
 Docker를 설치합니다.
 
 ```bash
-sudo apt install docker.io -y
-```
-
-/etc/docker 디렉터리를 생성합니다.
-
-```bash
-sudo mkdir -p /etc/docker
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 ```
 
 Docker daemon을 설정합니다.
 
 ```bash
+sudo mkdir -p /etc/docker
+
 cat <<EOF | sudo tee /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -556,8 +573,6 @@ sudo systemctl start docker.socket
 ```bash
 sudo docker run hello-world
 ```
-
-만약 잘 작동하지 않는다면 몇 번 더 시도해봅니다. 그럼에도 불구하고 작동하지 않는다면 `docker-ce`, `docker-ce-cli`, `containerd.io`를 설치한 뒤에 다시 시도해봅니다.
 
 잘 작동한다면 아래와 같은 내용이 출력됩니다.
 

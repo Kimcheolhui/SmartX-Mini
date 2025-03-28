@@ -79,7 +79,9 @@ Let's take a close look at the overall structure.
 > ![copy button](img/copy.png)
 
 > [!IMPORTANT]
-> Please check allocated IP address of your NUC, VM, and container in the ribbon paper.
+> Please check allocated IP address of your NUC, VM, and container in the ribbon paper.  
+> **NUC** stands for `Next Unit of Computing`, a compact computer developed by Intel. We will be using NUCs for our lab sessions.  
+> From now on, the term “NUC” will be used to refer to the computer you are using.
 >
 > 1. NUC IP: We use the IP assigned to the part labeled “NUC”
 > 2. VM IP: We use the IP assigned to the part labeled “Extra”
@@ -521,21 +523,36 @@ To add the Docker repository, configure apt to support HTTPS and install the req
 sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
 
+Add Docker’s official GPG key.
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+Add the Docker repository to the apt source list.
+
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
 Install Docker
 
 ```bash
-sudo apt install docker.io -y
-```
-
-Create /etc/docker directory
-
-```bash
-sudo mkdir -p /etc/docker
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 ```
 
 Set up the Docker daemon
 
 ```bash
+sudo mkdir -p /etc/docker
+
 cat <<EOF | sudo tee /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -565,8 +582,6 @@ Run the following command to check if Docker is running.
 ```bash
 sudo docker run hello-world
 ```
-
-If it doesn’t work, please try several times. Nevertheless, if you are not successful, try running from the installing `docker-ce`, `docker-ce-cli`, `containerd.io`
 
 If it works correctly, the following output will be displayed.
 
