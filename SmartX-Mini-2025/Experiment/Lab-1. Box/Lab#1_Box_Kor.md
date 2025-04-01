@@ -178,7 +178,7 @@ OS : Ubuntu Desktop 22.04 LTS(64bit)
     <img src="./img/network_setting3.png" />
   </p><br>
 
-## 2-2. NUC: Network Configuration Using Virtual Switch
+## 2-2. NUC: Network Configuration using Virtual Switch
 
 > [!CAUTION]  
 > <b>⚠️ (중요. 로그인 뒤에 Ubuntu를 업데이트할 것인지 묻는 창이 뜬다면 반드시 Don't Upgrade를 선택해야합니다!) ⚠️</b>
@@ -241,8 +241,9 @@ OS : Ubuntu Desktop 22.04 LTS(64bit)
    sudo vim /etc/systemd/resolved.conf
    ```
 
-   파일의 내용 중, DNS 왼편에 있는 주석표시 (#) 를 제거해주고 DNS 주소를 명시합니다.  
-   (참고: 실습 환경에 따라 `DNS`의 값이 달라질 수 있습니다.)
+   **파일의 내용 중, DNS 왼편에 있는 주석표시 (#) 를 제거해주고 DNS 주소를 명시합니다.**  
+   **(주의! DNS 주소 값 사이에는 공백 한 칸이 있습니다.)**  
+    (참고: 실습 환경에 따라 `DNS`의 값이 달라질 수 있습니다.)
 
    > …
    >
@@ -641,7 +642,7 @@ ping <VM IP(Extra IP)>
 # please type this command in the container.
 ```
 
-예를 들어, ping 172.29.0.X
+예를 들어, ping 172.29.0.XXX
 
 마찬가지로, VM 내부에서도 아래의 명령어를 실행하여 네트워크 관련 도구들을 설치하고 container로 통신이 잘 되는지 확인합니다.
 

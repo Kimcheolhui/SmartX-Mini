@@ -187,7 +187,7 @@ If an issue related to booting occurs, follow these steps.
     <img src="./img/network_setting3.png" />
   </p><br>
 
-## 2-2. NUC: Network Configuration Using Virtual Switch
+## 2-2. NUC: Network Configuration using Virtual Switch
 
 > [!CAUTION]  
 > <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
@@ -250,7 +250,8 @@ If an issue related to booting occurs, follow these steps.
   sudo vim /etc/systemd/resolved.conf
   ```
 
-  Remove the comment symbol (#) to the left of “DNS” in the file and specify the DNS address.  
+  **Remove the comment symbol (#) to the left of “DNS” in the file and specify the DNS address.**  
+  **(Caution! There is a single space between the DNS address values.)**
   (Note: The value of `DNS` may vary depending on the lab environment.)
 
   > …
@@ -650,7 +651,7 @@ ping <VM IP(Extra IP)>
 # please type this command in the container.
 ```
 
-For example, ping 172.29.0.X
+For example, ping 172.29.0.XXX
 
 Similarly, run the following command inside the VM to install network-related tools and send a ping to the container.
 
