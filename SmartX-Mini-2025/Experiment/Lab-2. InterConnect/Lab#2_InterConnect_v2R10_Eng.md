@@ -558,11 +558,16 @@ Add the following line(Pi IP Address & Hostname) at the bottom of the file:
 172.29.0.XX        <PI_HOSTNAME> 
 ```
 
->  [!warning]
-> 
-> For this lab, it is recommended to **set the hostname to an <U>easy-to-remember and simple</U> name**. <br>
-> The NUC's hostname must match the one recorded on the Pi's `/etc/hosts` file, as it will also be required during the Kafka configuration.
+>  [!Caution] 
 >
+> The hostnames of the Pi and NUC entered in `/etc/hosts` <ins>**must match their actual hostnames.**</ins>
+>
+> If they do not match, issues may arise during the upcoming Kafka practice sessions.
+
+> [!note]
+>
+> Topic: How to change Hostname (⚠️Warning⚠️: Applying this during lab is <ins>**not recommended.**</ins>)
+> 
 > You can change the NUC's hostname using the following commands: <br>
 >
 > **Temporary change (reverts after reboot):**
@@ -946,18 +951,18 @@ If everything is configured correctly, you should see the message displayed in t
 
 > [!note]
 > 
-> If `snmpd` is well-configured, and no error is shown on `producer`, but you can see any logs on `consumer`, Please remove and re-build the image `raspbian-flume`. Sometimes docker reports build process completed without error, yet unknown error has occurred on build process.
+> If `snmpd` is well-configured, and no error is shown on `producer`, but you can see any logs on `consumer`, Please remove and re-build the image `raspbian-flume` in Pi. Sometimes docker reports build process completed without error, yet unknown error has occurred on build process.
 >
-> To remove and rebuild the image, enter commands below:
+> To remove and rebuild the image, enter commands below on the Pi:
 > ```bash
-> sudo docker ps -A # list every created containers. 
+> sudo docker ps -a # list every created containers. 
 >
 > # If there are some containers built using `raspbian-flume` image, then stop and remove them.
 > sudo docker stop <flume-container> # stop container
 > sudo docker rm <flume-container>   # remove container
 > 
 > sudo docker rmi raspbian-flume     # remove image
-> cd ~/SmartX-mini/raspbian-flume    # move to `raspbian-flume` dir.
+> cd ~/SmartX-Mini/SmartX-Box/raspbian-flume    # move to `raspbian-flume` dir.
 > sudo docker build --tag raspbian-flume .   # build `raspbian-flume` image
 > ```
 
