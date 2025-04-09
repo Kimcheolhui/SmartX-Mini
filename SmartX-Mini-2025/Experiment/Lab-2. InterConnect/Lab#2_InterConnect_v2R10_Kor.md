@@ -549,13 +549,16 @@ sudo vim /etc/hosts
 172.29.0.XX        <PI_HOSTNAME> 
 ```
 
->  [!warning] 
+>  [!Caution] 
 > 
-> Hostname은 실습을 위해 <ins>**기억하기 쉽고 간단한 이름**</ins>으로 지정하는 것을 권장합니다.
-> 
-> NUC의 이름은 Pi의 `/etc/hosts`에 기록할 이름과 동일해야 하며, 추후의 Kafka 설정 시에도 NUC의 Hostname을 써야 하기 때문입니다.
+> `/etc/hosts`에 기입하는 Pi와 NUC의 Hostname은 실제 Hostname과 일치해야 합니다.
 >
-> NUC의 Hostname 변경은 다음과 같이 진행해주시기 바랍니다. <br>
+> 일치하지 않을 경우, 추후에 진행할 Kafka 실습 과정에서 차질이 발생할 수 있습니다.
+
+> [!note]
+>
+> 참고: Hostname 수정 (⚠️경고⚠️: 본 실습 과정 중에 적용하는 것은 권장하지 않습니다.)
+>
 >
 > ```bash
 > # 일시적 수정 (재부팅 시 원상 복구)
@@ -566,7 +569,7 @@ sudo vim /etc/hosts
 > sudo hostnamectl set-hostname <new_name>
 > ```
 >
-> 수정 이후, `/etc/hosts`에 기록된 NUC의 Hostname도 새로운 Hostname으로 반드시 갱신해주시기 바랍니다.
+> 수정 이후, `/etc/hosts`에 기록된 NUC의 Hostname도 새로운 Hostname으로 수정해야 합니다.
 >
 > Pi의 경우, `cloud-init`으로 인해 영구적 변경을 위해 추가적인 절차를 거쳐야합니다. <br>
 > 방법은 별도로 설명하지 않으며, <https://repost.aws/ko/knowledge-center/linux-static-hostname-rhel7-centos7>을 참고해주십시오.
@@ -937,18 +940,18 @@ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic resource --from
 
 > [!note]
 >
-> `snmpd` 설정이 제대로 이루어졌고, `producer`에서 눈에 띄는 오류가 없음에도 `consumer`에서 데이터를 확인할 수 없다면, `raspbian-flume` 이미지를 삭제한 후 다시 빌드하시기 바랍니다. 원인 불명의 문제로 빌드 과정에서 오류가 발생하였으나, 성공으로 처리된 사례가 있습니다.
+> `snmpd` 설정이 제대로 이루어졌고, `producer`에서 눈에 띄는 오류가 없음에도 `consumer`에서 데이터를 확인할 수 없다면, Pi에서 `raspbian-flume` 이미지를 삭제한 후 다시 빌드하시기 바랍니다. 원인 불명의 문제로 빌드 과정에서 오류가 발생하였으나, 성공으로 처리된 사례가 있습니다.
 >
-> 재빌드 과정은 다음과 같이 진행됩니다.
+> 재빌드 과정은 다음과 같이 Pi 내에서 진행합니다.
 > ```bash
-> sudo docker ps -A # 전체 Container 목록 조회. 
+> sudo docker ps -a # 전체 Container 목록 조회. 
 >
 > # 출력된 목록에서 `raspbian-flume` 이미지로 생성된 Container가 있다면, 하단의 2개 명령으로 정지 후 삭제합니다.
 > sudo docker stop <flume-container> # Container 정지
 > sudo docker rm <flume-container>   # Container 삭제
 > 
 > sudo docker rmi raspbian-flume     # Image 삭제
-> cd ~/SmartX-mini/raspbian-flume    # raspbian-flume 디렉토리 이동
+> cd ~/SmartX-Mini/SmartX-Box/raspbian-flume    # raspbian-flume 디렉토리 이동
 > sudo docker build --tag raspbian-flume .   # 이미지 빌드 수행
 > ```
 
