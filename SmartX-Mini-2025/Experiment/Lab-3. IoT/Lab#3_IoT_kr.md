@@ -90,6 +90,7 @@ vim /SmartX-Mini/IoT-labs/webserver.js
 아래 명령어를 입력해 필요한 파일들을 다운로드 해주세요
 
 ```bash
+cd ~
 git clone https://github.com/adafruit/Adafruit_python_DHT.git
 ```
 
@@ -98,12 +99,12 @@ git clone https://github.com/adafruit/Adafruit_python_DHT.git
 라즈베리파이 버전 4를 3으로 인식할 수 있도록 Adafruit_DHT의 패키지 Installer를 수정해줘야합니다.
 
 > [!note] Why?
-> 라즈베리파이 4의 SoC(System on Chip)는 BCM2711이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 BCM2711을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
+> 라즈베리파이 4의 SoC(System on Chip)는 `BCM2711`이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 `BCM2711`을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
 
 우선, 파일을 열어줍니다
 
 ```bash
-cd Adafruit_python_DHT
+cd ~/Adafruit_python_DHT
 
 sudo vim Adafruit_DHT/platform_detect.py
 ```
@@ -202,7 +203,7 @@ sudo ./AdafruitDHT.py 11 4
 아래와 같이 온도와 습도가 잘 표기됐다면, 온습도 센서가 라즈베리파이에 제대로 연결된 것을 의미합니다. 만약 오류가 발생한다면, 아래 순서를 따라주세요.
 
 1. `1. Preparation`으로 돌아가서 온습도 센서의 핀이 올바른 GPIO 핀에 꽂혀있는지 확인해주세요.
-2. 아무런 문제를 발견하지 못했다면, 패키지 설치가 제대로 됐는지 확인해주세요. 패키지를 다시 설치해보는 것도 방법이 될 수 있습니다.
+2. 아무런 문제를 발견하지 못했다면, **패키지 설치가 제대로 됐는지 확인해주세요**. 패키지를 다시 설치해보는 것도 방법이 될 수 있습니다.
 3. 센서 자체의 문제일 수 있습니다. 만약 여전히 문제가 해결되지 않았다면, 조교를 호출해주세요.
 
 <img alt="image" src="https://user-images.githubusercontent.com/63437430/160829118-04bae048-2cf3-4c3f-8cd9-4b9295b019d0.png">
@@ -236,7 +237,7 @@ sudo apt-get install -y mercurial
 
 ### 2-4-2. 센서 데이터 수집 코드
 
-아래 명령어를 이력해 센서 데이터 전송 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
+아래 명령어를 입력해 센서 데이터 전송 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
 
 **이 코드는 라즈베리파이에서 실행되며, 센서로부터 데이터를 읽어와 파일에 저장하는 역할을 합니다.**
 
