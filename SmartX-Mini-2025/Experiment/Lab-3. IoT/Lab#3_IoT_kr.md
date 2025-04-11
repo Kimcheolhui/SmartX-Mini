@@ -71,7 +71,7 @@ apt-get update
 apt-get install vim
 ```
 
-## 2-2. 웹 서버 코드 수정하기 ( in NUC )
+## 2-2. 웹 서버 코드 확인 ( in NUC container )
 
 아래 명령어를 이력해 웹서버 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
 
@@ -266,7 +266,7 @@ vim ~/SmartX-Mini/SmartX-Box/IoT-labs/RPI_transfer.py
 
 이제 지금까지 작업한 내용을 바탕으로 간단한 IoT Web Service를 실행하도록 하겠습니다.
 
-### 2-5-1. Web Server 실행하기 ( in NUC )
+### 2-5-1. Web Server 실행하기 ( in NUC container )
 
 NUC에서 실행했던 **도커 컨테이너 내부**에서 다음의 명령어를 실행해주세요. 다음의 명령어는 `webserver.js`라는 웹서버 코드를 실행합니다.
 

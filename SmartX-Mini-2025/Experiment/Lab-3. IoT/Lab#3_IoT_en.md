@@ -71,7 +71,7 @@ apt-get update
 apt-get install vim
 ```
 
-## 2-2. Modify Web Server Code ( in NUC )
+## 2-2. Check Web Server Code ( in NUC container )
 
 Run the following command to check the web server code. (No modification is needed.)
 
@@ -267,7 +267,7 @@ vim ~/SmartX-Mini/SmartX-Box/IoT-labs/RPI_transfer.py
 
 Now, let's run a simple IoT Web Service based on the work done so far.
 
-### 2-5-1. Run Web Server ( in NUC )
+### 2-5-1. Run Web Server ( in NUC container )
 
 Run the following command **inside the Docker container** running on the NUC. This command runs the web server code named `webserver.js`.
 
