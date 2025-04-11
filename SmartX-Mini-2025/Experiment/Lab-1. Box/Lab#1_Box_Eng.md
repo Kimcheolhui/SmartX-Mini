@@ -79,13 +79,15 @@ Let's take a close look at the overall structure.
 > ![copy button](img/copy.png)
 
 > [!IMPORTANT]
-> Please check allocated IP address of your NUC, VM, and container in the ribbon paper.
+> Please check allocated IP address of your NUC, VM, and container in the ribbon paper.  
+> **NUC** stands for `Next Unit of Computing`, a compact computer developed by Intel. We will be using NUCs for our lab sessions.  
+> From now on, the term “NUC” will be used to refer to the computer you are using.
 >
 > 1. NUC IP: We use the IP assigned to the part labeled “NUC”
 > 2. VM IP: We use the IP assigned to the part labeled “Extra”
 > 3. Container: For this Lab only, we use the IP assigned to the part labeled “PI”
 
-## 2-1. NUC: OS Installation
+## 2-1. NUC: OS Installation and Network Configuration
 
 > [!NOTE]
 > For students who have installed the OS in the Playground Lab, the OS Installation section can be skipped.
@@ -94,7 +96,7 @@ The Host OS to be used in the Lab is as follows. Use the provided installation U
 OS : Ubuntu Desktop 22.04 LTS(64bit)  
 Reference: Download Site - <https://releases.ubuntu.com/22.04/>
 
-### 2-1-1. Boot configuration
+### 2-1-1. Boot Configuration
 
 1. While the NUC is powered off, connect the USB for OS installation and then turn on the NUC.
 2. When the boot process begins, press F10 to enter the boot device selection screen.
@@ -155,11 +157,12 @@ If an issue related to booting occurs, follow these steps.
   5. Choose Something else and do the following steps
   </details>
 
-## 2-2. NUC: Network Configuration
+### 2-1-3. Basic Network Configuration after OS Installation
+
+> [!CAUTION]  
+> <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
 
 - When the login screen appears, enter your account information to log in. You will now proceed with the initial network configuration.
-  > [!CAUTION]  
-  > <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
 - ‘Temporary’ Network Configuration using GUI
 
   ![Network Configuration](./img/network_configuration.png)
@@ -184,9 +187,12 @@ If an issue related to booting occurs, follow these steps.
     <img src="./img/network_setting3.png" />
   </p><br>
 
-- **Set Prerequisites**
+## 2-2. NUC: Network Configuration using Virtual Switch
 
-1. Update & Upgrade
+> [!CAUTION]  
+> <b>⚠️(Important: If a window appears asking whether to update Ubuntu after logging in, make sure to select “Don’t Upgrade”!)⚠️</b>
+
+1. apt Update & Upgrade
 
    - In this lab, we will use apt, the package manager. To install the necessary packages, first, update the package list to the latest version and then upgrade any available packages.
    - To execute a command, open the terminal. You can do this by clicking the app list icon located at the bottom left of the screen and selecting the terminal icon from the list.
@@ -196,7 +202,7 @@ If an issue related to booting occurs, follow these steps.
    sudo apt upgrade
    ```
 
-2. Upgrade vim text editor
+2. Install vim text editor
 
    - We will use the Vim editor to modify file contents. Install Vim with the following command.
 
@@ -244,7 +250,8 @@ If an issue related to booting occurs, follow these steps.
   sudo vim /etc/systemd/resolved.conf
   ```
 
-  Remove the comment symbol (#) to the left of “DNS” in the file and specify the DNS address.  
+  **Remove the comment symbol (#) to the left of “DNS” in the file and specify the DNS address.**  
+  **(Caution! There is a single space between the DNS address values.)**
   (Note: The value of `DNS` may vary depending on the lab environment.)
 
   > …
@@ -375,7 +382,9 @@ sudo ovs-vsctl show
 
 Below is the figure you have configured so far.
 
-![Vport VFunction](./img/vport_vFunction.png)
+![vport_vFunction](./img/vport_vFunction.png)
+
+After running the `sudo ovs-vsctl show` command, the configuration is successful if the `vport_vFunction` and one of the active network interfaces (`eno1`, `enp88s0`, or `enp89s0`) are listed under the Bridge `br0`.
 
 Restart the whole interfaces.
 
@@ -521,21 +530,36 @@ To add the Docker repository, configure apt to support HTTPS and install the req
 sudo apt install -y ca-certificates curl gnupg lsb-release
 ```
 
+Add Docker’s official GPG key.
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+```
+
+Add the Docker repository to the apt source list.
+
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
 Install Docker
 
 ```bash
-sudo apt install docker.io -y
-```
-
-Create /etc/docker directory
-
-```bash
-sudo mkdir -p /etc/docker
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 ```
 
 Set up the Docker daemon
 
 ```bash
+sudo mkdir -p /etc/docker
+
 cat <<EOF | sudo tee /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -565,8 +589,6 @@ Run the following command to check if Docker is running.
 ```bash
 sudo docker run hello-world
 ```
-
-If it doesn’t work, please try several times. Nevertheless, if you are not successful, try running from the installing `docker-ce`, `docker-ce-cli`, `containerd.io`
 
 If it works correctly, the following output will be displayed.
 
@@ -629,7 +651,7 @@ ping <VM IP(Extra IP)>
 # please type this command in the container.
 ```
 
-For example, ping 172.29.0.X
+For example, ping 172.29.0.XXX
 
 Similarly, run the following command inside the VM to install network-related tools and send a ping to the container.
 

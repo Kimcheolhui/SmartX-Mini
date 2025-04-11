@@ -1,6 +1,8 @@
 FROM ubuntu:14.04
 LABEL "maintainer"="Seungryong Kim <srkim@nm.gist.ac.kr>"
 
+RUN sed -i 's@archive.ubuntu.com@mirror.kakao.com@g' /etc/apt/sources.list
+
 #Update & Install wget
 RUN sudo apt-get update
 RUN sudo apt-get install -y wget vim iputils-ping net-tools iproute2 dnsutils openjdk-7-jdk
