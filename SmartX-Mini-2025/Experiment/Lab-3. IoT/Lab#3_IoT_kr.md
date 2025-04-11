@@ -16,7 +16,7 @@
 
 ## 0-2. IoT-Cloud 시스템이 왜 필요한가?
 
-IoT 기기에서 수집되는 데이터는 개별적으로는 의미가 크지 않지만, 이를 클라우드에서 통합 및 분석하면 강력한 정보나 인사이트를 얻을 수 있습니다. 이러한 데이터는 실시간 모니터링, 자동화, 원격 제어 등의 다양한 분야에서 활용됩니다. Lab 4 - Tower Lab의 모니터링 시스템 구축과 그 필요성이 비슷하며, 이번 Lab에서는 IoT를 활용한 모니터링 시스템이라고 볼 수 있습니다.
+IoT 기기에서 수집되는 데이터는 개별적으로는 의미가 크지 않지만, 이를 클라우드에서 통합 및 분석하면 강력한 정보나 인사이트를 얻을 수 있습니다. 이러한 데이터는 실시간 모니터링, 자동화, 원격 제어 등의 다양한 분야에서 활용됩니다. Lab#4 - Tower Lab의 모니터링 시스템 구축과 그 필요성이 비슷하며, 이번 Lab에서는 IoT를 활용한 간단한 모니터링 시스템을 구축한다고 볼 수 있습니다.
 
 예를 들어 다음과 같은 분야에 IoT-Cloud 시스템이 적용될 수 있습니다.
 
@@ -247,7 +247,7 @@ sudo apt-get install -y mercurial
 **이 코드는 라즈베리파이에서 실행되며, 센서로부터 데이터를 읽어와 파일에 저장하는 역할을 합니다.**
 
 ```bash
-vim ~/SmartX-mini/IoT-labs/RPI_capture.py
+vim ~/SmartX-Mini/SmartX-Box/IoT-labs/RPI_capture.py
 ```
 
 <img src="img/rpi_capture.png" alt="rpi capture code">
@@ -257,7 +257,7 @@ vim ~/SmartX-mini/IoT-labs/RPI_capture.py
 저장된 센서 데이터를 전송하는 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
 
 ```bash
-vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
+vim ~/SmartX-Mini/SmartX-Box/IoT-labs/RPI_transfer.py
 ```
 
 <img src="img/rpi_transfer.png" alt="rpi transfer code">
@@ -268,7 +268,7 @@ vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
 
 ### 2-5-1. Web Server 실행하기 ( in NUC )
 
-NUC에서 실행했던 도커 컨테이너 내부에서 다음의 명령어를 실행해주세요. 다음의 명령어는 `webserver.js`라는 웹서버 코드를 실행합니다.
+NUC에서 실행했던 **도커 컨테이너 내부**에서 다음의 명령어를 실행해주세요. 다음의 명령어는 `webserver.js`라는 웹서버 코드를 실행합니다.
 
 ```bash
 cd /SmartX-Mini/IoT-labs
@@ -281,7 +281,7 @@ nodejs webserver.js
 다음의 명령어를 실행해주세요. `process.sh`는 방금 전 살펴본 `RPI_capture.py`와 `RPI_transfer.py` 파일을 반복적으로 실행합니다.
 
 ```bash
-cd ~/SmartX-mini/IoT-labs
+cd ~/SmartX-Mini/SmartX-Box/IoT-labs
 
 # 실행 권한 부여
 chmod +x process.sh

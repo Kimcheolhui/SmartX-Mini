@@ -248,7 +248,7 @@ Run the following command to check the sensor data transmission code. (No modifi
 **This code runs on the Raspberry Pi and reads data from the sensor to save in a file.**
 
 ```bash
-vim ~/SmartX-mini/IoT-labs/RPI_capture.py
+vim ~/SmartX-Mini/SmartX-Box/IoT-labs/RPI_capture.py
 ```
 
 <img src="img/rpi_capture.png" alt="rpi capture code">
@@ -258,7 +258,7 @@ vim ~/SmartX-mini/IoT-labs/RPI_capture.py
 Open the code that sends the saved sensor data and modify `<NUC IP>` to your NUC IP.
 
 ```bash
-vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
+vim ~/SmartX-Mini/SmartX-Box/IoT-labs/RPI_transfer.py
 ```
 
 <img src="img/rpi_transfer.png" alt="rpi transfer code">
@@ -269,7 +269,7 @@ Now, let's run a simple IoT Web Service based on the work done so far.
 
 ### 2-5-1. Run Web Server ( in NUC )
 
-Run the following command inside the Docker container running on the NUC. This command runs the web server code named `webserver.js`.
+Run the following command **inside the Docker container** running on the NUC. This command runs the web server code named `webserver.js`.
 
 ```bash
 cd /SmartX-Mini/IoT-labs
@@ -282,7 +282,7 @@ nodejs webserver.js
 Run the following commands. `process.sh` repeatedly runs the `RPI_capture.py` and `RPI_transfer.py` files we just reviewed.
 
 ```bash
-cd ~/SmartX-mini/IoT-labs
+cd ~/SmartX-Mini/SmartX-Box/IoT-labs
 
 # Grant execution permission
 chmod +x process.sh
