@@ -16,7 +16,12 @@ In this Lab, you will collect sensor data using Raspberry Pi with physical senso
 
 ## 0-2. Why is the IoT-Cloud System Necessary?
 
-Data collected from IoT devices may not be meaningful individually, but when integrated and analyzed in the cloud, it can provide powerful information or insights. Such data is utilized in various fields such as real-time monitoring, automation, and remote control. The monitoring system built in Tower Lab has similar needs, and this Lab can be seen as a monitoring system using IoT.
+Data collected from IoT devices may not be meaningful individually, but when integrated and analyzed in the cloud, it can provide powerful information or insights. Such data is utilized in various fields such as real-time monitoring, automation, and remote control. The monitoring system built in Lab 4 - Tower Lab has similar needs, and this Lab can be seen as a monitoring system using IoT.
+
+For example:
+
+- **Smart Farms**: Soil humidity sensors placed in greenhouses send data to the cloud in real time. Based on this data, the system automatically controls water supply, optimizing crop growth while saving resources.
+- **Smart Buildings**: Temperature and motion sensors detect occupancy in office spaces. The building management system uses this data to adjust lighting and HVAC (Heating, Ventilation, Air Conditioning) systems, reducing energy consumption and improving comfort.
 
 ## 0-3. Node.js
 
