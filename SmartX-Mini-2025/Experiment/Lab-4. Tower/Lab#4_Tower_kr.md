@@ -17,7 +17,7 @@
 
 ## 0-2. 모니터링 시스템이 왜 필요한가?
 
-시스템의 성능과 안정성을 유지하기 위해서는 실시간 모니터링이 필수적입니다. 시스템에서 발생한 장애를 신속하게 감지하고 대응할 수 있어야 하며, 시스템에서 발생한 시계열 데이터 분석을 통해 성능 최적화와 용량 계획을 수립할 수 있습니다. 특히, 분산 시스템에서는 다양한 노드에서 수집된 데이터를 종합적으로 분석해야 하므로, 이를 효과적으로 저장하고 시각화하는 시스템이 필요합니다. 이번 Lab에서는 Flume과 Kafka를 활용한 데이터 수집, InfluxDB를 통한 시계열 데이터 저장, 그리고 Chronograf를 이용한 데이터 시각화를 통해 모니터링 시스템 구축 방법을 익힙니다.
+시스템의 성능과 안정성을 유지하기 위해서는 실시간 모니터링이 필수적입니다. 시스템에서 발생한 장애를 신속하게 감지하고 대응할 수 있어야 하며, 시스템에서 발생한 시계열 데이터 분석을 통해 성능 최적화와 용량 계획을 수립할 수 있습니다. 특히, 분산 시스템에서는 다양한 노드에서 수집된 데이터를 종합적으로 분석해야 하므로, 이를 효과적으로 저장하고 시각화하는 시스템이 필요합니다. 이번 Lab에서는 `Flume`과 `Kafka`를 활용한 데이터 수집, `InfluxDB`를 통한 시계열 데이터 저장, 그리고 `Chronograf`를 이용한 데이터 시각화를 통해 모니터링 시스템 구축 방법을 익힙니다.
 
 ## 0-3. TSDB (Time Series Database)
 
@@ -33,6 +33,10 @@
 
 **InfluxDB**는 InfluxData에서 개발한 오픈소스 시계열 데이터베이스(TSDB)입니다.
 Go 프로그래밍 언어로 작성되었으며, 운영 모니터링, 애플리케이션 메트릭, 사물인터넷(IoT) 센서 데이터 및 실시간 분석과 같은 다양한 분야에서 시계열 데이터를 저장하고 검색하는 데 사용됩니다.
+
+> [!note]
+>
+> **여러분이 생각하시는 대부분의 IT 기업들이 시계열 데이터를 다루기 위해 InfluxDB를 사용합니다.**
 
 ## 0-5. Chronograf
 
@@ -85,9 +89,9 @@ sudo docker run -p 8888:8888 --name chronograf chronograf --influxdb-url http://
 
 ## 1-3. python-pip, python packages 설치하기 ( in NUC )
 
-이제 새로운 터미널을 열고 패키지 설치를 위해 아래 명령어를 터미널에서 실행합니다.
-
 ### 1-3-1. python-pip 설치
+
+이제 새로운 터미널을 열고 패키지 설치를 위해 아래 명령어를 터미널에서 실행합니다.
 
 > [!tip]
 >
@@ -178,7 +182,7 @@ bin/zookeeper-server-start.sh config/zookeeper.properties
 
 #### Case 2: **`broker` container인 경우(broker0, broker1, broker2)**
 
-아래 명령어를 입력합니다. `bin/zookeeper-server.start.sh`는 broker 서버를 실행하는 파일이며, `config/server.properties`는 Lab2에서 이미 수정했으므로 별도의 수정이 필요하지 않습니다.
+아래 명령어를 입력합니다. `bin/kafka-server-start.sh`는 broker 서버를 실행하는 파일이며, `config/server.properties`는 Lab2에서 이미 수정했으므로 별도의 수정이 필요하지 않습니다.
 
 ```bash
 bin/kafka-server-start.sh config/server.properties
@@ -304,7 +308,7 @@ docker run --rm -it busybox sh -c "while true; do :; done"
 
 새로고침을 누르다보면 Dashboard의 그래프가 위로 움직이는 것을 확인할 수 있습니다.
 
-확인했으면 `Ctrl + C`를 눌러 CPU 부하를 멈춰주세요.
+확인했으면 `Ctrl + C`를 눌러 CPU 부하를 멈춰주세요 ( in PI ).
 
 # 2. Lab Summary
 
