@@ -85,15 +85,13 @@ sudo docker run -p 8888:8888 --name chronograf chronograf --influxdb-url http://
     - This means that if you open port 8888 inside container, the same port 8888 will be available on host.
     - You don't need to set a port mapping.
 
-아래 그림처럼 아무런 반응이 없는 상태가 지속된다면, 잘 실행된 것입니다.
-
 If it appears as below, it means that the chronograph has started successfully.
 
 ![chronograf_run.png](./img/chronograf_run.png)
 
 ## 1-3. Install python-pip and Python packages ( in NUC )
 
-### 1-3-1. python-pip 설치
+### 1-3-1. Install python-pip
 
 Open a new terminal and run the commands!
 
@@ -209,13 +207,11 @@ If the information you previously entered is missing, please add the following t
 > You should replace `<>` with your information.
 
 ```
-<NUC_IP> >NUC_HOSTNAME>
+<NUC_IP> <NUC_HOSTNAME>
 <PI_IP> <PI_HOSTNAME>
 ```
 
 ### 1-5-2. Run Flume Container
-
-아래 명령어를 실행해 flume container을 실행하고, container 내부에 접근해주세요
 
 Enter these commands to run flume container, and access the inside of the container.
 
@@ -238,8 +234,12 @@ bin/flume-ng agent --conf conf --conf-file conf/flume-conf.properties --name age
 
 ### 1-6-1. Edit `broker_to_influxdb.py`
 
+> [!note]
+>
+> Please open a new terminal.
+
 ```bash
-vim ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
+vim ~/SmartX-Mini/SmartX-Box/ubuntu-kafkatodb/broker_to_influxdb.py
 ```
 
 In this file, you should replace `<NUC IP>` with your real NUC IP.
@@ -306,7 +306,7 @@ First, change the field in the Chronograf Dashboard to `CPU_Usage`.
 
 <img src="./img/chronograf-6.png" alt="chronograf-6">
 
-Then, run the following command on the PI:
+Then, **run the following command on the PI.**
 
 ```bash
 docker run --rm -it busybox sh -c "while true; do :; done"
