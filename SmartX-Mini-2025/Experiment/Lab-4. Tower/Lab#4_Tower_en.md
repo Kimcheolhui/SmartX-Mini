@@ -38,7 +38,7 @@ Written in the Go programming language, it is used in various domains to store a
 
 > [!note]
 >
-> > **Most of the IT companies you'd think of use InfluxDB to handle time-series data.**
+> **Most of the IT companies you'd think of use InfluxDB to handle time-series data.**
 
 ## 0-5. Chronograf
 

@@ -104,6 +104,7 @@ git clone https://github.com/adafruit/Adafruit_python_DHT.git
 라즈베리파이 버전 4를 3으로 인식할 수 있도록 Adafruit_DHT의 패키지 Installer를 수정해줘야합니다.
 
 > [!note] Why?
+>
 > 라즈베리파이 4의 SoC(System on Chip)는 `BCM2711`이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 `BCM2711`을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
 
 우선, 파일을 열어줍니다
