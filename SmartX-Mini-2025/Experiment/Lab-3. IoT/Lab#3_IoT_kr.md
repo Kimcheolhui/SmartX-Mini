@@ -16,7 +16,12 @@
 
 ## 0-2. IoT-Cloud 시스템이 왜 필요한가?
 
-IoT 기기에서 수집되는 데이터는 개별적으로는 의미가 크지 않지만, 이를 클라우드에서 통합 및 분석하면 강력한 정보나 인사이트를 얻을 수 있습니다. 이러한 데이터는 실시간 모니터링, 자동화, 원격 제어 등의 다양한 분야에서 활용됩니다. Tower Lab에서 진행한 모니터링 시스템 구축과 그 필요성이 비슷하며, 이 Lab에서는 IoT를 활용한 모니터링 시스템이라고 볼 수 있습니다.
+IoT 기기에서 수집되는 데이터는 개별적으로는 의미가 크지 않지만, 이를 클라우드에서 통합 및 분석하면 강력한 정보나 인사이트를 얻을 수 있습니다. 이러한 데이터는 실시간 모니터링, 자동화, 원격 제어 등의 다양한 분야에서 활용됩니다. Lab#4 - Tower Lab의 모니터링 시스템 구축과 그 필요성이 비슷하며, 이번 Lab에서는 IoT를 활용한 간단한 모니터링 시스템을 구축한다고 볼 수 있습니다.
+
+예를 들어 다음과 같은 분야에 IoT-Cloud 시스템이 적용될 수 있습니다.
+
+- **스마트팜(Smart Farm)**: 비닐하우스에 설치된 토양 습도 센서가 실시간으로 데이터를 클라우드로 전송하고, 이를 기반으로 자동으로 물을 공급합니다. 작물 생장에 최적화된 환경을 유지하면서도 자원을 효율적으로 사용할 수 있습니다.
+- **스마트 빌딩(Smart Building)**: 사무실 공간에 설치된 온도 및 동작 감지 센서가 사람의 존재 유무를 감지하여, 조명 및 냉난방(HVAC) 시스템을 자동으로 조절합니다. 이로써 에너지 절약과 쾌적한 환경 유지를 동시에 달성할 수 있습니다.
 
 ## 0-3. Node.js
 
@@ -66,7 +71,7 @@ apt-get update
 apt-get install vim
 ```
 
-## 2-2. 웹 서버 코드 수정하기 ( in NUC )
+## 2-2. 웹 서버 코드 확인 ( in NUC container )
 
 아래 명령어를 이력해 웹서버 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
 
@@ -90,6 +95,7 @@ vim /SmartX-Mini/IoT-labs/webserver.js
 아래 명령어를 입력해 필요한 파일들을 다운로드 해주세요
 
 ```bash
+cd ~
 git clone https://github.com/adafruit/Adafruit_python_DHT.git
 ```
 
@@ -98,12 +104,13 @@ git clone https://github.com/adafruit/Adafruit_python_DHT.git
 라즈베리파이 버전 4를 3으로 인식할 수 있도록 Adafruit_DHT의 패키지 Installer를 수정해줘야합니다.
 
 > [!note] Why?
-> 라즈베리파이 4의 SoC(System on Chip)는 BCM2711이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 BCM2711을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
+>
+> 라즈베리파이 4의 SoC(System on Chip)는 `BCM2711`이지만, 기존 Adafruit_python_DHT 라이브러리는 이를 인식하지 못하고 기본적으로 지원하는 BCM2835, BCM2837 등과 다르게 처리합니다. 따라서, platform_detect.py 파일에서 `BCM2711`을 Pi 3으로 인식하도록 설정하면 라이브러리가 정상적으로 작동하며, 추가적인 호환성 문제 없이 센서 데이터를 읽을 수 있습니다.
 
 우선, 파일을 열어줍니다
 
 ```bash
-cd Adafruit_python_DHT
+cd ~/Adafruit_python_DHT
 
 sudo vim Adafruit_DHT/platform_detect.py
 ```
@@ -202,7 +209,7 @@ sudo ./AdafruitDHT.py 11 4
 아래와 같이 온도와 습도가 잘 표기됐다면, 온습도 센서가 라즈베리파이에 제대로 연결된 것을 의미합니다. 만약 오류가 발생한다면, 아래 순서를 따라주세요.
 
 1. `1. Preparation`으로 돌아가서 온습도 센서의 핀이 올바른 GPIO 핀에 꽂혀있는지 확인해주세요.
-2. 아무런 문제를 발견하지 못했다면, 패키지 설치가 제대로 됐는지 확인해주세요. 패키지를 다시 설치해보는 것도 방법이 될 수 있습니다.
+2. 아무런 문제를 발견하지 못했다면, **패키지 설치가 제대로 됐는지 확인해주세요**. 패키지를 다시 설치해보는 것도 방법이 될 수 있습니다.
 3. 센서 자체의 문제일 수 있습니다. 만약 여전히 문제가 해결되지 않았다면, 조교를 호출해주세요.
 
 <img alt="image" src="https://user-images.githubusercontent.com/63437430/160829118-04bae048-2cf3-4c3f-8cd9-4b9295b019d0.png">
@@ -236,12 +243,12 @@ sudo apt-get install -y mercurial
 
 ### 2-4-2. 센서 데이터 수집 코드
 
-아래 명령어를 이력해 센서 데이터 전송 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
+아래 명령어를 입력해 센서 데이터 전송 코드를 확인해보세요. (별도의 수정은 필요하지 않습니다.)
 
 **이 코드는 라즈베리파이에서 실행되며, 센서로부터 데이터를 읽어와 파일에 저장하는 역할을 합니다.**
 
 ```bash
-vim ~/SmartX-mini/IoT-labs/RPI_capture.py
+vim ~/SmartX-Mini/SmartX-Box/IoT-labs/RPI_capture.py
 ```
 
 <img src="img/rpi_capture.png" alt="rpi capture code">
@@ -251,7 +258,7 @@ vim ~/SmartX-mini/IoT-labs/RPI_capture.py
 저장된 센서 데이터를 전송하는 코드를 열고, `<NUC IP>`를 여러분의 NUC IP로 수정합니다.
 
 ```bash
-vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
+vim ~/SmartX-Mini/SmartX-Box/IoT-labs/RPI_transfer.py
 ```
 
 <img src="img/rpi_transfer.png" alt="rpi transfer code">
@@ -260,9 +267,9 @@ vim ~/SmartX-mini/IoT-labs/RPI_transfer.py
 
 이제 지금까지 작업한 내용을 바탕으로 간단한 IoT Web Service를 실행하도록 하겠습니다.
 
-### 2-5-1. Web Server 실행하기 ( in NUC )
+### 2-5-1. Web Server 실행하기 ( in NUC container )
 
-NUC에서 실행했던 도커 컨테이너 내부에서 다음의 명령어를 실행해주세요. 다음의 명령어는 `webserver.js`라는 웹서버 코드를 실행합니다.
+NUC에서 실행했던 **도커 컨테이너 내부**에서 다음의 명령어를 실행해주세요. 다음의 명령어는 `webserver.js`라는 웹서버 코드를 실행합니다.
 
 ```bash
 cd /SmartX-Mini/IoT-labs
@@ -275,7 +282,7 @@ nodejs webserver.js
 다음의 명령어를 실행해주세요. `process.sh`는 방금 전 살펴본 `RPI_capture.py`와 `RPI_transfer.py` 파일을 반복적으로 실행합니다.
 
 ```bash
-cd ~/SmartX-mini/IoT-labs
+cd ~/SmartX-Mini/SmartX-Box/IoT-labs
 
 # 실행 권한 부여
 chmod +x process.sh
