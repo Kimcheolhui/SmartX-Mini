@@ -91,7 +91,9 @@ Master-Worker 패턴은 하나의 Master가 전체 시스템을 관리하고, �
 
 <img src='img/container-orch.png' alt='container orchestration tool' width="900">
 
-위 사진은 대표적인 컨테이터 오케스트레이션 도구입니다. 현재는 <b>Kubernetes(K8s)</b>가 가장 널리 사용되고 있습니다. (맨 앞(K)과 뒤(s), 그리고 나머지 알파벳의 개수 '8'을 사용하여 K8s라고도 부릅니다.)
+위 사진은 대표적인 컨테이터 오케스트레이션 도구입니다. 현재는 <b>Kubernetes(K8s)</b>가 가장 널리 사용되고 있습니다.
+
+맨 앞(K)과 뒤(s), 그리고 나머지 알파벳의 개수 '8'을 사용하여 K8s라고도 부릅니다.
 
 ## 1-3. 쿠버네티스(Kubernetes)
 
@@ -209,7 +211,9 @@ sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/conf
 
 NUC1에서 다음의 명령어를 실행하여, NUC2와 NUC3에 원격 접속이 정상적으로 이뤄지는지 확인합니다.
 
-\*컴시이실 실습의 경우 `<nuc username>`은 gist로 통일되어 있습니다.
+> [!Warning]
+>
+> 컴시이실 실습의 경우 `<nuc username>`은 gist로 통일되어 있습니다.
 
 ```shell
 # In new terminal
@@ -252,7 +256,9 @@ ssh <NUC3 username>@nuc03
 > ## 화면 세팅 Tip (optional)
 >
 > 각 원격 접속마다 별도의 터미널 **창**을 띄우게 되면 조작이 번거롭습니다. 다음의 사진과 같이 3개의 터미널 **탭**을 띄우고, 2번째와 3번째 탭에는 각각 NUC2와 NUC3에 원격 접속하도록 합니다.
+>
 > 새로운 터미널 탭을 띄우는 단축키는 `Ctrl + Shift + T`입니다.
+>
 > <img src='img/screen-setup.png' alt='screen setup'>
 
 ## 2-3. 쿠버네티스 설치(For All NUCs)
@@ -275,6 +281,7 @@ sudo swapoff -a
 ### 2-3-2. Install Kubernetes
 
 > [!warning]
+>
 > 각각의 실행이 정상적으로 이뤄지는지 확인하면서 진행할 것
 
 ```shell
@@ -304,6 +311,7 @@ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
 > [!warning]
+>
 > ⚠️ **만약 preflight 오류가 발생했다면 다음의 작업을 진행해주세요**
 >
 > <img src='img/preflight-error.png' alt='preflight error' width='900'>
@@ -335,7 +343,7 @@ NUC1에서 다음의 명령어를 실행합니다.
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-# master node도 woreker node처럼 Pod를 배포할 수 있게 해주는 명령어입니다. 이번 실습에서는 입력하지 않아도 됩니다.
+# 다음은 master node도 woreker node처럼 Pod를 배포할 수 있게 해주는 명령어입니다. 이번 실습에서는 입력하지 않아도 됩니다.
 # kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 
@@ -354,9 +362,11 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 <img src='img/kubeadm-init-2.png' alt='kubeadm init'>
 
-빨간 칸 안에 있는 명령어를 복사하고, 앞에 `sudo`를 붙여 NUC2와 NUC3에 입력합니다.
+빨간 칸 안에 있는 명령어를 복사하고, 앞에 `sudo`를 붙여 **NUC2와 NUC3**에 입력합니다.
 
 > [!warning]
+>
+> **NUC1에 입력하지 않도록 주의하세요!**
 >
 > **preflight 에러 발생 시**, --ignore-preflight-errors=all 맨 뒤에 붙여서 다시 입력합니다.
 
@@ -369,7 +379,7 @@ kubectl get node
 
 <img src='img/get-node-notready.png' alt='get node notreay'>
 
-위 사진에서 nuc02와 nuc03이 NotReady 상태인 이유는 네트워크 플러그인(CNI)이 아직 설치되지 않았거나, 워커 노드가 마스터 노드에 정상적으로 조인되지 않았기 때문입니다. Kubernetes에서는 클러스터 내 네트워크가 설정되지 않으면 노드를 Ready 상태로 만들지 않으며, kubeadm join이 제대로 실행되지 않은 경우에도 NotReady 상태가 유지됩니다. 이를 해결하려면 CNI를 설치하고, 워커 노드가 정상적으로 조인되었는지 확인해야 합니다. 바로 이어지는 section에서 CNI를 설치해보겠습니다.
+위 사진에서 nuc02와 nuc03이 NotReady 상태인 이유는 <b>네트워크 플러그인(CNI)</b>이 아직 설치되지 않았거나, 워커 노드가 마스터 노드에 정상적으로 조인되지 않았기 때문입니다. Kubernetes에서는 클러스터 내 네트워크가 설정되지 않으면 노드를 Ready 상태로 만들지 않으며, kubeadm join이 제대로 실행되지 않은 경우에도 NotReady 상태가 유지됩니다. 이를 해결하려면 CNI를 설치하고, 워커 노드가 정상적으로 조인되었는지 확인해야 합니다. 바로 이어지는 section에서 CNI를 설치해보겠습니다.
 
 ## 2-5. Kubenetes Network Plugin Installation at NUC1
 
@@ -424,7 +434,7 @@ kubectl get po -n kube-system -o wide
 
 이제 간단한 웹사이트를 쿠버네티스 환경에서 배포해보겠습니다.
 
-모든 작업은 NUC1에서 진행합니다.
+모든 작업은 **NUC1**에서 진행합니다.
 
 ## 3-1. Service Architecture
 
@@ -774,7 +784,7 @@ Rolling Update는 기존 Pod을 점진적으로 새로운 버전으로 교체하
 
    <img src='img/simple-app/simple-15.png' alt='simple 15'>
 
-   **이제 Pod의 개수를 3개로 Scale-in하고, Pod의 개수가 줄어든 것을 확인해주세요!**
+   <b>이제 Pod의 개수를 3개로 Scale-in하고, Pod의 개수가 줄어든 것을 확인해주세요! (스스로 해보세요!)</b>
 
 지금까지, 쿠버네티스에서 Pod, Deployment, Service를 활용한 애플리케이션 배포 및 업데이트를 실습했습니다.
 
@@ -785,11 +795,14 @@ Rolling Update는 기존 Pod을 점진적으로 새로운 버전으로 교체하
 ## Lab Summary
 
 이번 Lab에서는 컨테이너 오케스트레이션의 개념과 원리, 기능을 학습하기 위해 쿠버네티스를 활용하여 실습을 진행했습니다.
+
 여러분은 3개의 NUC 머신을 사용하여 컨테이너 오케스트레이션을 경험하고, 이를 통해 컨테이너 기반 애플리케이션을 효과적으로 배포 및 관리하는 방법을 배웠습니다.
 
 ## 왜 컨테이너 오케스트레이션이 필요한가?
 
-컨테이너 기술이 발전하면서 여러 개의 컨테이너를 효율적으로 배포하고 운영하는 것이 중요해졌습니다.하지만 단순히 컨테이너를 실행하는 것만으로는 확장성과 가용성을 보장하기 어렵기 때문에, 이를 자동화하는 컨테이너 오케스트레이션 도구가 필요합니다.
+컨테이너 기술이 발전하면서 여러 개의 컨테이너를 효율적으로 배포하고 운영하는 것이 중요해졌습니다.
+
+하지만 단순히 컨테이너를 실행하는 것만으로는 확장성과 가용성을 보장하기 어렵기 때문에, 이를 자동화하는 컨테이너 오케스트레이션 도구가 필요합니다.
 
 **1. 컨테이너 개수 증가에 따른 관리 문제**: 애플리케이션 규모가 커질수록 컨테이너의 개수가 증가하여 개별적으로 관리하기 어려워집니다.
 
