@@ -343,7 +343,7 @@ NUC1에서 다음의 명령어를 실행합니다.
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-# 다음은 master node도 woreker node처럼 Pod를 배포할 수 있게 해주는 명령어입니다. 이번 실습에서는 입력하지 않아도 됩니다.
+# 다음은 master node도 worker node처럼 Pod를 배포할 수 있게 해주는 명령어입니다. 이번 실습에서는 입력하지 않아도 됩니다.
 # kubectl taint nodes --all node-role.kubernetes.io/master-
 ```
 
@@ -362,13 +362,13 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 <img src='img/kubeadm-init-2.png' alt='kubeadm init'>
 
-빨간 칸 안에 있는 명령어를 복사하고, 앞에 `sudo`를 붙여 **NUC2와 NUC3**에 입력합니다.
+빨간 칸 안에 있는 명령어를 복사하고, 앞에 `sudo`를 붙여 <ins>NUC2와 NUC3</ins>에 입력합니다.
 
 > [!warning]
 >
 > **NUC1에 입력하지 않도록 주의하세요!**
 >
-> **preflight 에러 발생 시**, --ignore-preflight-errors=all 맨 뒤에 붙여서 다시 입력합니다.
+> **preflight 에러 발생 시**, `--ignore-preflight-errors=all`를 맨 뒤에 붙여서 다시 입력합니다.
 
 ### 2-4-4. Check Nodes at NUC1
 

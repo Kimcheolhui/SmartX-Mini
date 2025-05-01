@@ -368,7 +368,7 @@ Now join the Worker Nodes to the Kubernetes cluster.
 
 <img src='img/kubeadm-init-2.png' alt='kubeadm init'>
 
-Copy the command inside the red box and prepend `sudo` when running it on **NUC2 and NUC3**.
+Copy the command inside the red box and prepend `sudo` when running it on <ins>NUC2 and NUC3</ins>.
 
 > [!warning]
 >
