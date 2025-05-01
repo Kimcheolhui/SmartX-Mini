@@ -255,7 +255,7 @@ Enter the command below to run `broker_to_influxdb.py` with the settings for the
 ```bash
 sudo sysctl -w fs.file-max=100000
 ulimit -S -n 2048
-python3 ~/SmartX-mini/ubuntu-kafkatodb/broker_to_influxdb.py
+python3 ~/SmartX-Mini/SmartX-Box/ubuntu-kafkatodb/broker_to_influxdb.py
 ```
 
 ## 1-7. Chronograf Dashboard ( in NUC )
