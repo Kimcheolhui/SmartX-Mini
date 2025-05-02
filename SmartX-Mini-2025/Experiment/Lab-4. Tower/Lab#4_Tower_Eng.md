@@ -264,7 +264,7 @@ python3 ~/SmartX-Mini/SmartX-Box/ubuntu-kafkatodb/broker_to_influxdb.py
 
 Open a web browser and access the Chronograf Dashboard.
 
-> **Access URL**: http://<Your NUC IP>:8888
+> **Access URL**: `http://<Your NUC IP>:8888`
 
 <img src="./img/chronograf-1.png" alt="chronograf-1">
 
